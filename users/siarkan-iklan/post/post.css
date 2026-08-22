@@ -1,0 +1,1104 @@
+* {
+    scroll-margin-top: 100px;
+}
+
+nav {
+    padding: 20px 30px;
+    background-color: #F7F2ED;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 499;
+    transition: background-color 0.3s ease, padding 0.3s ease;
+    box-sizing: border-box;
+    color: #52341D;
+    border-bottom: 1px solid #52341d3f;
+}
+
+nav.scrolled {
+    background-color: #F7F2ED;
+    padding: 20px 30px;
+    color: #52341D;
+    border-bottom: 1px solid #52341d3f;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-mainbutton {
+    padding: 10px 15px;
+    color: #52341D;
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease-in-out forwards;
+    background: #ad6a3623;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border: 1px solid rgba(215, 185, 108, 0.3);
+}
+
+.nav-mainbutton.scrolled {
+    color: #52341D;
+}
+
+.nav-mainbutton.disable {
+    pointer-events: none;
+}
+
+.nav-logo {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+nav .nav-left a,
+nav .nav-right a {
+    cursor: pointer;
+}
+
+/* Override CSS */
+
+nav a {
+    color: #52341D;
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   EASYRENT - POST PAGE
+   All styles are scoped to #top so they don't interfere
+   with main-ui.css
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+#top {
+    width: min(1180px, calc(100% - 40px));
+    margin: 90px auto 50px;
+    border: 1px solid rgba(82, 52, 29, 0.12);
+    border-radius: 22px;
+}
+
+#top *,
+#top *::before,
+#top *::after {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
+#top .container-post {
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(82, 52, 29, 0.12);
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow:
+        0 18px 55px rgba(82, 52, 29, 0.08);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+#top .post-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    padding: 34px 38px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f7f2ed 0%,
+            #fffaf5 100%
+        );
+
+    border-bottom: 1px solid rgba(82, 52, 29, 0.1);
+}
+
+#top .post-heading > div:first-child {
+    min-width: 0;
+}
+
+#top .eyebrow {
+    display: inline-block;
+
+    margin-bottom: 8px;
+
+    color: #a56b3c;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.14em;
+}
+
+#top .post-heading h1 {
+    margin: 0 0 7px;
+
+    color: #52341d;
+
+    font-size: clamp(24px, 3vw, 32px);
+    line-height: 1.15;
+}
+
+#top .post-heading p {
+    max-width: 650px;
+
+    margin: 0;
+
+    color: #77685d;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+#top .heading-icon {
+    display: grid;
+    place-items: center;
+
+    flex: 0 0 58px;
+
+    width: 58px;
+    height: 58px;
+
+    border: 1px solid rgba(173, 106, 54, 0.18);
+    border-radius: 16px;
+
+    background: rgba(173, 106, 54, 0.1);
+
+    color: #9a5d30;
+
+    font-size: 23px;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+#top .post-form {
+    width: 100%;
+}
+
+#top .form-content {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(320px, 0.8fr);
+
+    gap: 18px;
+
+    padding: 22px;
+
+    background: #faf9f7;
+}
+
+
+/* =========================================================
+   LEFT / RIGHT COLUMNS
+========================================================= */
+
+#top .left,
+#top .right {
+    min-width: 0;
+}
+
+#top .left {
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+#top .right {
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+#top .section-card {
+    overflow: hidden;
+
+    border: 1px solid #e9e2dc;
+    border-radius: 17px;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+#top .section-title {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 13px;
+
+    padding: 23px 25px 20px;
+
+    border-bottom: 1px solid #eee8e3;
+}
+
+#top .section-number {
+    display: grid;
+    place-items: center;
+
+    flex: 0 0 34px;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 10px;
+
+    background: #f4e7dc;
+
+    color: #94582f;
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+#top .section-title > div {
+    min-width: 0;
+}
+
+#top .section-title h3 {
+    margin: 1px 0 4px;
+
+    color: #34271f;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    line-height: 1.3;
+}
+
+#top .section-title p {
+    margin: 0;
+
+    color: #8b8078;
+
+    font-size: 12px;
+    font-weight: 400;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+#top .body-section,
+#top .image-section {
+    padding: 25px;
+}
+
+
+/* =========================================================
+   FORM GROUP
+========================================================= */
+
+#top .form-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 18px;
+}
+
+#top .form-group:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+#top .form-group label {
+    display: block;
+
+    color: #40332a;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+#top .form-group label span {
+    color: #c05242;
+}
+
+#top .form-group label small {
+    color: #9c9189;
+
+    font-size: 11px;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   INPUT / TEXTAREA
+========================================================= */
+
+#top .form-group input,
+#top .form-group textarea {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+
+    border: 1px solid #ded6cf;
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #ffffff;
+    color: #332a25;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+#top .form-group input {
+    height: 46px;
+    padding: 0 13px;
+}
+
+#top .form-group textarea {
+    min-height: 145px;
+    padding: 13px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+#top .form-group input::placeholder,
+#top .form-group textarea::placeholder {
+    color: #aaa19a;
+
+    opacity: 1;
+}
+
+#top .form-group input:focus,
+#top .form-group textarea:focus {
+    border-color: #b97745;
+
+    box-shadow:
+        0 0 0 3px rgba(183, 119, 69, 0.1);
+
+    background: #fffdfa;
+}
+
+
+/* =========================================================
+   TWO COLUMN INPUT
+========================================================= */
+
+#top .form-row,
+#top .coordinate-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 15px;
+}
+
+
+/* =========================================================
+   ICON INPUT
+========================================================= */
+
+#top .number-input,
+#top .input-with-icon {
+    position: relative;
+}
+
+#top .number-input i,
+#top .input-with-icon i {
+    position: absolute;
+
+    top: 50%;
+    left: 14px;
+
+    z-index: 1;
+
+    transform: translateY(-50%);
+
+    color: #a67552;
+
+    font-size: 13px;
+
+    pointer-events: none;
+}
+
+#top .number-input input,
+#top .input-with-icon input {
+    padding-left: 39px;
+}
+
+
+/* =========================================================
+   CHARACTER COUNTER
+========================================================= */
+
+#top .field-hint {
+    margin-top: -2px;
+
+    color: #a19891;
+
+    font-size: 11px;
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   HELPER TEXT
+========================================================= */
+
+#top .helper-text,
+#top .upload-hint {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 7px;
+
+    margin: 12px 0 0;
+
+    color: #948981;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+#top .helper-text i,
+#top .upload-hint i {
+    flex: 0 0 auto;
+
+    margin-top: 2px;
+
+    color: #a66b3d;
+}
+
+
+/* =========================================================
+   IMAGE GRID
+========================================================= */
+
+#top .image-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   FILE INPUT
+========================================================= */
+
+#top #images {
+    display: none;
+}
+
+
+/* =========================================================
+   IMAGE UPLOAD BOX
+========================================================= */
+
+#top .image-upload,
+#top .preview-image {
+    position: relative;
+
+    width: 100%;
+    height: 180px;
+
+    overflow: hidden;
+
+    border-radius: 13px;
+}
+
+
+/* =========================================================
+   UPLOAD BOX
+========================================================= */
+
+#top .image-upload {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 2px dashed #d9cec4;
+
+    background: #fcfaf8;
+
+    color: #756960;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    -webkit-tap-highlight-color: transparent;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+#top .image-upload:hover {
+    border-color: #b97745;
+
+    background: #fffaf5;
+}
+
+#top .image-upload:active {
+    transform: scale(0.99);
+}
+
+
+/* =========================================================
+   UPLOAD ICON
+========================================================= */
+
+#top .upload-icon {
+    display: grid;
+    place-items: center;
+
+    width: 43px;
+    height: 43px;
+
+    margin-bottom: 10px;
+
+    border-radius: 50%;
+
+    background: #f0e4d9;
+
+    color: #9a5e34;
+
+    font-size: 25px;
+    font-weight: 300;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   UPLOAD TEXT
+========================================================= */
+
+#top .image-upload span {
+    color: #4d4038;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+#top .image-upload small {
+    max-width: 90%;
+
+    margin-top: 6px;
+
+    color: #a29a94;
+
+    font-size: 10px;
+    font-weight: 400;
+
+    line-height: 1.4;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   IMAGE PREVIEW
+========================================================= */
+
+#top .preview-image {
+    background: #eee9e4;
+}
+
+#top .preview-image img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   REMOVE IMAGE
+========================================================= */
+
+#top .remove-image {
+    position: absolute;
+
+    top: 8px;
+    right: 8px;
+
+    display: grid;
+    place-items: center;
+
+    width: 29px;
+    height: 29px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: rgba(30, 24, 20, 0.72);
+
+    color: #ffffff;
+
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease;
+}
+
+#top .remove-image:hover {
+    background: #b64c3d;
+}
+
+#top .remove-image:active {
+    transform: scale(0.92);
+}
+
+
+/* =========================================================
+   TIPS
+========================================================= */
+
+#top .tips-card {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 13px;
+
+    padding: 18px;
+
+    border: 1px solid #eadfd5;
+    border-radius: 15px;
+
+    background: #f8f1eb;
+
+    color: #6d5b4e;
+}
+
+#top .tips-card > i {
+    flex: 0 0 auto;
+
+    margin-top: 2px;
+
+    color: #a7683a;
+
+    font-size: 18px;
+}
+
+#top .tips-card strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #52341d;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+#top .tips-card p {
+    margin: 0;
+
+    color: #6d5b4e;
+
+    font-size: 11px;
+    font-weight: 400;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+#top .form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 18px 25px;
+
+    border-top: 1px solid #e9e2dc;
+
+    background: #ffffff;
+}
+
+#top .required-note {
+    color: #948a82;
+
+    font-size: 11px;
+}
+
+#top .required-note span {
+    color: #c05242;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
+
+#top .form-footer button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    min-height: 44px;
+
+    padding: 0 22px;
+
+    border: 0;
+    border-radius: 10px;
+
+    background: #52341d;
+
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 18px rgba(82, 52, 29, 0.15);
+
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease;
+}
+
+#top .form-footer button:hover {
+    background: #704625;
+}
+
+#top .form-footer button:active {
+    transform: translateY(1px);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 950px) {
+
+    #top {
+        width: min(900px, calc(100% - 30px));
+
+        margin-top: 100px;
+    }
+
+    #top .form-content {
+        grid-template-columns: 1fr;
+    }
+
+    /*
+        Keep the image card full width.
+        Tips stays below it instead of beside it.
+    */
+
+    #top .right {
+        display: flex;
+
+        flex-direction: column;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    #top {
+        width: calc(100% - 24px);
+
+        margin: 86px auto 25px;
+    }
+
+    #top .container-post {
+        border-radius: 17px;
+    }
+
+
+    /* Header */
+
+    #top .post-heading {
+        align-items: flex-start;
+
+        padding: 25px 20px;
+
+        gap: 15px;
+    }
+
+    #top .post-heading h1 {
+        font-size: 24px;
+    }
+
+    #top .post-heading p {
+        font-size: 12px;
+
+        line-height: 1.55;
+    }
+
+    #top .heading-icon {
+        flex: 0 0 46px;
+
+        width: 46px;
+        height: 46px;
+
+        border-radius: 13px;
+
+        font-size: 18px;
+    }
+
+
+    /* Form */
+
+    #top .form-content {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+
+        padding: 12px;
+    }
+
+
+    /* Cards */
+
+    #top .section-title {
+        padding: 19px;
+    }
+
+    #top .body-section,
+    #top .image-section {
+        padding: 19px;
+    }
+
+
+    /* Form rows */
+
+    #top .form-row,
+    #top .coordinate-grid {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+
+    /* Images */
+
+    #top .image-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 8px;
+    }
+
+    #top .image-upload,
+    #top .preview-image {
+        height: 155px;
+    }
+
+
+    /* Footer */
+
+    #top .form-footer {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        padding: 16px 19px;
+    }
+
+    #top .form-footer button {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONE
+========================================================= */
+
+@media (max-width: 430px) {
+
+    #top {
+        width: calc(100% - 16px);
+
+        margin-top: 80px;
+    }
+
+    #top .post-heading {
+        padding: 22px 17px;
+    }
+
+    #top .post-heading h1 {
+        font-size: 21px;
+    }
+
+    #top .post-heading p {
+        font-size: 11px;
+    }
+
+    #top .heading-icon {
+        flex-basis: 40px;
+
+        width: 40px;
+        height: 40px;
+
+        border-radius: 11px;
+
+        font-size: 16px;
+    }
+
+    #top .form-content {
+        padding: 8px;
+    }
+
+    #top .section-title,
+    #top .body-section,
+    #top .image-section {
+        padding: 16px;
+    }
+
+    #top .section-title {
+        gap: 10px;
+    }
+
+    #top .section-number {
+        flex-basis: 30px;
+
+        width: 30px;
+        height: 30px;
+
+        border-radius: 8px;
+    }
+
+    #top .section-title h3 {
+        font-size: 14px;
+    }
+
+    #top .section-title p {
+        font-size: 11px;
+    }
+
+    #top .form-group input {
+        height: 44px;
+
+        font-size: 13px;
+    }
+
+    #top .form-group textarea {
+        min-height: 130px;
+
+        font-size: 13px;
+    }
+
+    #top .image-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #top .image-upload,
+    #top .preview-image {
+        height: 170px;
+    }
+
+    #top .tips-card {
+        padding: 15px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONE
+========================================================= */
+
+@media (max-width: 350px) {
+
+    #top .post-heading {
+        flex-direction: column;
+    }
+
+    #top .heading-icon {
+        display: none;
+    }
+
+}

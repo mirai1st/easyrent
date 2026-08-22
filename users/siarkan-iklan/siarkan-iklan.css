@@ -1,0 +1,263 @@
+* {
+    scroll-margin-top: 100px;
+}
+
+nav {
+    padding: 20px 30px;
+    background-color: #F7F2ED;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 499;
+    transition: background-color 0.3s ease, padding 0.3s ease;
+    box-sizing: border-box;
+    color: #52341D;
+    border-bottom: 1px solid #52341d3f;
+}
+
+nav.scrolled {
+    background-color: #F7F2ED;
+    padding: 20px 30px;
+    color: #52341D;
+    border-bottom: 1px solid #52341d3f;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-mainbutton {
+    padding: 10px 15px;
+    color: #52341D;
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease-in-out forwards;
+    background: #ad6a3623;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border: 1px solid rgba(215, 185, 108, 0.3);
+}
+
+.nav-mainbutton.scrolled {
+    color: #52341D;
+}
+
+.nav-mainbutton.disable {
+    pointer-events: none;
+}
+
+.nav-logo {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+nav .nav-left a,
+nav .nav-right a {
+    cursor: pointer;
+}
+
+/* Override CSS */
+
+nav a {
+    color: #52341D;
+    text-decoration: none;
+}
+
+#top {
+    background-color: white;
+    margin: 80px 50px;
+    padding: 30px;
+    border-radius: 7px;
+    border: 1px solid rgba(0, 0, 0, 0.226);
+}
+
+
+/* ==========================================================================
+   Step / progress bar
+   ========================================================================== */
+
+.step-bar {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.step-bar div {
+    height: 5px;
+    width: 100%;
+    background-color: rgb(214, 214, 214);
+    border-radius: 50px;
+    margin-bottom: 20px;
+}
+
+.step-bar div.active {
+    background-color: rgb(134, 134, 134);
+}
+
+
+/* ==========================================================================
+   Multi-step form containers
+   ========================================================================== */
+
+.form-1,
+.form-2,
+.form-3 {
+    position: relative;
+    border-radius: 12px;
+    animation: slideIn 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(30px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(-30px); }
+}
+
+/* untuk balik (back) — arah bertentangan */
+@keyframes slideInReverse {
+    from { opacity: 0; transform: translateX(-30px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOutReverse {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(30px); }
+}
+
+.slide-out {
+    animation: slideOut 0.3s ease forwards;
+}
+
+/* Step 1 & 3: short content (icon + text), centered in a fixed area */
+.form-1 .body,
+.form-3 .body {
+    margin-top: 20px;
+    height: 50vh;
+    display: grid;
+    place-items: center;
+}
+
+/* Step 2: long form content, flows naturally from the top */
+.form-2 .body {
+    margin-top: 20px;
+    display: block;
+}
+
+.body-content {
+    text-align: center;
+    max-width: 500px;
+}
+
+.step-icon {
+    font-size: 64px;
+    color: #6F4A2D;
+    margin-bottom: 24px;
+}
+
+
+/* ==========================================================================
+   Form fields (Step 2)
+   ========================================================================== */
+
+.form-group {
+    text-align: left;
+    margin-top: 16px;
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #52341D;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #6F4A2D;
+}
+
+.sub-text {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Shared base look for every footer button */
+.footer button {
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/* "Take me to the next step" — step 1 & 2 */
+.footer .next-btn {
+    margin-top: 20px;
+    background-color: #52341D;
+    border: none;
+    color: white;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* Primary action — e.g. "Saya mahu iklankan rumah sewa saya" */
+.footer .btn-primary {
+    background-color: #52341D;
+    border: none;
+    color: white;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* Secondary / lower-emphasis action — e.g. "Saya buat kemudian" */
+.footer .btn-secondary {
+    background-color: transparent;
+    border: 1.5px solid #52341D;
+    color: #52341D;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    #top {
+        background-color: white;
+        margin: 80px 25px;
+        padding: 30px;
+        border-radius: 7px;
+        border: 1px solid rgba(0, 0, 0, 0.226);
+    }
+}

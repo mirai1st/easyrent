@@ -1,0 +1,270 @@
+nav {
+    padding: 20px 30px;
+    background-color: transparent;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 499;
+    transition: background-color 0.3s ease, padding 0.3s ease;
+    box-sizing: border-box;
+    background-color: #F7F2ED;
+    padding: 20px 30px;
+    color: #52341D;
+    border-bottom: 1px solid #52341d3f;
+}
+    
+nav.scrolled {
+    background-color: #F7F2ED;
+    padding: 20px 30px;
+    color: #52341D;
+    border-bottom: 1px solid #52341d3f;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-mainbutton {
+    padding: 10px 15px;
+    color: rgb(0, 0, 0);
+    border-radius: 50px;
+    border: #52341D47 solid 2px;
+    animation: fadeIn 0.3s ease-in-out forwards;
+    background: #ad6a3623;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border-radius: 8px;
+    border: 1px solid rgba(215, 185, 108, 0.3);
+}
+
+.nav-mainbutton.scrolled {
+    color: black;
+}
+
+.nav-mainbutton.disable {
+    pointer-events: none;
+}
+
+.nav-logo {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+nav .nav-left a,
+nav .nav-right a {
+    cursor: pointer;
+}
+
+/* Override CSS */
+
+nav a {
+    color: #52341D;
+    text-decoration: none;
+}
+
+/* Section Top */
+
+#top {
+    padding: 100px 50px;
+    transition: padding 0.3s ease;
+}
+
+.section-picker {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    background-color: #E3E3E3;
+    padding: 5px;
+    border: 2px solid rgba(0, 0, 0, 0.075);
+    border-radius: 7px;
+    position: relative;
+}
+
+.section-picker.your-active .section-picker-indicator {
+    transform: translateX(100%);
+}
+
+.section-picker-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-color: white;
+    border-radius: 7px;
+    transition: transform 0.3s ease;
+    z-index: 0;
+}
+
+.section-picker a {
+    position: relative;
+    z-index: 1;
+    width: 50%;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.community-section, .you-section {
+    margin-top: 15px;
+}
+
+.card {
+    background-color: white;
+    border: 2px solid rgba(0, 0, 0, 0.176);
+    padding: 20px;
+    border-radius: 7px;
+    margin-top: 10px;
+    position: relative;
+    animation: fade .3s ease-in-out forwards;
+}
+
+.card-image {
+    background-color: #D9D9D9;
+    width: 100%;
+    border-radius: 7px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;            /* Or any width you want (e.g., 500px) */
+    aspect-ratio: 16 / 9;   /* Automatically calculates the height */
+    object-fit: cover;      /* Crops the image to fit without distortion */
+}
+
+.card-content .title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.card .card-footer {
+    margin-top: 15px;
+    color: #969696;
+}
+
+.like-icon-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.like-icon-btn i {
+    margin-left: 3px;
+    cursor: pointer;
+}
+
+/* Create your own post */
+
+.create-post {
+    background-color: white;
+    border: 2px solid rgba(0, 0, 0, 0.176);
+    padding: 20px;
+    border-radius: 7px;
+    margin-top: 10px;
+    position: relative;
+}
+
+.create-post input[type="text"] {
+    margin-top: 15px;
+    width: 100%;                  /* Makes it responsive */              /* Sets a default height */
+    padding: 12px 10px;                /* Adds space inside the box */
+    background-color: #f8f9fa;    /* Changes background color */
+    border: 2px solid #e0e0e0;    /* Custom border */
+    border-radius: 8px;           /* Rounds the corners */
+    font-family: 'Arial', sans-serif; /* Changes the font */
+    font-size: 16px;              /* Increases text size */
+    color: #333333;               /* Changes text color */
+    box-sizing: border-box;       /* Includes padding in width calculation */
+    resize: none;
+}
+
+.create-post textarea {
+    margin-top: 5px;
+    width: 100%;                  /* Makes it responsive */
+    height: 150px;                 /* Sets a default height */
+    padding: 12px;                /* Adds space inside the box */
+    background-color: #f8f9fa;    /* Changes background color */
+    border: 2px solid #e0e0e0;    /* Custom border */
+    border-radius: 8px;           /* Rounds the corners */
+    font-family: 'Arial', sans-serif; /* Changes the font */
+    font-size: 16px;              /* Increases text size */
+    color: #333333;               /* Changes text color */
+    box-sizing: border-box;       /* Includes padding in width calculation */
+    resize: none;
+}
+
+.create-post-footer {
+    position: relative;
+    margin-top: 10px;
+    height: 40px;
+}
+
+.create-post-footer div {
+    position: absolute;
+    right: 0;
+}
+
+.create-post-footer i {
+    margin-left: 3px;
+}
+
+.reset-post, .submit-post {
+    padding: 10px 20px;
+    margin-right: 3px;
+    border: 1.5px solid rgba(0, 0, 0, 0.218);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.submit-post {
+    background-color: #52341D;
+    font-weight: bold;
+    color: white;
+    border: 1.5px solid rgba(0, 0, 0, 0.628);
+}
+
+.reset-post:hover {
+    background-color: #d7d7d7;
+}
+
+.submit-post:hover {
+    background-color: #482d19;
+}
+
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .card .card-footer {
+        margin-top: 10px;
+        color: #969696;
+        margin-bottom: 40px;
+    }
+
+    #top {
+        padding: 100px 30px;
+    }
+
+    .like-icon-btn {
+        position: absolute;
+        bottom: 20px;
+        right: 25px;
+    }
+}

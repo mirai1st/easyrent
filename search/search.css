@@ -1,0 +1,269 @@
+nav {
+    padding: 20px 30px;
+    background-color: transparent;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 499;
+    transition: background-color 0.3s ease, padding 0.3s ease;
+    box-sizing: border-box;
+    background-color: #F7F2ED;
+    padding: 20px 30px;
+    color: #52341D;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 4px, rgba(0, 0, 0, 0.24) 0px 1px 5px;
+}
+    
+nav.scrolled {
+    background-color: #F7F2ED;
+    padding: 20px 30px;
+    color: #52341D;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 4px, rgba(0, 0, 0, 0.24) 0px 1px 5px;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-mainbutton {
+    padding: 10px 15px;
+    color: #52341D;
+    border-radius: 50px;
+    border: #52341D47 solid 2px;
+    animation: fadeIn 0.3s ease-in-out forwards;
+    background: #ad6a3623;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border-radius: 8px;
+    border: 1px solid rgba(215, 185, 108, 0.3);
+}
+
+.nav-mainbutton.scrolled {
+    color: #52341D;
+}
+    
+.nav-mainbutton.disable {
+    pointer-events: none;
+}
+
+.nav-logo {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+nav .nav-left a,
+nav .nav-right a {
+    cursor: pointer;
+}
+
+/* section top */
+
+#top-search {
+    padding: 100px 50px;
+}
+
+#top-search.scrolldisable {
+    overflow: hidden;
+    position: fixed;
+    z-index: 500;
+}
+
+/* search container */
+
+.search-container {
+    width: 100%;
+    position: relative;
+}
+
+.search-container input[type="text"] {
+    width: 100%;
+    height: 50px;
+    padding: 0 10px;
+    outline: none;
+    border-radius: 8px;
+    border: 1px solid #00000023;
+    box-sizing: border-box;
+}
+
+.search-container button[type="submit"] {
+    position: absolute;
+    height: 38px;
+    width: 40px;
+    top: 6px;
+    right: 7px;
+    background-color: #7A4F2D;
+    border-radius: 8px;
+    border: 1px solid #00000023;
+    color: white;
+}
+
+/* button container */
+
+.button-container {
+    margin-top: 12px;
+}
+
+.button-container button {
+    padding: 12px;
+    border: 1px solid #00000023;
+    border-radius: 50px;
+    background-color: white;
+}
+
+/* card container */
+
+.card-container {
+    margin-top: 15px;
+    display: block;
+}
+
+.card-container .card {
+    border: 1px solid #00000023;
+    border-radius: 12px;
+    background-color: white;
+    overflow: hidden; /* clips children to the rounded corners */
+}
+
+.card-container .card img {
+    background-color: #BFBFBF;
+}
+
+.card-container .card .card-info {
+    padding: 25px;
+}
+
+.card-container .card .card-info .title {
+    font-weight: 800;
+    font-size: 1.4rem;
+    font-family: "Inter";
+}
+
+.card-container .card .card-info .title span{
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+.card-container .card .card-info .subtitle {
+    margin-top: 5px;
+    font-size: 1rem;
+}
+
+.card .card-info .text-header {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+/* card footer */
+
+.card .card-footer {
+    border-top: 1px solid rgba(128, 128, 128, 0.295);
+    display: flex;
+    gap: 10px;
+    padding: 10px 25px;
+}
+
+.card .card-footer a {
+    margin: 10px 0;
+    width: 100%;
+    padding: 14px;
+    border: #00000023 1px solid;
+    color: black;
+    text-decoration: none;
+    border-radius: 50px;
+    text-align: center;
+}
+
+.card .card-footer a:hover {
+    background-color: rgba(0, 0, 0, 0.156);
+}
+
+/* Image carousel */
+
+.card-container .card .image-carousel {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+.card-container .card .carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.4s ease;
+}
+
+.card-container .card .carousel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.card-container .card .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-container .card .carousel-btn.prev { left: 8px; }
+.card-container .card .carousel-btn.next { right: 8px; }
+
+.card-container .card .carousel-dots {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+}
+
+.card-container .card .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.6);
+}
+
+.card-container .card .dot.active {
+    background: #fff;
+}
+
+/* Jantina */
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    padding: 6px 0;
+    cursor: pointer;
+}
+
+
+@media (max-width: 768px) {
+    #top-search {
+        padding: 100px 30px;
+    }
+}
+
+/* Override CSS */
+
+nav a {
+    color: #52341D;
+    text-decoration: none;
+}
+

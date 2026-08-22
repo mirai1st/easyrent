@@ -1,0 +1,220 @@
+<!-- <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>House Rental Control Panel</title>
+  <style>
+    :root{--bg:#f4f6f8;--card:#fff;--accent:#2b8aef;--muted:#657786}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:0; background:var(--bg); color:#111}
+    .app{display:flex; min-height:100vh}
+    aside{width:260px; background:#0f1720; color:#fff; padding:24px; box-sizing:border-box}
+    aside h1{margin:0 0 8px; font-size:20px}
+    nav a{display:block;color:#cbd5e1;text-decoration:none;padding:8px 0}
+    main{flex:1;padding:20px}
+    .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .controls{display:flex;gap:8px;align-items:center}
+    input[type=search],select{padding:8px;border:1px solid #d1d5db;border-radius:6px}
+    button{background:var(--accent);color:#fff;border:0;padding:8px 12px;border-radius:6px;cursor:pointer}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:18px}
+    .card{background:var(--card);padding:14px;border-radius:8px;box-shadow:0 1px 3px rgba(2,6,23,0.06)}
+    .card h3{margin:0 0 8px;font-size:16px}
+    .meta{color:var(--muted);font-size:13px;margin-bottom:8px}
+    .chip{display:inline-block;padding:6px 8px;border-radius:999px;font-size:12px;color:#fff}
+    .chip.available{background:#16a34a}
+    .chip.rented{background:#ef4444}
+    .actions{display:flex;gap:8px;margin-top:10px}
+    .link{background:transparent;border:1px solid #e2e8f0;padding:6px 8px;border-radius:6px;color:#111}
+    /* modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.4)}
+    .modal.open{display:flex}
+    .panel{background:var(--card);padding:18px;border-radius:10px;min-width:320px;max-width:720px}
+    .form-row{display:flex;gap:8px;margin-bottom:8px}
+    .form-row input,.form-row select,textarea{flex:1;padding:8px;border:1px solid #d1d5db;border-radius:6px}
+    textarea{min-height:80px}
+    footer{margin-top:16px;display:flex;justify-content:flex-end;gap:8px}
+    .empty{padding:24px;border-radius:8px;background:linear-gradient(90deg,#fff,#f8fafc);text-align:center;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <h1>Rent Control</h1>
+      <p style="color:#9aa9bf;margin:8px 0 18px;font-size:13px">Manage houses, tenants and availability</p>
+      <nav>
+        <a href="#">Dashboard</a>
+        <a href="#">Properties</a>
+        <a href="#">Tenants</a>
+        <a href="#">Payments</a>
+        <a href="#">Settings</a>
+      </nav>
+    </aside>
+    <main>
+      <div class="topbar">
+        <div>
+          <h2 style="margin:0 0 6px">Properties</h2>
+          <div style="color:var(--muted);font-size:13px">Manage your listings</div>
+        </div>
+        <div class="controls">
+          <input id="search" type="search" placeholder="Search address or tenant">
+          <select id="filter">
+            <option value="all">All</option>
+            <option value="available">Available</option>
+            <option value="rented">Rented</option>
+          </select>
+          <button id="addBtn">Add Property</button>
+        </div>
+      </div>
+
+      <div id="list" class="grid"></div>
+
+      <div id="empty" class="empty" style="display:none">No properties yet. Click "Add Property" to create one.</div>
+    </main>
+  </div>
+
+  <div id="modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="panel">
+      <h3 id="modalTitle">Add Property</h3>
+      <div style="margin-top:8px">
+        <div class="form-row">
+          <input id="addr" placeholder="Address">
+          <input id="price" placeholder="Monthly Rent (USD)" type="number">
+        </div>
+        <div class="form-row">
+          <input id="tenant" placeholder="Tenant name (optional)">
+          <select id="status"><option value="available">Available</option><option value="rented">Rented</option></select>
+        </div>
+        <textarea id="notes" placeholder="Notes (optional)"></textarea>
+      </div>
+      <footer>
+        <button id="cancel">Cancel</button>
+        <button id="save">Save</button>
+      </footer>
+    </div>
+  </div>
+
+  <div id="gate" class="modal open" style="background:rgba(2,6,23,0.65);">
+    <div class="panel" style="min-width:300px;">
+      <h3>Enter Password</h3>
+      <div style="margin-top:8px">
+        <input id="gatePass" type="password" placeholder="Password" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px">
+      </div>
+      <footer>
+        <button id="gateBtn">Unlock</button>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // Simple client-side manager using localStorage
+    const storageKey = 'rp_properties_v1';
+    const listEl = document.getElementById('list');
+    const emptyEl = document.getElementById('empty');
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const addr = document.getElementById('addr');
+    const price = document.getElementById('price');
+    const tenant = document.getElementById('tenant');
+    const status = document.getElementById('status');
+    const notes = document.getElementById('notes');
+    const search = document.getElementById('search');
+    const filter = document.getElementById('filter');
+
+    let editingId = null;
+
+    function load(){
+      try{return JSON.parse(localStorage.getItem(storageKey))||[];}catch(e){return []}
+    }
+    function saveAll(arr){ localStorage.setItem(storageKey, JSON.stringify(arr)); render(); }
+
+    function render(){
+      const q = (search.value||'').toLowerCase();
+      const f = filter.value;
+      const items = load().filter(p=>{
+        if(f!=='all' && p.status!==f) return false;
+        if(!q) return true;
+        return (p.address||'').toLowerCase().includes(q) || (p.tenant||'').toLowerCase().includes(q);
+      });
+      listEl.innerHTML='';
+      if(items.length===0){ emptyEl.style.display='block'; return } else emptyEl.style.display='none';
+      for(const p of items){
+        const card = document.createElement('div'); card.className='card';
+        card.innerHTML = `<h3>${escapeHtml(p.address||'Unnamed')}</h3>
+          <div class="meta">Monthly: $${Number(p.price||0).toFixed(2)} • Tenant: ${escapeHtml(p.tenant||'—')}</div>
+          <div><span class="chip ${p.status==='available'?'available':'rented'}">${p.status}</span></div>
+          <div style="margin-top:8px;color:var(--muted);font-size:13px">${escapeHtml(p.notes||'')}</div>
+          <div class="actions">
+            <button class="link" data-id="${p.id}" data-action="edit">Edit</button>
+            <button class="link" data-id="${p.id}" data-action="toggle">Toggle</button>
+            <button class="link" data-id="${p.id}" data-action="delete">Delete</button>
+          </div>`;
+        listEl.appendChild(card);
+      }
+    }
+
+    function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    document.getElementById('addBtn').addEventListener('click',()=>{
+      editingId=null; modalTitle.textContent='Add Property'; addr.value=''; price.value=''; tenant.value=''; status.value='available'; notes.value=''; openModal();
+    });
+    document.getElementById('cancel').addEventListener('click',closeModal);
+
+    const gate = document.getElementById('gate');
+    const gatePass = document.getElementById('gatePass');
+    const gateBtn = document.getElementById('gateBtn');
+
+    // simple client-side password (change as needed)
+    const APP_PASSWORD = 'admin123';
+
+    function unlock(){
+      if(gatePass.value===APP_PASSWORD){ gate.classList.remove('open'); gate.setAttribute('aria-hidden','true'); return true }
+      alert('Incorrect password'); return false;
+    }
+    gateBtn.addEventListener('click',()=>{ if(unlock()) render(); });
+    gatePass.addEventListener('keydown',e=>{ if(e.key==='Enter') { if(unlock()) render(); } });
+
+    // hide main UI until unlocked
+    if(gate.classList.contains('open')){
+      // prevent rendering until unlocked
+    }
+    modal.addEventListener('click',e=>{ if(e.target===modal) closeModal(); });
+
+    function openModal(){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); }
+    function closeModal(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+
+    document.getElementById('save').addEventListener('click',()=>{
+      const arr = load();
+      const data = { address: addr.value.trim(), price: Number(price.value)||0, tenant: tenant.value.trim(), status: status.value, notes: notes.value.trim() };
+      if(!data.address){ alert('Address required'); return }
+      if(editingId){
+        const idx = arr.findIndex(x=>x.id===editingId); if(idx!==-1){ arr[idx]=Object.assign(arr[idx],data); }
+      }else{
+        data.id = 'p_'+Date.now(); arr.push(data);
+      }
+      saveAll(arr); closeModal();
+    });
+
+    listEl.addEventListener('click',e=>{
+      const btn = e.target.closest('button[data-action]'); if(!btn) return;
+      const id = btn.dataset.id; const action = btn.dataset.action;
+      const arr = load();
+      const idx = arr.findIndex(x=>x.id===id); if(idx===-1) return;
+      if(action==='delete'){ if(confirm('Delete this property?')){ arr.splice(idx,1); saveAll(arr); } }
+      if(action==='toggle'){ arr[idx].status = arr[idx].status==='available'?'rented':'available'; saveAll(arr); }
+      if(action==='edit'){ editingId = id; modalTitle.textContent='Edit Property'; const p=arr[idx]; addr.value=p.address; price.value=p.price; tenant.value=p.tenant; status.value=p.status; notes.value=p.notes; openModal(); }
+    });
+
+    search.addEventListener('input',render); filter.addEventListener('change',render);
+
+    // seed sample if empty
+    if(load().length===0){
+      const sample = [
+        {id:'p1',address:'12 Oak Street, Apt 3',price:950,tenant:'Alice',status:'rented',notes:'Near park'},
+        {id:'p2',address:'44 Pine Road',price:1200,tenant:'',status:'available',notes:''}
+      ];
+      saveAll(sample);
+    }else render();
+
+  </script>
+</body>
+</html> -->

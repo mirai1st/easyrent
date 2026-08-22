@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EasyRent - Mesej</title>
+
+    <link rel="stylesheet" href="/css/main-ui.css" />
+    <link rel="stylesheet" href="message.css" />
+
+    <script
+      src="https://kit.fontawesome.com/7a8114958c.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <!-- LOGIN MODAL -->
+    <div id="login-modal" class="login-modal">
+      <form id="loginForm">
+        <div class="login-modal-container">
+          <a class="login-modal-close-btn">
+            <i class="fa-solid fa-xmark"></i>
+          </a>
+
+          <div class="modal-content-header">
+            <div class="auth-brand">
+              <i class="fa-solid fa-house"></i>
+              <span>EasyRent</span>
+            </div>
+          </div>
+
+          <div class="modal-content">
+            <h3>Selamat Kembali ke EasyRent!</h3>
+            <p>Log masuk untuk meneruskan perjalanan anda.</p>
+
+            <div class="input-container">
+              <input
+                type="text"
+                id="username-login"
+                placeholder="Username atau Email"
+                autocomplete="username"
+              />
+            </div>
+
+            <div class="input-container">
+              <input
+                type="password"
+                id="password-login"
+                placeholder="Password"
+                autocomplete="current-password"
+              />
+            </div>
+
+            <button type="submit">Log Masuk</button>
+
+            <div class="auth-switch">
+              <span>Belum mempunyai akaun?</span>
+              <a id="register-modal-btn" class="register-modal-btn"
+                >Daftar sekarang</a
+              >
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- REGISTER MODAL -->
+    <div class="register-modal" id="register-modal">
+      <form id="registerForm">
+        <div class="register-modal-container">
+          <a class="register-modal-close-btn">
+            <i class="fa-solid fa-xmark"></i>
+          </a>
+
+          <div class="modal-content-header">
+            <div class="auth-brand">
+              <i class="fa-solid fa-house"></i>
+              <span>EasyRent</span>
+            </div>
+          </div>
+
+          <div class="modal-content">
+            <h3>Cipta Akaun EasyRent Anda!</h3>
+            <p>Daftar untuk meneroka lebih banyak ciri EasyRent.</p>
+
+            <div class="input-container">
+              <input
+                type="text"
+                id="username-register"
+                placeholder="Username"
+                autocomplete="username"
+              />
+            </div>
+
+            <div class="input-container">
+              <input
+                type="email"
+                id="email-register"
+                placeholder="Email"
+                autocomplete="email"
+              />
+            </div>
+
+            <div class="input-container">
+              <input
+                type="password"
+                id="password-register"
+                placeholder="Password"
+                autocomplete="new-password"
+              />
+            </div>
+
+            <div class="input-container">
+              <input
+                type="password"
+                id="repeat_password-register"
+                placeholder="Re-enter Password"
+                autocomplete="new-password"
+              />
+            </div>
+
+            <div class="input-container">
+              <input
+                type="text"
+                id="captcha-register"
+                placeholder="Captcha"
+                autocomplete="off"
+              />
+            </div>
+
+            <button type="submit">Daftar Akaun</button>
+
+            <div class="auth-switch">
+              <span>Sudah mempunyai akaun?</span>
+              <a class="login-modal-btn">Log masuk</a>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar-overlay"></div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a class="sidebar-close-btn"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li><a href="/#top"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg> Utama</a></li>
+            <li><a href="/#recommendations"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245" /></svg> Cadangan</a></li>
+            <li><a href="/users/settings"><i class="fa-solid fa-sliders"></i> Tetapan</a></li>
+            <li><a href="/users/favourite"><i class="fa-regular fa-heart"></i> Kegemaran</a></li>
+            <li><a href="/sudut-pelajar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M496 240L496 480C496 488.8 488.8 496 480 496L160 496C151.2 496 144 488.8 144 480L144 240L496 240zM485 192L344 192L344 128L431.1 128C436.3 128 441.1 130.5 444.1 134.7L485 192zM296 192L155 192L195.9 134.7C198.9 130.5 203.8 128 208.9 128L296 128L296 192zM107.9 175.3C100.2 186.2 96 199.2 96 212.5L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 212.5C544 199.2 539.8 186.2 532.1 175.3L483.1 106.8C471.1 90 451.7 80 431.1 80L208.9 80C188.3 80 168.9 90 156.9 106.8L107.9 175.3z"/></svg> Sudut Pelajar</a></li>
+            <li><a href="/users/profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg> Profil</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <a class="sidebar-login-btn login-modal-btn">Log Masuk Akaun <i class="fa-solid fa-user"></i></a>
+            <a class="sidebar-post-btn" href="/users/siarkan-iklan/">Siarkan Iklan Sebagai Tuan Rumah</a>
+        </div>
+    </div>
+
+    <nav class="desktop-view">
+        <div class="nav-left">
+            <ul>
+                <li>
+                    <a class="nav-logo" id="sidebarButton">
+                        <i class="fa-solid fa-bars"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" class="nav-logo">EasyRent</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-right">
+            <ul>
+                <li>
+                    <a href="/users/notifications/" class="notification-button nav-right-button">
+                        <i class="notification-count fa-regular fa-bell"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="/users/message/" class="message-button nav-right-button">
+                        <i class="message-count fa-regular fa-message"></i>
+                    </a>
+                </li>
+
+                <li data-view="desktop-navmainbtn">
+                    <a class="login-modal-btn">
+                        <i class="fa-regular fa-user"></i>
+                        &nbsp; Log Masuk
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-mainbutton" href="/users/siarkan-iklan/">
+                        Siarkan Iklan
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="mobile-view">
+        <nav class="mobile-view-nav">
+            <div class="nav-left">
+                <ul>
+                    <li><a class="nav-logo" id="sidebarButton"><i class="fa-solid fa-bars"></i></a></li>
+                    <li><a href="/" class="nav-logo">EasyRent</a></li>
+                </ul>
+            </div>
+    
+            <div class="nav-right">
+                <ul>
+                    <li>
+                        <a href="/users/notifications/" class="notification-button nav-right-button">
+                            <i class="notification-count fa-regular fa-bell"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/users/message/" class="message-button nav-right-button">
+                            <i class="message-count fa-regular fa-message"></i>
+                        </a>
+                    </li>
+                    <li><a class="nav-mainbutton login-modal-btn" data-view="mobile-navmainbtn">Log Masuk</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <!-- ALERT -->
+    <div class="alertbox-overlay"></div>
+
+    <div class="alert-box">
+      <h3>Alert</h3>
+      <p class="alertbox-message">Are you sure you want to do this?</p>
+
+      <div class="alert-box-footer">
+        <a class="yes-alert-box">Yes</a>
+        <a class="no-alert-box">No</a>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <section id="top">
+      <!-- =========================
+             MOBILE
+             ========================= -->
+
+      <div class="mobile-view mobile-message-view">
+        <div class="message-container">
+          <!-- CONVERSATION LIST -->
+
+          <aside class="message-list">
+            <div class="message-list-header">
+              <h2>Mesej</h2>
+
+              <button class="message-search-btn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
+
+            <div class="conversation-list" id="mobileConversationList"></div>
+          </aside>
+
+          <!-- CHAT PANEL -->
+
+          <section class="chat-container">
+            <div class="chat-header">
+              <button type="button" class="chat-back-btn" aria-label="Kembali">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+
+              <div class="chat-user">
+                <div class="chat-avatar" id="mobileChatAvatar">A</div>
+
+                <div>
+                  <h3 id="mobileChatUserName">Pilih perbualan</h3>
+
+                  <span class="chat-status" id="mobileChatStatus"> </span>
+                </div>
+              </div>
+
+              <button class="chat-more-btn" type="button">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </button>
+            </div>
+
+            <div class="chat-messages" id="mobileChatMessages"></div>
+
+            <form class="chat-input-container" id="mobileChatForm">
+              <button type="button" class="chat-attachment-btn">
+                <i class="fa-solid fa-paperclip"></i>
+              </button>
+
+              <input
+                type="text"
+                class="chat-input"
+                id="mobileChatInput"
+                placeholder="Tulis mesej..."
+                autocomplete="off"
+              />
+
+              <button type="submit" class="chat-send-btn">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </form>
+          </section>
+        </div>
+      </div>
+
+      <!-- =========================
+             DESKTOP
+             ========================= -->
+
+      <div class="desktop-view desktop-message-view">
+        <div class="side-panel">
+          <div class="side-panel-breadcrumb">
+            <span onclick="window.location.href = '/users/profile'">
+              Pengguna
+            </span>
+            > Mesej
+          </div>
+
+          <div class="side-panel-nav">
+            <a href="/users/profile/" class="side-panel-link">
+              <i class="fa-solid fa-user"></i>
+              Profil
+            </a>
+
+            <a href="/users/favourite/" class="side-panel-link">
+              <i class="fa-solid fa-heart"></i>
+              Kegemaran
+            </a>
+
+            <a href="/users/notifications/" class="side-panel-link">
+              <i class="fa-solid fa-bell"></i>
+              Notifikasi
+            </a>
+
+            <a href="/users/message/" class="side-panel-link active">
+              <i class="fa-solid fa-message"></i>
+              Mesej
+            </a>
+
+            <a href="/users/settings/" class="side-panel-link">
+              <i class="fa-solid fa-gear"></i>
+              Tetapan
+            </a>
+
+            <a
+              href="#"
+              id="btn-logout"
+              class="side-panel-link danger btn-logout"
+            >
+              <i class="fa-solid fa-right-from-bracket"></i>
+              Log Keluar
+            </a>
+          </div>
+        </div>
+
+        <div class="message-container">
+          <!-- LIST -->
+
+          <aside class="message-list">
+            <div class="message-list-header">
+              <h2>Mesej</h2>
+
+              <button class="message-search-btn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
+
+            <div class="conversation-list" id="desktopConversationList"></div>
+          </aside>
+
+          <!-- CHAT -->
+
+          <section class="chat-container">
+            <div class="chat-header">
+              <div class="chat-user">
+                <div class="chat-avatar" id="desktopChatAvatar">A</div>
+
+                <div>
+                  <h3 id="desktopChatUserName">Pilih perbualan</h3>
+
+                  <span class="chat-status" id="desktopChatStatus"> </span>
+                </div>
+              </div>
+
+              <button class="chat-more-btn">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </button>
+            </div>
+
+            <div class="chat-messages" id="desktopChatMessages"></div>
+
+            <form class="chat-input-container" id="desktopChatForm">
+              <button type="button" class="chat-attachment-btn">
+                <i class="fa-solid fa-paperclip"></i>
+              </button>
+
+              <input
+                type="text"
+                class="chat-input"
+                id="desktopChatInput"
+                placeholder="Tulis mesej..."
+                autocomplete="off"
+              />
+
+              <button type="submit" class="chat-send-btn">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="/js/checkLogin.js"></script>
+    <script src="message.js"></script>
+    <script src="/js/main-ui.js"></script>
+    <script src="/js/loginRequest.js"></script>
+  </body>
+</html>

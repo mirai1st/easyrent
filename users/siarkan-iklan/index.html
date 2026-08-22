@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyRent - Siarkan Iklan</title>
+    <link rel="stylesheet" href="../../css/main-ui.css">
+    <link rel="stylesheet" href="siarkan-iklan.css">
+    <script src="/js/checkLogin.js"></script>
+    <script src="https://kit.fontawesome.com/7a8114958c.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+        <!-- =====================================================
+            LOGIN MODAL
+        ====================================================== -->
+    <div id="login-modal" class="login-modal">
+        <form id="loginForm">
+            <div class="login-modal-container">
+                <!-- Close -->
+                <a class="login-modal-close-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+
+                <!-- Header -->
+                <div class="modal-content-header">
+                    <div class="auth-brand">
+                        <i class="fa-solid fa-house"></i>
+                        <span>EasyRent</span>
+                    </div>
+                </div>
+
+                <div class="modal-content">
+                    <h3>Selamat Kembali ke EasyRent!</h3>
+                    <p>Log masuk untuk meneruskan perjalanan anda.</p>
+
+                    <div class="input-container">
+                        <input type="text" id="username-login" placeholder="Username atau Email" autocomplete="username">
+                    </div>
+
+                    <div class="input-container">
+                        <input type="password" id="password-login" placeholder="Password" autocomplete="current-password">
+                    </div>
+
+                    <button type="submit">Log Masuk</button>
+                    <div class="auth-switch">
+                        <span>Belum mempunyai akaun?</span>
+                        <a id="register-modal-btn" class="register-modal-btn">Daftar sekarang</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+        <!-- =====================================================
+            REGISTER MODAL
+        ====================================================== -->
+        <div class="register-modal" id="register-modal">
+        <form id="registerForm">
+            <div class="register-modal-container">
+                <!-- Close -->
+                <a class="register-modal-close-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+
+                <!-- Header -->
+                <div class="modal-content-header">
+                    <div class="auth-brand">
+                        <i class="fa-solid fa-house"></i>
+                        <span>EasyRent</span>
+                    </div>
+                </div>
+
+                <div class="modal-content">
+                    <h3>Cipta Akaun EasyRent Anda!</h3>
+                    <p>Daftar untuk meneroka lebih banyak ciri EasyRent.</p>
+
+                    <div class="input-container">
+                        <input type="text" id="username-register" placeholder="Username" autocomplete="username">
+                    </div>
+
+                    <div class="input-container">
+                        <input type="email" id="email-register" placeholder="Email" autocomplete="email">
+                    </div>
+
+                    <div class="input-container">
+                        <input type="password" id="password-register" placeholder="Password" autocomplete="new-password">
+                    </div>
+
+                    <div class="input-container">
+                        <input type="password" id="repeat_password-register" placeholder="Re-enter Password" autocomplete="new-password">
+                    </div>
+
+                    <div class="input-container">
+                        <input type="text" id="captcha-register" placeholder="Captcha" autocomplete="off">
+                    </div>
+
+                    <button type="submit">Daftar Akaun</button>
+                    <div class="auth-switch">
+                        <span>Sudah mempunyai akaun?</span>
+                        <a class="login-modal-btn">Log masuk</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="sidebar-overlay"></div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a class="sidebar-close-btn"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li><a href="/#top"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg> Utama</a></li>
+            <li><a href="/#recommendations"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245" /></svg> Cadangan</a></li>
+            <li><a href="/users/settings"><i class="fa-solid fa-sliders"></i> Tetapan</a></li>
+            <li><a href="/users/favourite"><i class="fa-regular fa-heart"></i> Kegemaran</a></li>
+            <li><a href="/sudut-pelajar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M496 240L496 480C496 488.8 488.8 496 480 496L160 496C151.2 496 144 488.8 144 480L144 240L496 240zM485 192L344 192L344 128L431.1 128C436.3 128 441.1 130.5 444.1 134.7L485 192zM296 192L155 192L195.9 134.7C198.9 130.5 203.8 128 208.9 128L296 128L296 192zM107.9 175.3C100.2 186.2 96 199.2 96 212.5L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 212.5C544 199.2 539.8 186.2 532.1 175.3L483.1 106.8C471.1 90 451.7 80 431.1 80L208.9 80C188.3 80 168.9 90 156.9 106.8L107.9 175.3z"/></svg> Sudut Pelajar</a></li>
+            <li><a href="/users/profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg> Profil</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <a class="sidebar-login-btn login-modal-btn">Log Masuk Akaun <i class="fa-solid fa-user"></i></a>
+            <a class="sidebar-post-btn" href="/users/siarkan-iklan/">Siarkan Iklan Sebagai Tuan Rumah</a>
+        </div>
+    </div>
+
+    <nav class="desktop-view">
+        <div class="nav-left">
+            <ul>
+                <li>
+                    <a class="nav-logo" id="sidebarButton">
+                        <i class="fa-solid fa-bars"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" class="nav-logo">EasyRent</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-right">
+            <ul>
+                <li>
+                    <a href="/users/notifications/" class="notification-button nav-right-button">
+                        <i class="notification-count fa-regular fa-bell"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="/users/message/" class="message-button nav-right-button">
+                        <i class="message-count fa-regular fa-message"></i>
+                    </a>
+                </li>
+                <li data-view="desktop-navmainbtn">
+                    <a class="login-modal-btn">
+                        <i class="fa-regular fa-user"></i>
+                        &nbsp; Log Masuk
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-mainbutton" href="/users/siarkan-iklan/">
+                        Siarkan Iklan
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="mobile-view">
+        <nav class="mobile-view-nav">
+            <div class="nav-left">
+                <ul>
+                    <li><a class="nav-logo" id="sidebarButton"><i class="fa-solid fa-bars"></i></a></li>
+                    <li><a href="/" class="nav-logo">EasyRent</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-right">
+                <ul>
+                    <li>
+                        <a href="/users/notifications/" class="notification-button nav-right-button">
+                            <i class="notification-count fa-regular fa-bell"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/users/message/" class="message-button nav-right-button">
+                            <i class="message-count fa-regular fa-message"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-mainbutton login-modal-btn" data-view="mobile-navmainbtn">Log Masuk</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <section id="top">
+        <div class="form-1">
+            <form action="">
+                <a class="back-button"><i class="fa-solid fa-xmark"></i></a>
+                <br><br>
+                <center>Langkah 1 dari 3</center>
+                <div class="step-bar">
+                    <div class="active">&nbsp</div>
+                    <div>&nbsp</div>
+                    <div>&nbsp</div>
+                </div>
+                <div class="body">
+                    <div class="body-content">
+                        <div class="step-icon"><i class="fa-solid fa-house-chimney-user"></i></div>
+                        <b>Mahu memasarkan rumah sewa anda kepada pelajar?</b>
+                        <p>Daftarkan hartanah anda dan sambung terus dengan pelajar yang sedang mencari tempat tinggal berdekatan kampus. Proses cepat, senang, dan percuma.</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button type="button" class="next-btn">Langkah seterusnya</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-2" style="display: none">
+            <form action="">
+                <a class="back-button"><i class="fa-solid fa-xmark"></i></a>
+                <br><br>
+                <center>Langkah 2 dari 3</center>
+                <div class="step-bar">
+                    <div class="active">&nbsp</div>
+                    <div class="active">&nbsp</div>
+                    <div>&nbsp</div>
+                </div>
+
+                <div class="body">
+                    <b>Maklumat penyiar</b>
+                    <p class="sub-text">Kami perlukan sedikit maklumat asas anda sebelum mula memasarkan hartanah.</p>
+
+                    <div class="form-group">
+                        <label for="fullname">Nama penuh</label>
+                        <input type="text" id="fullname" placeholder="John Alex" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Nombor telefon</label>
+                        <input type="tel" id="phone" placeholder="012-3456789" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Emel</label>
+                        <input type="email" id="email" placeholder="john@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Anda ialah</label>
+                        <select id="role" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="owner">Pemilik hartanah</option>
+                            <option value="agent">Ejen hartanah</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <button type="button" class="next-btn">Langkah Seterusnya &nbsp<i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-3" style="display: none">
+            <form action="">
+                <a class="back-button"><i class="fa-solid fa-xmark"></i></a>
+                <br><br>
+                <center>Langkah 3 dari 3</center>
+                <div class="step-bar">
+                    <div class="active">&nbsp</div>
+                    <div class="active">&nbsp</div>
+                    <div class="active">&nbsp</div>
+                </div>
+
+                <div class="body">
+                    <div class="body-content">
+                        <div class="step-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <b>Akaun penyiar anda dah sedia!</b>
+                        <p>Nak terus iklankan rumah sewa anda sekarang, atau nak buat kemudian?</p>
+                    </div>
+                </div>
+
+                <div class="footer" style="flex-direction: column; gap: 5px;">
+                    <button type="button" class="btn-primary" id="add-listing-btn">Saya mahu iklankan rumah sewa saya</button>
+                    <button type="button" class="btn-secondary" id="later-btn">Saya buat kemudian</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script src="siarkan-iklan.js"></script>
+    <script src="../../js/main-ui.js"></script>
+    <script src="../../js/loginRequest.js"></script>
+</body>
+</html>

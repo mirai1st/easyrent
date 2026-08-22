@@ -1,0 +1,593 @@
+* {
+    scroll-margin-top: 100px;
+}
+
+nav {
+    padding: 20px 30px;
+    background-color: transparent;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 499;
+    transition: background-color 0.3s ease, padding 0.3s ease;
+    box-sizing: border-box;
+    background-color: #F7F2ED;
+    padding: 20px 30px;
+    color: #52341D;
+    border-bottom: 1px solid #52341d3f;
+}
+    
+nav.scrolled {
+    background-color: #F7F2ED;
+    padding: 20px 30px;
+    color: #52341D;
+    border-bottom: 1px solid #52341d3f;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-mainbutton {
+    padding: 10px 15px;
+    color: #52341D;
+    border-radius: 50px;
+    border: #52341D47 solid 2px;
+    animation: fadeIn 0.3s ease-in-out forwards;
+    background: #ad6a3623;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border-radius: 8px;
+    border: 1px solid rgba(215, 185, 108, 0.3);
+}
+
+.nav-mainbutton.scrolled {
+    color: #52341D;
+}
+
+.nav-mainbutton.disable {
+    pointer-events: none;
+}
+
+.nav-logo {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+nav .nav-left a,
+nav .nav-right a {
+    cursor: pointer;
+}
+
+/* Override CSS */
+
+nav a {
+    color: #52341D;
+    text-decoration: none;
+}
+
+/* Profile */
+
+#top {
+    padding: 100px 50px;
+    transition: padding 0.3s ease;
+    
+}
+
+.profile-container {
+    flex: 1; /* ambil baki ruang sebagai right panel */
+    min-width: 0; /* elak overflow bila content dalam settings terlalu lebar */
+    padding: 20px;
+    border: 1px solid #00000023;
+    border-radius: 12px;
+}
+
+
+.footer-container {
+    margin-top: 12px;
+    border: 1px solid #00000023;
+    border-radius: 12px;
+    background-color: white;
+    overflow: hidden;
+    padding: 20px;
+    flex: 0 0 260px;
+    align-self: flex-start;
+}
+
+
+/* From Uiverse.io by Na3ar-17 */ 
+.radio-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-input * {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.radio-input label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  cursor: pointer;
+  height: 20px;
+  position: relative;
+}
+
+.radio-input label::before {
+  position: absolute;
+  content: "";
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 220px;
+  height: 45px;
+  z-index: -1;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+.radio-input label:hover::before {
+  transition: all 0.2s ease;
+}
+
+.radio-input .label .text {
+  color: black;
+}
+
+.radio-input .label input[type="radio"] {
+  appearance: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.radio-input .label input[type="radio"]:checked {
+  background-color: #9e7b35;
+  -webkit-animation: puls 0.7s forwards;
+  animation: pulse 0.7s forwards;
+}
+
+.radio-input .label input[type="radio"]:before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transition: all 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
+  background-color: #fff;
+  transform: scale(0);
+}
+
+.radio-input .label input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+/* Desktop View */
+
+.mobile-view {
+    display: none;
+}
+
+.desktop-view {
+    gap: 10px;
+    display: flex;
+}
+
+.side-panel {
+    flex: 0 0 260px; /* width tetap untuk panel kiri, adjust ikut design */
+}
+
+/* Add your custom profile styles here */
+
+/* sidepanel */
+
+.side-panel {
+    border: 1px solid #00000023;
+    border-radius: 12px;
+    background-color: white;
+    overflow: hidden;
+    padding: 20px;
+    flex: 0 0 260px;
+    align-self: flex-start;
+    position: sticky;
+    animation: slideUp .3s ease-in-out forwards;
+    top: 100px; /* ikut height nav fixed + jarak selesa */
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateX(-30px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0px);
+        opacity: 1;
+    }
+}
+
+.side-panel-breadcrumb {
+    color: #6F4A2D;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.side-panel-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.side-panel-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #52341D;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.side-panel-link i {
+    width: 16px;
+    text-align: center;
+    opacity: 0.7;
+}
+
+.side-panel-link:hover {
+    background-color: #F7F2ED;
+}
+
+.side-panel-link.active {
+    background-color: #ad6a3623;
+    color: #6F4A2D;
+}
+
+.side-panel-link.danger {
+    color: #b3382c;
+    margin-top: 10px;
+}
+
+/* For profile */
+
+.top-section {
+    border-radius: 10px;
+}
+
+.top-section .profile-img {
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.168);
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.top-section.profile-img img {
+    background-color: rgb(213, 213, 213);
+    border: 1px solid rgba(0, 0, 0, 0.168);
+    aspect-ratio: 1/1;
+}
+
+.top-section h3 {
+    margin-top: 10px;
+}
+
+
+/* =========================
+   PROFILE PAGE
+========================= */
+
+.profile-container {
+    background: white;
+    overflow: hidden;
+    padding: 0;
+    animation: slideUp .3s ease-in-out forwards;
+}
+
+
+/* Profile Header */
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 30px;
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    min-width: 90px;
+
+    border-radius: 50%;
+    overflow: hidden;
+
+    background: #F7F2ED;
+    border: 1px solid #00000020;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-header-info {
+    flex: 1;
+}
+
+.profile-header-info h2 {
+    margin: 0;
+    color: #52341D;
+    font-size: 1.4rem;
+}
+
+.profile-header-info p {
+    margin: 5px 0 10px;
+    color: #6F4A2D;
+}
+
+.profile-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #ad6a3623;
+    color: #6F4A2D;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+
+/* Edit Button */
+
+.edit-profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border: 1px solid #52341D35;
+    border-radius: 8px;
+    background: #F7F2ED;
+    color: #52341D;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.edit-profile-btn:hover {
+    background: #ad6a3623;
+}
+
+
+/* Divider */
+
+.profile-divider {
+    height: 1px;
+    background: #00000012;
+}
+
+
+/* Sections */
+
+.profile-section {
+    padding: 25px 30px;
+}
+
+.section-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.section-title > i {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: #F7F2ED;
+    color: #6F4A2D;
+}
+
+.section-title h3 {
+    margin: 0;
+    color: #52341D;
+    font-size: 1rem;
+}
+
+.section-title p {
+    margin: 4px 0 0;
+    color: #8a7665;
+    font-size: 0.85rem;
+}
+
+
+/* Information Grid */
+
+.profile-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.profile-info-item {
+    padding: 15px;
+
+    background: #F7F2ED;
+
+    border-radius: 8px;
+}
+
+.profile-info-item span {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #8a7665;
+    font-size: 0.8rem;
+}
+
+.profile-info-item strong {
+    color: #52341D;
+    font-size: 0.95rem;
+}
+
+
+/* Password */
+
+.profile-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border: 1px solid #00000012;
+    border-radius: 8px;
+}
+
+.profile-action strong {
+    color: #52341D;
+}
+
+.profile-action p {
+    margin: 5px 0 0;
+    color: #8a7665;
+    font-size: 0.8rem;
+}
+
+.profile-action button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    background: none;
+    color: #6F4A2D;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+/* Account Created */
+
+.account-created {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: #F7F2ED;
+    border-radius: 8px;
+}
+
+.account-created span {
+    color: #8a7665;
+}
+
+.account-created strong {
+    color: #52341D;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+    #top {
+        padding: 90px 15px 30px;
+    }
+
+    .mobile-view {
+        display: block;
+    }
+
+    .mobile-view .profile-container {
+        margin-bottom: 15px;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 25px 20px;
+    }
+
+    .profile-header-info {
+        width: 100%;
+    }
+
+    .edit-profile-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .profile-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-section {
+        padding: 20px;
+    }
+
+    .profile-action {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .profile-action button {
+        width: 100%;
+        justify-content: space-between;
+        padding: 10px 0;
+    }
+
+    .desktop-view {
+        display: none;
+    }
+
+    .account-created {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .alert-box {
+        max-width: 300px;
+    }
+    
+    .alert-box .alert-box-footer a {
+        width: 100%;
+    }
+}
+
+/* Alert box */
+

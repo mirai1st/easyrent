@@ -1,0 +1,350 @@
+/* Top Sections */
+
+#top {
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.799), rgba(0, 0, 0, 0.6)),
+        url("https://www.metproperty.com/wp-content/uploads/2023/09/small-terrace-house-design.jpg");
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+
+.top-container {
+  align-content: center; /* Vertically centers direct children */
+  height: 100vh;
+  padding: 0 50px;
+}
+
+.top-subtitle {
+    margin-bottom: 15px;
+    color: #FFC699;
+}
+
+.top-input {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.top-input .searchbox {
+    position: relative;
+    width: 50%;
+}
+
+.top-input {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.top-input .searchbox {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    background-color: #fff;
+    border-radius: 7px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.top-input .searchbox input[type="text"] {
+    padding: 0 35px;
+    width: 100%;
+    border: none;
+    border-radius: 7px;
+    background-color: transparent;
+    outline: none;
+}
+
+.top-input .searchbox button.location {
+    flex-shrink: 0;
+    padding: 15px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    position: absolute;
+}
+
+.top-input .btn-submit button {
+    font-weight: bold;
+    color: white;
+    background-color: #7A4F2D;
+    padding: 15px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    white-space: nowrap;
+}
+
+
+.js-open-filter {
+    border-radius: 10px;
+    padding: 10px 15px;
+    outline: none;
+    cursor: pointer;
+    border: 1.5px solid #0000003c;
+    background-color: white;
+}
+
+
+/* Second Section */
+
+#recommendations {
+    background-color: #fffbf7;
+    padding: 40px;
+}
+
+.recommendations-cards {
+    margin-top: 20px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+}
+
+.recommendations-cards .card {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 1px solid #796c2623;
+    /* Make the card container content centered */
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.card-header {
+    margin-bottom: 12px;
+    width: 100%;
+    height: 200px;
+    background-color: #00000023;
+}
+
+.card-body {
+    padding: 10px 20px;
+}
+
+.card-footer {
+    padding: 20px 20px;
+    margin-bottom: 10px;
+}
+
+.card-footer a {
+    padding: 10px;
+    background-color: rgba(76, 57, 35, 0.986);
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.card .button-fav {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    height: 20px;
+    width: 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+/* Card Image Carousel */
+
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* penting: sorok gambar yang tak active */
+}
+
+.carousel-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.carousel-img.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.carousel-btn {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%); /* ni yang tak ada tadi - center secara vertical */
+    border: 1px solid rgba(0, 0, 0, 0.155);
+    background: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.carousel-btn:hover {
+    background: #fff;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+.carousel-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 2;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.dot.active {
+    background: #fff;
+}
+
+/* Animation slide up for cards */
+
+.card {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUpFade 0.5s ease forwards;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger effect - setiap card masuk lambat sikit dari card sebelum */
+.card:nth-child(1) { animation-delay: 0s; }
+.card:nth-child(2) { animation-delay: 0.15s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+
+/* Button ToScroll */
+
+.buttonToScroll {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(84, 35, 0, 0.21);
+    border-radius: 15px;
+    color: rgb(255, 255, 255);
+    padding: 14.5px 18px;
+    border-radius: 50px;
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    font-size: large;
+    background: #ad6a3623;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border: 1px solid rgba(215, 185, 108, 0.3);
+}
+
+.buttonToScroll i.rotate {
+    transform: rotate(180deg);
+}
+
+.buttonToScroll.rotate {
+    transform: rotate(180deg);
+}
+
+
+@media (min-width: 1000px) {
+    .container-recommendations-mobile {
+        display: none;
+    }
+    .container-recommendations-desktop {
+        display: grid;
+    }
+}
+
+#details {
+    padding: 0 40px;
+    background-color: #fffbf7;
+    height: 100vh;
+}
+
+.website-features-container {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+}
+
+.website-features-container .card {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    height: 250px;
+    border: 1px solid #796c2623;
+    /* Make the card container content centered */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.website-features-container .card i {
+    font-size: 1.5rem;
+    color: #7A4F2D;
+    background-color: #F5F5F5;
+    border-radius: 100px;
+    padding: 15px;
+    border: 1px solid #00000023;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 700px) {
+    #recommendations {
+        padding: 40px 20px;
+    }
+
+    #details {
+        padding: 40px 20px;
+        background-color: #fffbf7;
+    }
+
+    .top-container {
+        align-content: center; /* Vertically centers direct children */
+        height: 100vh;
+        padding: 0 25px;
+    }
+}
