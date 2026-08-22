@@ -59,7 +59,7 @@ This project was developed as a Final Year Project for students looking for acco
 
 - Node.js 18 or newer
 - MySQL
-- A configured `.env` file with the database and authentication settings required by the server
+- A configured `.env` file with the database and authentication settings required by the server (This configuration guide will be send here later)
 
 ### Install Dependencies
 
