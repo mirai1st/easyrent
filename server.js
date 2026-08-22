@@ -15,6 +15,7 @@ const { authenticateToken } = require("./server/commonFunctions");
 const chatHandler = require("./server/users/chatHandler");
 const postHandler = require("./server/houseHandler");
 const userHandler = require("./server/users/userHandler");
+const notiHandler = require("./server/users/notifications/notificationsHandler");
 
 // Login/Register Handler
 const loginHandler = require("./server/loginHandler");
@@ -38,114 +39,29 @@ app.use("/api", chatHandler); // TODO: This is not done yet
 
 // This get the user info
 app.get("/api/me", authenticateToken, userHandler.getProfile);
-
 // This handles when the user wants to log out 
 app.post("/api/logout", userHandler.userLogout);
-
 // This handle when user want to update the profile. TODO: siapkan userprofile frontend
 app.post("/api/update-profile", authenticateToken, upload.uploadProfile.single("images"), userHandler.updateProfile);
-
 // This handle when user want to delete the account
 app.delete("/api/delete-account", authenticateToken, userHandler.userAccountDeletion);
 
-app.get("/api/notifications/unread", authenticateToken, userHandler.getUnreadNotifications);
-// -----------------------------------------------------------------------------
 
+// User Notifications ----------------------------------------------------------
+
+// This get the unread notifications
+app.get("/api/notifications/unread", authenticateToken, notiHandler.getUnreadNotifications);
+// This for handling user notifications
+app.get("/api/notifications", authenticateToken, notiHandler.getNotification);
+// Set is_read = 1 when users read the notification
+app.patch("/api/notifications/:id/read", authenticateToken, notiHandler.setIsRead);
+// Set is_read = 1 when users read the notification
+app.patch("/api/notifications/mark-all-read", authenticateToken, notiHandler.markAllRead);
+
+// -----------------------------------------------------------------------------
 
 // Ini untuk post data and image into rent table
-app.post( "/api/rent", authenticateToken, upload.uploadHouse.array("images", 5), postHandler,);
-
-
-// This for handling user notifications
-app.get("/api/notifications", authenticateToken, async (req, res) => {
-  try {
-    const [rows] = await db.execute(
-      `
-            SELECT
-                notificationID,
-                username,
-                type,
-                title,
-                message,
-                is_read,
-                related_id,
-                created_at
-            FROM notifications
-            WHERE username = ?
-            ORDER BY created_at DESC
-        `,
-      [req.user.username],
-    );
-
-    res.json(rows);
-  } catch (err) {
-    console.error("Error fetching notifications:", err);
-    res.status(500).json({
-      success: false,
-      message: "Server error.",
-    });
-  }
-});
-
-// Set is_read = 1 when users read the notification
-app.patch("/api/notifications/:id/read", authenticateToken, async (req, res) => {
-    try {
-      const [result] = await db.execute(
-        `
-            UPDATE notifications
-            SET is_read = 1
-            WHERE notificationID = ?
-            AND username = ?
-        `,
-        [req.params.id, req.user.username],
-      );
-
-      if (result.affectedRows === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Notification not found.",
-        });
-      }
-
-      res.json({
-        success: true,
-      });
-    } catch (err) {
-      console.error("Error marking notification as read:", err);
-      res.status(500).json({
-        success: false,
-        message: "Server error.",
-      });
-    }
-  },
-);
-
-app.patch("/api/notifications/mark-all-read", authenticateToken, async (req, res) => {
-    try {
-      await db.execute(
-        `
-            UPDATE notifications
-            SET is_read = 1
-            WHERE username = ?
-            AND is_read = 0
-        `,
-        [req.user.username],
-      );
-
-      res.json({
-        success: true,
-      });
-    } catch (err) {
-      console.error("Error marking all notifications as read:", err);
-      res.status(500).json({
-        success: false,
-        message: "Server error.",
-      });
-    }
-  },
-);
-
-// -----------------------------------------------------------------------------
+app.post( "/api/rent", authenticateToken, upload.uploadHouse.array("images", 5), postHandler);
 
 // Socket.IO attach to HTTP
 const server = http.createServer(app);

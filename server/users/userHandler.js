@@ -31,35 +31,6 @@ async function getProfile(req, res) {
     }
 };
 
-// Get Unread Notification Counts
-async function getUnreadNotifications(req, res) {
-    try {
-        const [rows] = await db.execute(
-            `SELECT *
-             FROM notifications
-             WHERE username = ?
-             AND is_read = 0
-             ORDER BY created_at DESC`,
-            [req.user.username]
-        );
-
-        res.json({
-            success: true,
-            unreadCount: rows.length,
-            notifications: rows
-        });
-
-    } catch (err) {
-        console.error(err);
-
-        res.status(500).json({
-            success: false,
-            message: "Error fetching notifications.",
-            errorGet: err.message
-        });
-    }
-}
-
 // This functions when user want to update their profile
 async function updateProfile(req, res) {
     try {
@@ -177,7 +148,6 @@ async function userAccountDeletion(req, res) {
 module.exports = { 
     getProfile, 
     updateProfile, 
-    getUnreadNotifications,
     userLogout, 
     userAccountDeletion 
 };
