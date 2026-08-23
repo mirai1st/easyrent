@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const pool = require("./db");
+const crypto = require('crypto');
 require("dotenv").config();
 
 async function loginHandler(req, res) {
@@ -27,8 +28,22 @@ async function loginHandler(req, res) {
             return res.status(401).json({ success: false, message: "Invalid username or password." });
         }
 
+        if (!user.is_verified) {
+            return res.status(403).json({
+                success: false,
+                message: "Akaun anda belum disahkan. Sila sahkan email anda.",
+                needsVerification: true,
+                email: user.email
+            });
+        }
+
+        const sessionId = generateSessionId();
+
         const token = jwt.sign(
-            { username: user.username },
+            {
+                username: user.username,
+                sessionId: sessionId
+            },
             process.env.JWT_SECRET,
             { expiresIn: "1h" }
         );
@@ -40,11 +55,15 @@ async function loginHandler(req, res) {
             maxAge: 60 * 60 * 1000
         });
 
-        return res.json({ success: true, message: "Logged in successfully.", token: token });
+        return res.json({ success: true, message: "Logged in successfully.", sessionId: sessionId });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
+}
+
+function generateSessionId() {
+    return crypto.randomBytes(16).toString('hex');
 }
 
 module.exports = loginHandler;

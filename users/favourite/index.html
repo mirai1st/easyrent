@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EasyRent - Mesej</title>
+    <title>EasyRent - Kegemaran</title>
 
     <link rel="stylesheet" href="/css/main-ui.css" />
-    <link rel="stylesheet" href="message.css" />
+    <link rel="stylesheet" href="favourite.css" />
 
     <script
       src="https://kit.fontawesome.com/7a8114958c.js"
@@ -239,65 +239,7 @@
              ========================= -->
 
       <div class="mobile-view mobile-message-view">
-        <div class="message-container">
-          <!-- CONVERSATION LIST -->
 
-          <aside class="message-list">
-            <div class="message-list-header">
-              <h2>Mesej</h2>
-
-              <button class="message-search-btn">
-                <i class="fa-solid fa-magnifying-glass"></i>
-              </button>
-            </div>
-
-            <div class="conversation-list" id="mobileConversationList"></div>
-          </aside>
-
-          <!-- CHAT PANEL -->
-
-          <section class="chat-container">
-            <div class="chat-header">
-              <button type="button" class="chat-back-btn" aria-label="Kembali">
-                <i class="fa-solid fa-arrow-left"></i>
-              </button>
-
-              <div class="chat-user">
-                <div class="chat-avatar" id="mobileChatAvatar">A</div>
-
-                <div>
-                  <h3 id="mobileChatUserName">Pilih perbualan</h3>
-
-                  <span class="chat-status" id="mobileChatStatus"> </span>
-                </div>
-              </div>
-
-              <button class="chat-more-btn" type="button">
-                <i class="fa-solid fa-ellipsis-vertical"></i>
-              </button>
-            </div>
-
-            <div class="chat-messages" id="mobileChatMessages"></div>
-
-            <form class="chat-input-container" id="mobileChatForm">
-              <button type="button" class="chat-attachment-btn">
-                <i class="fa-solid fa-paperclip"></i>
-              </button>
-
-              <input
-                type="text"
-                class="chat-input"
-                id="mobileChatInput"
-                placeholder="Tulis mesej..."
-                autocomplete="off"
-              />
-
-              <button type="submit" class="chat-send-btn">
-                <i class="fa-solid fa-paper-plane"></i>
-              </button>
-            </form>
-          </section>
-        </div>
       </div>
 
       <!-- =========================
@@ -310,7 +252,7 @@
             <span onclick="window.location.href = '/users/profile'">
               Pengguna
             </span>
-            > Mesej
+            > Kegemaran
           </div>
 
           <div class="side-panel-nav">
@@ -319,7 +261,7 @@
               Profil
             </a>
 
-            <a href="/users/favourite/" class="side-panel-link">
+            <a href="/users/favourite/" class="side-panel-link active">
               <i class="fa-solid fa-heart"></i>
               Kegemaran
             </a>
@@ -329,7 +271,7 @@
               Notifikasi
             </a>
 
-            <a href="/users/message/" class="side-panel-link active">
+            <a href="/users/message/" class="side-panel-link">
               <i class="fa-solid fa-message"></i>
               Mesej
             </a>
@@ -350,65 +292,11 @@
           </div>
         </div>
 
-        <div class="message-container">
-          <!-- LIST -->
-
-          <aside class="message-list">
-            <div class="message-list-header">
-              <h2>Mesej</h2>
-
-              <button class="message-search-btn">
-                <i class="fa-solid fa-magnifying-glass"></i>
-              </button>
-            </div>
-
-            <div class="conversation-list" id="desktopConversationList"></div>
-          </aside>
-
-          <!-- CHAT -->
-
-          <section class="chat-container">
-            <div class="chat-header">
-              <div class="chat-user">
-                <div class="chat-avatar" id="desktopChatAvatar">A</div>
-
-                <div>
-                  <h3 id="desktopChatUserName">Pilih perbualan</h3>
-
-                  <span class="chat-status" id="desktopChatStatus"> </span>
-                </div>
-              </div>
-
-              <button class="chat-more-btn">
-                <i class="fa-solid fa-ellipsis-vertical"></i>
-              </button>
-            </div>
-
-            <div class="chat-messages" id="desktopChatMessages"></div>
-
-            <form class="chat-input-container" id="desktopChatForm">
-              <button type="button" class="chat-attachment-btn">
-                <i class="fa-solid fa-paperclip"></i>
-              </button>
-
-              <input
-                type="text"
-                class="chat-input"
-                id="desktopChatInput"
-                placeholder="Tulis mesej..."
-                autocomplete="off"
-              />
-
-              <button type="submit" class="chat-send-btn">
-                <i class="fa-solid fa-paper-plane"></i>
-              </button>
-            </form>
-          </section>
+        <div class="favourite-container">
+          
         </div>
-      </div>
     </section>
 
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="/js/checkLogin.js"></script>
     <script src="message.js"></script>
     <script src="/js/main-ui.js"></script>

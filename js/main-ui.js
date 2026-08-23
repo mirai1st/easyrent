@@ -5,8 +5,11 @@ var register_modal = document.getElementById("register-modal");
 var login_buttons = document.querySelectorAll(".login-modal-btn");
 var register_buttons = document.querySelectorAll(".register-modal-btn");
 
+var codeverify_modal = document.getElementById("codeverify-modal");
+
 var login_close_btn = document.getElementsByClassName("login-modal-close-btn")[0];
 var register_close_btn = document.getElementsByClassName("register-modal-close-btn")[0];
+var codeverify_close_btn = document.getElementsByClassName("codeverify-modal-close-btn")[0];
 
 // Open login modal (and close register modal if it's open)
 login_buttons.forEach(btn => {
@@ -33,13 +36,20 @@ register_close_btn.onclick = function () {
   register_modal.style.display = "none";
 };
 
-// Click outside modal content to close — single handler covers both modals
+codeverify_close_btn.onclick = function () {
+  codeverify_modal.style.display = "none";
+};
+
+// Click outside modal content to close — single handler covers all three modals
 window.onclick = function (event) {
   if (event.target == modal) {
     modal.style.display = "none";
   }
   if (event.target == register_modal) {
     register_modal.style.display = "none";
+  }
+  if (event.target == codeverify_modal) {
+    codeverify_modal.style.display = "none";
   }
 };
 

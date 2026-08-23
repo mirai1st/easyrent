@@ -1,7 +1,15 @@
 const bcrypt = require("bcrypt");
 const pool = require("./db");
+const crypto = require("crypto");
+const { sendVerificationEmail } = require("./EmailRequest");
 require("dotenv").config();
 
+function generateVerificationCode() {
+    // Generates a random 6-digit code, e.g. "042817"
+    return crypto.randomInt(0, 1000000).toString().padStart(6, "0");
+}
+
+// This function handle user registrations
 async function registerHandler(req, res) {
     try {
         const { username, email, password, repeat_password } = req.body;
@@ -23,18 +31,34 @@ async function registerHandler(req, res) {
             return res.status(409).json({ success: false, message: "User already exists!" });
         }
 
+        // Encrypt password
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Generate 6 digit verification_code
+        const verificationCode = generateVerificationCode();
+
         await pool.query(
-            "INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
-            [username, email, hashedPassword]
+            `INSERT INTO Users (username, email, password, is_verified, verification_code, verification_expires)
+             VALUES (?, ?, ?, 0, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE))`,
+            [username, email, hashedPassword, verificationCode]
         );
 
         await pool.query(`INSERT INTO notifications (username, type, title, message, is_read) VALUES (?, ?, ?, ?, 0)`, [
-            username, "system", "Akaun anda telah diaktifkan!", "Terima kasih kerana menggunakan perkhidmatan EasyRent."
+            username, "system", "Akaun anda telah diaktifkan!", "Akaun anda telah pun diaktifkan! Terima kasih kerana menggunakan perkhidmatan EasyRent."
         ]);
 
-        return res.status(201).json({ success: true, message: "Registration successful! Please log in back again to continue." });
+        try {
+            await sendVerificationEmail(email, verificationCode);
+        } catch (emailErr) {
+            console.error("Failed to send verification email:", emailErr);
+            // Registration still succeeds; user can request the code to be resent later.
+        }
+
+        return res.status(201).json({
+            success: true,
+            message: "Pendaftaran berjaya! Sila semak email anda untuk kod pengesahan.",
+            email: email
+        });
 
     } catch (err) {
         console.error("Registration error:", err);

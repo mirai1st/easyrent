@@ -49,16 +49,34 @@
 
                     <!-- Username -->
                     <div class="input-container">
-                        <input type="text" id="username-login" placeholder="Username atau Email" autocomplete="username">
+                        <input type="text" id="username-login" placeholder="Username atau Email"
+                            autocomplete="username">
                     </div>
 
                     <!-- Password -->
                     <div class="input-container">
-                        <input type="password" id="password-login" placeholder="Password" autocomplete="current-password">
+                        <input type="password" id="password-login" placeholder="Password"
+                            autocomplete="current-password">
                     </div>
 
                     <!-- Login -->
-                    <button type="submit">Log Masuk</button>
+                    <button type="submit" class="loginForm-submit">
+                        <span class="btn-text">Log Masuk</span>
+                        <div class="spinner center loginForm-spinner">
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                        </div>
+                    </button>
 
                     <!-- Register -->
                     <div class="auth-switch">
@@ -103,25 +121,94 @@
 
                     <!-- Password -->
                     <div class="input-container">
-                        <input type="password" id="password-register" placeholder="Password" autocomplete="new-password">
+                        <input type="password" id="password-register" placeholder="Password"
+                            autocomplete="new-password">
                     </div>
 
                     <!-- Repeat Password -->
                     <div class="input-container">
-                        <input type="password" id="repeat_password-register" placeholder="Re-enter Password" autocomplete="new-password">
+                        <input type="password" id="repeat_password-register" placeholder="Re-enter Password"
+                            autocomplete="new-password">
                     </div>
 
-                    <div class="input-container">
-                        <input type="text" id="captcha-register" placeholder="Captcha" autocomplete="off">
-                    </div>
-
-                    <!-- Register -->
-                    <button type="submit">Daftar Akaun</button>
+                    <button type="submit" class="registerForm-submit">
+                        <span class="btn-text">Daftar Akaun</span>
+                        <div class="spinner center registerForm-spinner">
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                        </div>
+                    </button>
 
                     <!-- Login -->
                     <div class="auth-switch">
                         <span>Sudah mempunyai akaun?</span>
                         <a class="login-modal-btn">Log masuk</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="codeverify-modal" class="codeverify-modal">
+        <form id="codeverifyForm">
+            <div class="codeverify-modal-container">
+                <!-- Close -->
+                <a class="codeverify-modal-close-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+
+                <!-- Header -->
+                <div class="modal-content-header">
+                    <div class="auth-brand">
+                        <i class="fa-solid fa-house"></i>
+                        <span>EasyRent</span>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="modal-content">
+                    <h3>Masukkan Kod Pengesahan</h3>
+                    <p>Kod pengesahan telah dihantar ke email anda <span id="inserted-email">-</span></p>
+
+                    <!-- Username -->
+                    <div class="input-container">
+                        <input type="text" id="codeverify" placeholder="6 digit kod" autocomplete="one-time-code"
+                            inputmode="numeric" maxlength="6">
+                    </div>
+
+                    <!-- Verify -->
+                    <button type="submit" class="codeverifyForm-submit">
+                        <span class="btn-text">Sahkan</span>
+                        <div class="spinner center codeverifyForm-spinner">
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                        </div>
+                    </button>
+
+                    <!-- Resend code -->
+                    <div class="auth-switch">
+                        <span>Tak terima kod?</span>
+                        <a id="resend-code-btn">Hantar semula</a>
                     </div>
                 </div>
             </div>
@@ -140,8 +227,9 @@
         <ul class="sidebar-nav">
             <li>
                 <a href="#top">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
                         <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
                         <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
@@ -152,9 +240,11 @@
 
             <li>
                 <a href="#recommendations">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path
+                            d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245" />
                     </svg>
                     Cadangan
                 </a>
@@ -177,7 +267,8 @@
             <li>
                 <a href="/sudut-pelajar">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                        <path d="M496 240L496 480C496 488.8 488.8 496 480 496L160 496C151.2 496 144 488.8 144 480L144 240L496 240zM485 192L344 192L344 128L431.1 128C436.3 128 441.1 130.5 444.1 134.7L485 192zM296 192L155 192L195.9 134.7C198.9 130.5 203.8 128 208.9 128L296 128L296 192zM107.9 175.3C100.2 186.2 96 199.2 96 212.5L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 212.5C544 199.2 539.8 186.2 532.1 175.3L483.1 106.8C471.1 90 451.7 80 431.1 80L208.9 80C188.3 80 168.9 90 156.9 106.8L107.9 175.3z"/>
+                        <path
+                            d="M496 240L496 480C496 488.8 488.8 496 480 496L160 496C151.2 496 144 488.8 144 480L144 240L496 240zM485 192L344 192L344 128L431.1 128C436.3 128 441.1 130.5 444.1 134.7L485 192zM296 192L155 192L195.9 134.7C198.9 130.5 203.8 128 208.9 128L296 128L296 192zM107.9 175.3C100.2 186.2 96 199.2 96 212.5L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 212.5C544 199.2 539.8 186.2 532.1 175.3L483.1 106.8C471.1 90 451.7 80 431.1 80L208.9 80C188.3 80 168.9 90 156.9 106.8L107.9 175.3z" />
                     </svg>
                     Sudut Pelajar
                 </a>
@@ -185,7 +276,8 @@
 
             <li>
                 <a href="/users/profile">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
                         <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
                     </svg>
@@ -205,9 +297,6 @@
         </div>
     </div>
 
-    <!-- =====================================================
-         DESKTOP NAVIGATION
-    ====================================================== -->
     <nav class="desktop-view">
         <div class="nav-left">
             <ul>
@@ -249,9 +338,6 @@
         </div>
     </nav>
 
-    <!-- =====================================================
-         MOBILE NAVIGATION
-    ====================================================== -->
     <div class="mobile-view">
         <nav class="mobile-view-nav">
             <div class="nav-left">
@@ -289,9 +375,6 @@
         </nav>
     </div>
 
-    <!-- =====================================================
-         HERO / SEARCH
-    ====================================================== -->
     <section id="top">
         <div class="top-container">
             <div class="desktop-top">
@@ -324,9 +407,6 @@
         </div>
     </section>
 
-    <!-- =====================================================
-         RECOMMENDATIONS
-    ====================================================== -->
     <section id="recommendations">
         <div class="recommendations-container">
             <h2>Cadangan</h2>
@@ -338,15 +418,10 @@
                 <p>Generating Response...</p>
             </div>
 
-            <div class="recommendations-cards">
-                <!-- Dynamic cards will be inserted here -->
-            </div>
+            <div class="recommendations-cards"></div>
         </div>
     </section>
 
-    <!-- =====================================================
-         DETAILS
-    ====================================================== -->
     <section id="details">
         <div class="mobile-view">
             <h2 id="asdasdasdasd">Kenapa Memilih EasyRent?</h2>

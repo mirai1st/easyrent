@@ -204,74 +204,7 @@ nav a {
 
 /* sidepanel */
 
-.side-panel {
-    border: 1px solid #00000023;
-    border-radius: 12px;
-    background-color: white;
-    overflow: hidden;
-    padding: 20px;
-    flex: 0 0 260px;
-    align-self: flex-start;
-    position: sticky;
-    animation: slideUp .3s ease-in-out forwards;
-    top: 100px; /* ikut height nav fixed + jarak selesa */
-}
 
-@keyframes slideUp {
-    0% {
-        transform: translateX(-30px);
-        opacity: 0;
-    }
-
-    100% {
-        transform: translateX(0px);
-        opacity: 1;
-    }
-}
-
-.side-panel-breadcrumb {
-    color: #6F4A2D;
-    font-size: 0.9rem;
-    margin-bottom: 20px;
-}
-
-.side-panel-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.side-panel-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    color: #52341D;
-    text-decoration: none;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-}
-
-.side-panel-link i {
-    width: 16px;
-    text-align: center;
-    opacity: 0.7;
-}
-
-.side-panel-link:hover {
-    background-color: #F7F2ED;
-}
-
-.side-panel-link.active {
-    background-color: #ad6a3623;
-    color: #6F4A2D;
-}
-
-.side-panel-link.danger {
-    color: #b3382c;
-    margin-top: 10px;
-}
 
 /* For profile */
 

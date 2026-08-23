@@ -1,4 +1,3 @@
-// Memilih elemen mengikut CLASS
 const profile_username = document.querySelectorAll(".profile-username");
 const profile_fullname = document.querySelectorAll(".profile-fullname");
 const profile_email = document.querySelectorAll(".profile-email");
@@ -11,6 +10,7 @@ const sessionId = document.querySelectorAll(".session-id");
 
 let sessionInterval;
 
+// Function looping (forEach) with callback
 function looping(array, callback) {
     array.forEach(element => callback(element));
 }
@@ -46,7 +46,7 @@ loadUser((user) => {
     looping(profile_phone, el => el.textContent = user.phoneNo || "-");
     looping(profile_fullname, el => el.textContent = user.full_name || "-");
     looping(user_type, el => el.textContent = (user.role === "normal_user") ? "Pengguna" : "Admin");
-    looping(sessionId, el => el.textContent = "-");
+    looping(sessionId, el => el.textContent = user.sessionId);
     looping(createdAt, el => {
         el.textContent = user.dateCreated
             ? new Date(user.dateCreated).toLocaleDateString("ms-MY")
@@ -55,14 +55,13 @@ loadUser((user) => {
     looping(profile_img, el => {
         if (user.profileImg_url) {
             el.style.display = "block";
-            el.src = "/users/userdata/img/profileImg/" + user.profileImg_url;
+            el.src = "/users/userdata/uploads/profileImg/" + user.profileImg_url;
         }
     });
 
     startSessionTimer(user.sessionStart);
 });
 
-// Event Listener untuk Log Keluar
 // Event Listener untuk Log Keluar
 document.addEventListener("DOMContentLoaded", () => {
     loadUser();

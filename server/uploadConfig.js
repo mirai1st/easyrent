@@ -42,8 +42,8 @@ function createUpload(directory) {
     });
 }
 
-const uploadHouse = createUpload('uploads/houses');
-const uploadProfile = createUpload('userdata');
+const uploadHouse = createUpload('userdata/uploads/houses');
+const uploadProfile = createUpload('userdata/uploads/profileImg');
 
 module.exports = {
     uploadHouse,

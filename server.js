@@ -20,6 +20,7 @@ const notiHandler = require("./server/users/notifications/notificationsHandler")
 // Login/Register Handler
 const loginHandler = require("./server/loginHandler");
 const registerHandler = require("./server/registerHandler");
+const { verifyCode, resendCode } = require("./server/verifyHandler");
 
 // -----------------------------------------------------------------------------
 
@@ -31,11 +32,15 @@ app.use(cors({ origin: "http://localhost:4000", credentials: true }));
 
 app.use(express.static(path.join(__dirname)));
 
+// Login/Register Handler ------------------------------------------------------
+
 app.post("/api/login", loginHandler); // For handling login
 app.post("/api/register", registerHandler); // For handling register
+app.post("/api/verify-code", verifyCode); // For confirming the 6-digit email code
+app.post("/api/resend-code", resendCode); // For resending the 6-digit email code
 app.use("/api", chatHandler); // TODO: This is not done yet
 
-// -----------------------------------------------------------------------------
+// User ------------------------------------------------------------------------
 
 // This get the user info
 app.get("/api/me", authenticateToken, userHandler.getProfile);
@@ -70,6 +75,7 @@ initSocket(server);
 server.listen(4000, "0.0.0.0", () =>
   console.log("Server running on port 4000"),
 );
+
 // -----------------------------------------------------------------------------
 
 process.on("unhandledRejection", (err) => {

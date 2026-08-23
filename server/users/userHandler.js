@@ -25,6 +25,7 @@ async function getProfile(req, res) {
         res.json({
             ...rows[0],
             sessionStart: req.user.iat * 1000,
+            sessionId: req.user.sessionId
         });
     } catch (err) {
         res.status(500).json({ success: false, message: "Error fetching user data.", errorGet: err });
@@ -40,7 +41,7 @@ async function updateProfile(req, res) {
         const file = req.file;
         let profileImg_url;
         if (file) {
-            profileImg_url = `/userdata/${file.filename}`;
+            profileImg_url = `/userdata/uploads/profileImg/${file.filename}`;
         }
 
         let query;
