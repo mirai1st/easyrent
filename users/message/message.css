@@ -60,7 +60,7 @@ nav a {
 }
 
 .side-panel {
-  flex: 0 0 260px;
+  flex: 0 0 302px;
 }
 
 /* =========================================================
@@ -401,7 +401,7 @@ nav a {
   }
 
   #top {
-    padding: 75px 0 0;
+    padding: 60px 0;
   }
 
   .mobile-message-view {
@@ -448,14 +448,10 @@ nav a {
     inset: 0;
     width: 100%;
     height: 100%;
-
     display: flex;
-
     z-index: 50;
-
     transform: translateX(100%);
     transition: transform 0.3s ease;
-
     will-change: transform;
   }
 

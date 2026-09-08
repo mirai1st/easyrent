@@ -195,15 +195,22 @@ if (loginSuccess === "true") {
     showNotification("Logged in successfully!", "success");
 } else if (loginSuccess === "false") {
     showNotification(`Login Failed: ${error || 'Invalid credentials'}`, "error");
+    modal.style.display = "block"; // Open login modal on failed login
 } else if (registerSuccess === "true") {
     showNotification("Registered successfully!", "success");
 } else if (error === "1") {
     showNotification("Uh oh! That action requires you to log in.", "error");
+    modal.style.display = "block"; // Open login modal on failed login
 }
 
-// Clear parameters from the address bar to prevent notices on refresh
-if (urlParams.toString()) {
-    window.history.replaceState({}, document.title, window.location.pathname);
+// Clear only notification parameters so search and filter parameters remain visible.
+const cleanUrl = new URL(window.location.href);
+cleanUrl.searchParams.delete("login_success");
+cleanUrl.searchParams.delete("register_success");
+cleanUrl.searchParams.delete("error");
+
+if (cleanUrl.href !== window.location.href) {
+  window.history.replaceState({}, document.title, `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`);
 }
 
 
@@ -218,6 +225,7 @@ loadUser((user, error) => {
 
     const login_btn_m = document.querySelector("[data-view='mobile-navmainbtn']");
     const login_btn_d = document.querySelector("[data-view='desktop-navmainbtn']");
+    const login_btn_side = document.querySelectorAll(".sidebar-login-btn");
 
     if (login_btn_m || login_btn_d) {
         if (login_btn_m) {
@@ -229,9 +237,27 @@ loadUser((user, error) => {
             login_btn_d.style.display = "none";
             login_btn_d.style.marginLeft = "0px";
         }
+
+        login_btn_side.forEach(btn => {
+          btn.style.display = "none";
+        })
     }
 });
 
 // Alert Box
 
 loadNotificationCount();
+
+// Function to open modal login if user is not logged in, otherwise redirect to the specified URL and do callback
+
+function checkLoginModal(url, callback = () => {}) {
+    loadUser((user, error) => {
+        if (error || !user) {
+            modal.style.display = "block";
+            showNotification("You need to log in first to access this feature.", "error");
+        } else {
+            window.location.href = url;
+            callback();
+        }
+    });
+}

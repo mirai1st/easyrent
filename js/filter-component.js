@@ -400,6 +400,28 @@
         }
     });
 
+    // Add the current filter values to search forms before the browser builds the GET URL.
+    document.addEventListener('submit', (e) => {
+        const form = e.target;
+        const action = new URL(form.action || window.location.href, window.location.href);
+
+        if (action.pathname !== '/search/') return;
+
+        Object.entries(state).forEach(([key, value]) => {
+            let input = form.querySelector(`input[data-filter-query="${key}"]`);
+
+            if (!input) {
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.dataset.filterQuery = key;
+                form.appendChild(input);
+            }
+
+            input.value = value;
+        });
+    }, true);
+
     // ---- 7. Public API -----------------------------------------------------
     // Expose a small API so other scripts (e.g. index-ui.js) can read/set
     // filter state, or open/close programmatically.

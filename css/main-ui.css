@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kameron:wght@400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 /* =========================================================
    GLOBAL
@@ -14,15 +15,15 @@
 }
 
 body {
-    background-color: #EBE7E4;
-    font-family: "Inter", sans-serif;
+    background-color: #fffaf7;
+    font-family: "Poppins", sans-serif;
     font-size: 0.9rem;
     color: #000000;
 }
 
 button,
 input {
-    font-family: "Inter", sans-serif;
+    font-family: "Poppins", sans-serif;
 }
 
 /* =========================================================
@@ -45,7 +46,7 @@ nav {
 }
 
 nav.scrolled {
-    background-color: #F7F2ED;
+    background-color: #fffcf6;
     padding: 20px 30px;
     color: #52341D;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 4px, rgba(0, 0, 0, 0.24) 0px 1px 5px;
@@ -468,7 +469,7 @@ nav .nav-right a {
 }
 
 .sidebar-nav li {
-    margin-bottom: 22px;
+    margin-bottom: 15px;
     opacity: 0;
     animation: fadeInRight 0.5s ease forwards;
     animation-play-state: paused;
@@ -685,6 +686,10 @@ nav .nav-right a {
     display: inline-block;
 }
 
+a.js-close-filter {
+    cursor: pointer;
+}
+
 /* =========================================================
    FORM ELEMENTS
    ========================================================= */
@@ -819,9 +824,16 @@ hr {
     -webkit-backdrop-filter: blur(10px);
     user-select: none;
     color: white;
-    z-index: 498;
+    z-index: 1000;
     border: 1px solid rgba(136, 205, 62, 0.3);
     transform: translateX(-50%) translateY(-300%);
+}
+
+@media (max-width: 768px) {
+    .notification-dialog {
+        width: 80%;
+        top: 30px;
+    }
 }
 
 .notification-dialog.show {
@@ -1075,7 +1087,7 @@ hr {
 }
 
 .spinner.center {
-  position: relative;
+  position: absolute;
   left: 0;
   right: 0;
   top: 0;

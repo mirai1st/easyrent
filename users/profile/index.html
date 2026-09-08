@@ -11,9 +11,6 @@
 </head>
 
 <body>
-    <!-- =====================================================
-            LOGIN MODAL
-        ====================================================== -->
     <div id="login-modal" class="login-modal">
         <form id="loginForm">
             <div class="login-modal-container">
@@ -30,21 +27,43 @@
                     </div>
                 </div>
 
+                <!-- Content -->
                 <div class="modal-content">
                     <h3>Selamat Kembali ke EasyRent!</h3>
                     <p>Log masuk untuk meneruskan perjalanan anda.</p>
 
+                    <!-- Username -->
                     <div class="input-container">
                         <input type="text" id="username-login" placeholder="Username atau Email"
                             autocomplete="username">
                     </div>
 
+                    <!-- Password -->
                     <div class="input-container">
                         <input type="password" id="password-login" placeholder="Password"
                             autocomplete="current-password">
                     </div>
 
-                    <button type="submit" class="loginForm-submit"><span class="btn-text">Log Masuk</span><div class="spinner center loginForm-spinner"></div></button>
+                    <!-- Login -->
+                    <button type="submit" class="loginForm-submit">
+                        <span class="btn-text">Log Masuk</span>
+                        <div class="spinner center loginForm-spinner">
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                        </div>
+                    </button>
+
+                    <!-- Register -->
                     <div class="auth-switch">
                         <span>Belum mempunyai akaun?</span>
                         <a id="register-modal-btn" class="register-modal-btn">Daftar sekarang</a>
@@ -54,10 +73,7 @@
         </form>
     </div>
 
-    <!-- =====================================================
-            REGISTER MODAL
-        ====================================================== -->
-    <div class="register-modal" id="register-modal">
+    <div id="register-modal" class="register-modal">
         <form id="registerForm">
             <div class="register-modal-container">
                 <!-- Close -->
@@ -73,29 +89,52 @@
                     </div>
                 </div>
 
+                <!-- Content -->
                 <div class="modal-content">
                     <h3>Cipta Akaun EasyRent Anda!</h3>
                     <p>Daftar untuk meneroka lebih banyak ciri EasyRent.</p>
 
+                    <!-- Username -->
                     <div class="input-container">
                         <input type="text" id="username-register" placeholder="Username" autocomplete="username">
                     </div>
 
+                    <!-- Email -->
                     <div class="input-container">
                         <input type="email" id="email-register" placeholder="Email" autocomplete="email">
                     </div>
 
+                    <!-- Password -->
                     <div class="input-container">
                         <input type="password" id="password-register" placeholder="Password"
                             autocomplete="new-password">
                     </div>
 
+                    <!-- Repeat Password -->
                     <div class="input-container">
                         <input type="password" id="repeat_password-register" placeholder="Re-enter Password"
                             autocomplete="new-password">
                     </div>
 
-                    <button type="submit" class="registerForm-submit"><span class="btn-text">Daftar Akaun</span><div class="spinner center registerForm-spinner"></div></button>
+                    <button type="submit" class="registerForm-submit">
+                        <span class="btn-text">Daftar Akaun</span>
+                        <div class="spinner center registerForm-spinner">
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                        </div>
+                    </button>
+
+                    <!-- Login -->
                     <div class="auth-switch">
                         <span>Sudah mempunyai akaun?</span>
                         <a class="login-modal-btn">Log masuk</a>
@@ -105,7 +144,62 @@
         </form>
     </div>
 
-    <div id="codeverify-modal" class="codeverify-modal"><form id="codeverifyForm"><div class="codeverify-modal-container"><a class="codeverify-modal-close-btn"><i class="fa-solid fa-xmark"></i></a><div class="modal-content-header"><div class="auth-brand"><i class="fa-solid fa-house"></i><span>EasyRent</span></div></div><div class="modal-content"><h3>Masukkan Kod Pengesahan</h3><p>Kod pengesahan telah dihantar ke email anda <span id="inserted-email">-</span></p><div class="input-container"><input type="text" id="codeverify" placeholder="6 digit kod" autocomplete="one-time-code" inputmode="numeric" maxlength="6"></div><button type="submit" class="codeverifyForm-submit"><span class="btn-text">Sahkan</span><div class="spinner center codeverifyForm-spinner"></div></button><div class="auth-switch"><span>Tak terima kod?</span><a id="resend-code-btn">Hantar semula</a></div></div></div></form></div>
+    <div id="codeverify-modal" class="codeverify-modal">
+        <form id="codeverifyForm">
+            <div class="codeverify-modal-container">
+                <!-- Close -->
+                <a class="codeverify-modal-close-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+
+                <!-- Header -->
+                <div class="modal-content-header">
+                    <div class="auth-brand">
+                        <i class="fa-solid fa-house"></i>
+                        <span>EasyRent</span>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="modal-content">
+                    <h3>Masukkan Kod Pengesahan</h3>
+                    <p>Kod pengesahan telah dihantar ke email anda <span id="inserted-email">-</span></p>
+
+                    <!-- Username -->
+                    <div class="input-container">
+                        <input type="text" id="codeverify" placeholder="6 digit kod" autocomplete="one-time-code"
+                            inputmode="numeric" maxlength="6">
+                    </div>
+
+                    <!-- Verify -->
+                    <button type="submit" class="codeverifyForm-submit">
+                        <span class="btn-text">Sahkan</span>
+                        <div class="spinner center codeverifyForm-spinner">
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                        </div>
+                    </button>
+
+                    <!-- Resend code -->
+                    <div class="auth-switch">
+                        <span>Tak terima kod?</span>
+                        <a id="resend-code-btn">Hantar semula</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="sidebar-overlay"></div>
 
     <div class="sidebar">
@@ -231,19 +325,20 @@
     </div>
 
     <section id="top">
-        <!-- ============ MOBILE VIEW ============ -->
+
         <div class="mobile-view">
             <div class="side-panel-breadcrumb">
                 <span onclick="window.location.href='/users/profile'">Pengguna</span>
             </div>
+
             <div class="profile-container">
                 <div class="profile-header">
                     <div class="profile-avatar">
-                        <img class="profile-img" src="/users/userdata/uploads/profileImg/no-image.jpg">
+                        <img class="profile-img" src="/userdata/uploads/profileImg/no-image.jpg">
                     </div>
 
                     <div class="profile-header-info">
-                        <h2 class="profile-fullname">Nama Penuh</h2>
+                        <h2 class="profile-fullname">Nama Profil</h2>
                         <p class="profile-username">@Username</p>
                         <span class="profile-role">
                             <i class="fa-solid fa-user"></i>
@@ -275,8 +370,8 @@
                         </div>
 
                         <div class="profile-info-item">
-                            <span>Nama Penuh</span>
-                            <strong class="profile-fullname">Nama Penuh</strong>
+                            <span>Nama Profil</span>
+                            <strong class="profile-fullname">Nama Profil</strong>
                         </div>
 
                         <div class="profile-info-item">
@@ -345,6 +440,86 @@
                 </div>
             </div>
 
+            <div class="profile-container edit-profile-container" style="display: none">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <img class="profile-img" src="/users/userdata/uploads/profileImg/no-image.jpg">
+                    </div>
+
+                    <div class="profile-header-info">
+                        <h2 class="profile-fullname">Nama Profil</h2>
+                        <p class="profile-username">@Username</p>
+                        <span class="profile-role">
+                            <i class="fa-solid fa-user"></i>
+                            <span class="type-of-user">Pengguna</span>
+                        </span>
+                    </div>
+
+                    <button class="edit-profile-btn save-profile-btn">
+                        <i class="fa-solid fa-check"></i>
+                        Simpan Profil
+                    </button>
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <div class="profile-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <div>
+                            <h3>Kemaskini Maklumat Akaun Anda</h3>
+                            <p>Sila klik pada input untuk memasukkan data</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-info-grid">
+                        <div class="profile-info-item">
+                            <span>Username</span>
+                            <strong class="profile-username">@Username</strong>
+                        </div>
+
+                        <div class="profile-info-item">
+                            <span>Nama Profil</span>
+                            <input type="text" class="profile_fullname">
+                        </div>
+
+                        <div class="profile-info-item">
+                            <span>Email</span>
+                            <input type="email" class="profile-email">
+                        </div>
+
+                        <div class="profile-info-item">
+                            <span>Nombor Telefon</span>
+                            <input type="text" class="profile-phone">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <div class="profile-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <div>
+                            <h3>Keselamatan</h3>
+                            <p>Urus keselamatan akaun anda.</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-action">
+                        <div>
+                            <strong>Kata Laluan</strong>
+                            <p>Pastikan kata laluan anda sentiasa selamat.</p>
+                        </div>
+
+                        <button>
+                            Tukar Kata Laluan
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="side-panel">
                 <div class="side-panel-breadcrumb">
                     Pengguna
@@ -375,7 +550,6 @@
             </div>
         </div>
 
-        <!-- ============ DESKTOP VIEW ============ -->
         <div class="desktop-view">
             <div class="side-panel">
                 <div class="side-panel-breadcrumb">
@@ -413,7 +587,7 @@
                     </div>
 
                     <div class="profile-header-info">
-                        <h2 class="profile-fullname">Nama Penuh</h2>
+                        <h2 class="profile-fullname">Nama Profil</h2>
                         <p class="profile-username">@Username</p>
                         <span class="profile-role">
                             <i class="fa-solid fa-user"></i>
@@ -445,8 +619,8 @@
                         </div>
 
                         <div class="profile-info-item">
-                            <span>Nama Penuh</span>
-                            <strong class="profile-fullname">Nama Penuh</strong>
+                            <span>Nama Profil</span>
+                            <strong class="profile-fullname">Nama Profil</strong>
                         </div>
 
                         <div class="profile-info-item">
@@ -511,6 +685,86 @@
                         <span>Session Active</span>
                         <strong class="session-time"
                             style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">00:00:00</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-container edit-profile-container" style="display: none">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <img class="profile-img" src="/userdata/uploads/profileImg/no-image.jpg">
+                    </div>
+
+                    <div class="profile-header-info">
+                        <h2 class="profile-fullname">Nama Profil</h2>
+                        <p class="profile-username">@Username</p>
+                        <span class="profile-role">
+                            <i class="fa-solid fa-user"></i>
+                            <span class="type-of-user">Pengguna</span>
+                        </span>
+                    </div>
+
+                    <button class="edit-profile-btn save-profile-btn">
+                        <i class="fa-solid fa-check"></i>
+                        Simpan Profil
+                    </button>
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <div class="profile-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <div>
+                            <h3>Kemaskini Maklumat Akaun Anda</h3>
+                            <p>Sila klik pada input untuk memasukkan data</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-info-grid">
+                        <div class="profile-info-item">
+                            <span>Username</span>
+                            <strong class="profile-username">@Username</strong>
+                        </div>
+
+                        <div class="profile-info-item">
+                            <span>Nama Profil</span>
+                            <input type="text" class="profile_fullname"/>
+                        </div>
+
+                        <div class="profile-info-item">
+                            <span>Email</span>
+                            <input type="email" class="profile-email"/>
+                        </div>
+
+                        <div class="profile-info-item">
+                            <span>Nombor Telefon</span>
+                            <input type="text" class="profile-phone"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <div class="profile-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <div>
+                            <h3>Keselamatan</h3>
+                            <p>Urus keselamatan akaun anda.</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-action">
+                        <div>
+                            <strong>Kata Laluan</strong>
+                            <p>Pastikan kata laluan anda sentiasa selamat.</p>
+                        </div>
+
+                        <button>
+                            Tukar Kata Laluan
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>

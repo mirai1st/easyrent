@@ -55,7 +55,7 @@ loadUser((user) => {
     looping(profile_img, el => {
         if (user.profileImg_url) {
             el.style.display = "block";
-            el.src = "/users/userdata/uploads/profileImg/" + user.profileImg_url;
+            el.src = "/userdata/uploads/profileImg/" + user.profileImg_url;
         }
     });
 
@@ -134,3 +134,62 @@ function alertbox(message, callback = null) {
     alertbox_overlay.addEventListener("click", closeAlertBox);
     newNo.addEventListener("click", closeAlertBox);
 }
+
+// Ambil pasangan container mengikut setiap viewport (mobile-view & desktop-view)
+const viewports = document.querySelectorAll(".mobile-view, .desktop-view");
+
+viewports.forEach(viewport => {
+    const profileContainer = viewport.querySelector(".profile-container:not(.edit-profile-container)");
+    const editProfileContainer = viewport.querySelector(".edit-profile-container");
+
+    // Ada viewport (contoh: side-panel dalam mobile-view) yang tak ada profile-container, skip je
+    if (!profileContainer || !editProfileContainer) return;
+
+    const btnEditProfile = profileContainer.querySelector(".edit-profile-btn");
+    const btnSaveProfile = editProfileContainer.querySelector(".save-profile-btn");
+
+    btnEditProfile?.addEventListener("click", () => {
+        // Salin data terkini dari view ke dalam input edit
+        editProfileContainer.querySelector(".profile_fullname").value = 
+            profileContainer.querySelector(".profile-fullname").textContent;
+        editProfileContainer.querySelector(".profile-email").value = 
+            profileContainer.querySelector(".profile-email").textContent.trim();
+        editProfileContainer.querySelector(".profile-phone").value =
+            profileContainer.querySelector(".profile-phone").textContent.trim();
+
+        profileContainer.style.display = "none";
+        editProfileContainer.style.display = "block";
+    });
+
+    btnSaveProfile?.addEventListener("click", async () => {
+        const full_name = editProfileContainer.querySelector(".profile_fullname").value.trim();
+        const email = editProfileContainer.querySelector(".profile-email").value.trim();
+        const phoneNo = editProfileContainer.querySelector(".profile-phone").value.trim();
+
+        try {
+            const res = await fetch("/api/users/update-profile", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ 
+                    full_name, 
+                    email, 
+                    phoneNo 
+                })
+            });
+
+            if (!res.ok) throw new Error("Gagal simpan profil");
+
+            // Update SEMUA profile-container (mobile + desktop) supaya data konsisten
+            document.querySelectorAll(".profile-container:not(.edit-profile-container) .profile-fullname").forEach(el => el.textContent = full_name);
+            document.querySelectorAll(".profile-container:not(.edit-profile-container) .profile-email").forEach(el => el.textContent = email);
+            document.querySelectorAll(".profile-container:not(.edit-profile-container) .profile-phone").forEach(el => el.textContent = phoneNo || "-");
+
+            editProfileContainer.style.display = "none";
+            profileContainer.style.display = "block";
+        } catch (err) {
+            console.error(err);
+            alert("Gagal simpan profil. Cuba lagi.");
+        }
+    });
+});

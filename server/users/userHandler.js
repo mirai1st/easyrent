@@ -36,7 +36,7 @@ async function getProfile(req, res) {
 async function updateProfile(req, res) {
     try {
         const username = req.user.username;
-        const { email, phoneNo, full_name} = req.body;
+        const { email, phoneNo, full_name } = req.body;
 
         const file = req.file;
         let profileImg_url;
@@ -81,6 +81,8 @@ async function updateProfile(req, res) {
             ];
         }
 
+        console.log("req.body:", req.body);
+        console.log("values:", values);
         await db.execute(query, values);
 
         res.json({

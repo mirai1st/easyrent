@@ -24,7 +24,7 @@ async function postHandler(req, res) {
         return res.status(400).json({ success: false, message: 'Sila muat naik sekurang-kurangnya satu gambar.' });
     }
 
-    const imagePaths = files.map(file => `/uploads/houses/${file.filename}`);
+    const imagePaths = files.map(file => `/userdata/uploads/houses/${file.filename}`);
 
     try {
         const [result] = await db.execute(
@@ -56,4 +56,58 @@ async function postHandler(req, res) {
     }
 }
 
-module.exports = postHandler;
+async function getRecommendations(req, res) {
+    try {
+        const [rows] = await db.query(
+            `SELECT rentID, title, totalOf_bedroom, totalOf_shower, img_url, location, price
+             FROM Rent
+             WHERE isAdminApprove = 'true'
+             ORDER BY RAND()
+             LIMIT 3`
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'No recommendations found' });
+        }
+
+        const listings = rows.map((row) => ({
+            house_id: row.rentID,
+            title: row.title,
+            beds: row.totalOf_bedroom,
+            baths: row.totalOf_shower,
+            location: row.location,
+            price: row.price,
+            images: normalizeImagePaths(row.img_url)
+        }));
+
+        res.json(listings);
+    }
+    catch (error) {
+        console.error('Error fetching recommendations:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+function normalizeImagePaths(imageValue) {
+    let images = imageValue;
+
+    if (typeof images === 'string') {
+        try {
+            images = JSON.parse(images);
+        } catch (error) {
+            images = [];
+        }
+    }
+
+    if (!Array.isArray(images)) return [];
+
+    return images.map((imagePath) => {
+        const filename = String(imagePath).split('/').pop();
+        return `/userdata/uploads/houses/${filename}`;
+    });
+}
+
+module.exports = {
+    postHandler,
+    getRecommendations
+}

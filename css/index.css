@@ -1,19 +1,85 @@
 /* Top Sections */
 
 #top {
-    background-image: 
-        linear-gradient(rgba(0, 0, 0, 0.799), rgba(0, 0, 0, 0.6)),
-        url("https://www.metproperty.com/wp-content/uploads/2023/09/small-terrace-house-design.jpg");
+    position: relative;
+    overflow: hidden;
+    background-color: #251a14;
+    background-image: url("https://www.metproperty.com/wp-content/uploads/2023/09/small-terrace-house-design.jpg");
     height: 100vh;
+    min-height: 620px;
     background-size: cover;
     background-position: center;
     color: white;
 }
 
+.hero-background-carousel {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: #251a14;
+}
+
+.hero-background-carousel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(25, 18, 14, 0.88) 0%, rgba(25, 18, 14, 0.5) 48%, rgba(25, 18, 14, 0.18) 100%);
+}
+
+.hero-background-layer {
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-size: cover;
+    opacity: 0;
+    transform: scale(1.02);
+    transition: opacity 2.8s ease-in-out, transform 8s ease-out;
+}
+
+.hero-background-layer.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
 .top-container {
-  align-content: center; /* Vertically centers direct children */
-  height: 100vh;
-  padding: 0 50px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-height: 620px;
+    padding: 0 clamp(25px, 6vw, 120px);
+    box-sizing: border-box;
+}
+
+.desktop-top {
+    width: min(680px, 100%);
+}
+
+.desktop-top form {
+    text-align: left;
+}
+
+.desktop-top center {
+    text-align: left;
+}
+
+.desktop-top h1 {
+    margin-bottom: 12px;
+    color: #fff;
+    font-family: "Raleway", sans-serif;
+    font-size: clamp(2rem, 3vw, 3rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: 0;
+}
+
+.desktop-top .top-subtitle {
+    max-width: 430px;
+    margin-bottom: 34px;
+    color: #f6d3b2;
+    font-size: 1.05rem;
+    line-height: 1.6;
 }
 
 .top-subtitle {
@@ -23,43 +89,42 @@
 
 .top-input {
     display: flex;
-    gap: 5px;
-    margin-bottom: 10px;
-}
-
-.top-input .searchbox {
-    position: relative;
-    width: 50%;
-}
-
-.top-input {
-    display: flex;
-    margin-bottom: 10px;
+    align-items: stretch;
+    gap: 8px;
+    width: min(620px, 100%);
+    margin-bottom: 14px;
 }
 
 .top-input .searchbox {
     display: flex;
     align-items: center;
-    width: 50%;
+    flex: 1;
+    min-width: 0;
+    position: relative;
     background-color: #fff;
-    border-radius: 7px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border-radius: 5px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
 .top-input .searchbox input[type="text"] {
-    padding: 0 35px;
+    min-height: 58px;
+    padding: 0 42px;
     width: 100%;
     border: none;
-    border-radius: 7px;
+    border-radius: 5px;
     background-color: transparent;
     outline: none;
+    color: #2b211b;
+    font-size: 1rem;
 }
 
 .top-input .searchbox button.location {
     flex-shrink: 0;
-    padding: 15px;
+    left: 8px;
+    padding: 14px 9px;
     border: none;
     background-color: transparent;
+    color: #7A4F2D;
     cursor: pointer;
     position: absolute;
 }
@@ -67,31 +132,46 @@
 .top-input .btn-submit button {
     font-weight: bold;
     color: white;
-    background-color: #7A4F2D;
-    padding: 15px;
-    border-radius: 7px;
+    min-height: 58px;
+    padding: 0 24px;
+    border-radius: 5px;
     border: none;
     cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
     white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    backdrop-filter: blur(10px);
+    background-color: #ffaa003d;
+    border: 1px solid rgba(255, 255, 255, 0.134);
+}
+
+.top-input .btn-submit button:hover {
+    background-color: rgba(156, 126, 105, 0.413);
+    transform: translateY(-2px);
 }
 
 
 .js-open-filter {
-    border-radius: 10px;
-    padding: 10px 15px;
+    border-radius: 5px;
+    padding: 10px 14px;
     outline: none;
     cursor: pointer;
-    border: 1.5px solid #0000003c;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background-color: transparent;
+    color: white;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.js-open-filter:hover {
     background-color: white;
+    color: #52341D;
 }
 
 
 /* Second Section */
 
 #recommendations {
-    background-color: #fffbf7;
-    padding: 40px;
+    padding: 60px 40px;
 }
 
 .recommendations-cards {
@@ -102,6 +182,7 @@
 }
 
 .recommendations-cards .card {
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     position: relative;
     width: 100%;
     box-sizing: border-box;
@@ -126,18 +207,36 @@
     padding: 10px 20px;
 }
 
+.card-body .unit {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: #000000;
+}
+
+.card-body .location-text {
+    margin-top: 8px;
+}
+
 .card-footer {
-    padding: 20px 20px;
-    margin-bottom: 10px;
+    padding: 10px 20px;
+    margin-bottom: 20px;
 }
 
 .card-footer a {
     padding: 10px;
-    background-color: rgba(76, 57, 35, 0.986);
+    color: rgba(76, 57, 35, 0.986);
+    background-color: #fff;
+    border: 1px solid rgba(76, 57, 35, 0.986);
     border-radius: 5px;
-    color: white;
     font-weight: bold;
     text-decoration: none;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.card-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .card .button-fav {
@@ -240,7 +339,7 @@
 .card {
     opacity: 0;
     transform: translateY(30px);
-    animation: slideUpFade 0.5s ease forwards;
+    /* animation: slideUpFade 0.5s ease forwards; */
 }
 
 @keyframes slideUpFade {
@@ -268,8 +367,8 @@
     background: rgba(84, 35, 0, 0.21);
     border-radius: 15px;
     color: rgb(255, 255, 255);
-    padding: 14.5px 18px;
-    border-radius: 50px;
+    padding: 18px 24.8px;
+    border-radius: 100px;
     transition: transform 0.3s ease;
     z-index: 1000;
     font-size: large;
@@ -285,6 +384,7 @@
 
 .buttonToScroll.rotate {
     transform: rotate(180deg);
+    color: black;
 }
 
 
@@ -298,9 +398,11 @@
 }
 
 #details {
-    padding: 0 40px;
-    background-color: #fffbf7;
+    padding: 50px 40px;
+    background-color: rgb(246, 235, 224);
     height: 100vh;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
 }
 
 .website-features-container {
@@ -339,12 +441,65 @@
 
     #details {
         padding: 40px 20px;
-        background-color: #fffbf7;
+        background-color: rgb(246, 235, 224);
+        height: 100vh;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
     }
 
     .top-container {
-        align-content: center; /* Vertically centers direct children */
-        height: 100vh;
+        align-items: flex-end;
+        min-height: 620px;
+        height: 100%;
         padding: 0 25px;
+        padding-bottom: 170px;
+    }
+
+    .desktop-top h1 {
+        font-size: clamp(2rem, 15vw, 3rem);
+    }
+
+    .desktop-top .top-subtitle {
+        margin-bottom: 24px;
+        font-size: 0.95rem;
+    }
+
+    .top-input {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .top-input .searchbox,
+    .top-input .btn-submit,
+    .top-input .btn-submit button {
+        width: 100%;
+    }
+
+    .top-input .btn-submit button {
+        min-height: 52px;
+    }
+
+    .card-body {
+        padding: 10px 20px;
+    }
+
+    .card-body .unit {
+        font-weight: 400;
+        font-size: 0.8rem;
+        color: #000000;
+    }
+
+    .card-body h2 {
+        font-size: 1.3rem;
+    }
+
+    .card-body h3 {
+        font-size: 1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-background-layer {
+        transition: none;
     }
 }

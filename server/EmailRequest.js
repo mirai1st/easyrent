@@ -40,4 +40,11 @@ async function sendVerificationEmail(to, code) {
     );
 }
 
+async function sendCustomEmail(to, msg) {
+    return sendEmail(
+        to,
+        msg
+    );
+}
+
 module.exports = { sendEmail, sendVerificationEmail };

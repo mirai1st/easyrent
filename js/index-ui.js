@@ -1,14 +1,69 @@
-// User location
 const container = document.querySelector('.recommendations-cards');
 const containerDesktop = document.querySelector('.recommendations-cards-desktop'); // TUKAR ikut selector desktop sebenar
-const output = document.getElementById("output-message");
 const loadingDiv = document.querySelector(".center-body");
 
+function initHeroBackgroundCarousel() {
+    const hero = document.querySelector('#top');
+    if (!hero) return;
+
+    const images = [
+        'https://hips.hearstapps.com/hmg-prod/images/edc100123egan-002-6500742f5feb7.jpg',
+        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=85',
+        'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=85',
+        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1800&q=85'
+    ];
+
+    const background = document.createElement('div');
+    background.className = 'hero-background-carousel';
+
+    const layers = images.slice(0, 2).map((image, index) => {
+        const layer = document.createElement('div');
+        layer.className = `hero-background-layer${index === 0 ? ' active' : ''}`;
+        layer.style.backgroundImage = `url("${image}")`;
+        background.appendChild(layer);
+        return layer;
+    });
+
+    hero.prepend(background);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let currentIndex = 0;
+    let nextLayerIndex = 1;
+
+    window.setInterval(() => {
+        currentIndex = (currentIndex + 1) % images.length;
+        layers[nextLayerIndex].style.backgroundImage = `url("${images[currentIndex]}")`;
+        layers[nextLayerIndex].classList.add('active');
+        layers[1 - nextLayerIndex].classList.remove('active');
+        nextLayerIndex = 1 - nextLayerIndex;
+    }, 9000);
+}
+
+initHeroBackgroundCarousel();
+
 /**
- * Generates and renders 3 recommendation cards for both mobile and desktop views
+ * Fetches recommendations from backend
  */
-function renderCards() {
-    const html = Array.from({ length: 3 }, () => createCard(dummyData)).join('');
+async function requestData() {
+    const response = await fetch("/api/recommendations", {
+        method: "GET"
+    });
+
+    if (!response.ok) {
+        console.error("Failed to fetch recommendations:", response.statusText);
+        return [];
+    }
+
+    return await response.json(); // array of up to 3 listings
+}
+
+/**
+ * Generates and renders recommendation cards for both mobile and desktop views
+ */
+async function renderCards() {
+    const listings = await requestData();
+    const html = listings.map(createCard).join('');
     disableLoading();
     container.innerHTML += html;
     if (containerDesktop) containerDesktop.innerHTML += html;
@@ -26,54 +81,9 @@ function disableLoading() {
     loadingDiv.style.display = "none";
 }
 
-/**
- * Geolocation success handler
- */
-function showPosition(position) {
-    const { latitude, longitude } = position.coords;
-    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&email=mirai1st04@gmail.com`;
-
-    fetch(url)
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            const address = data.address || {};
-            const city = address.city || address.town || address.village || "Unknown City";
-            const country = address.country || "Unknown Country";
-            output.innerHTML = `<strong>Lokasi:</strong> ${city}, ${country}`;
-        })
-        .catch(error => {
-            console.error('Ralat semasa mendapatkan lokasi:', error);
-            output.innerHTML = `<strong>Lokasi:</strong> Ralat semasa mendapatkan butiran`;
-        })
-        .finally(() => {
-            container.innerHTML = '';
-            renderCards();
-        });
-}
-
-/**
- * Geolocation error/denied handler
- */
-function showError(error) {
-    console.error('Ralat geolokasi:', error);
-    output.innerHTML = `<strong>Lokasi:</strong> Tidak dapat kesan lokasi! Kesemua cadangan akan dimuatkan berdasarkan lokasi lalai: Politeknik Balik Pulau, Pulau Pinang`;
-    container.innerHTML = '';
-    renderCards();
-}
-
 // Trigger
 showLoading();
-
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, showError);
-} else {
-    output.innerHTML = `<strong>Lokasi:</strong> Geolocation tidak disokong browser ini`;
-    container.innerHTML = '';
-    renderCards();
-}
+renderCards();
 
 // Recommendations Page
 
@@ -90,7 +100,7 @@ function createCard(data) {
     ).join('');
 
     return `
-        <div class="card">
+        <div class="card" data-aos="fade-up" data-aos-duration="1000">
             <div class="card-header">
                 <div class="carousel" data-index="0">
                     <div class="carousel-track">
@@ -103,17 +113,20 @@ function createCard(data) {
             </div>
 
             <div class="card-body">
-                <h3>RM ${Number(data.price).toLocaleString()} <span>/${data.unit}</h3>
+                <h2>RM ${data.price.toLocaleString()}<span class="unit"> /bln</span></h2>
+                <h3>${data.title}</h3>
                 <p class="subtitle">
                     <i class="fa-solid fa-bed"></i>&nbsp ${data.beds} &nbsp
-                    <i class="fa-solid fa-shower"></i>&nbsp ${data.baths} &nbsp
-                    <span class="divider">|</span> ${data.type}
-                    <br><br><p><b>Alamat</b><br>${data.address}</p>        
+                    <i class="fa-solid fa-shower"></i>&nbsp ${data.baths}
+                    <br>
+                    <p class="location-text"><i class="fa-solid fa-location-dot"></i>&nbsp ${data.location}</p>
                 </p>
             </div>
 
             <div class="card-footer">
-                <a href="/house/house?id=${data.house_id}" class="card-button">Lihat Butiran</a>
+                <a href="/house?id=${data.house_id}" class="card-button">Lihat Butiran 
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
 
             <a class="button-fav"><i class="fa-regular fa-heart"></i></a>
@@ -160,23 +173,6 @@ function initCarousels() {
         });
     });
 }
-
-// frontend must request data like this, and backend must give data back like this
-const dummyData = {
-    house_id: 1,
-    title: "Rumah Sewa",
-    price: 1800,
-    beds: 3,
-    baths: 2,
-    type: "Lelaki Sahaja",
-    unit: "bulan",
-    address: "No. 12, Lorong Sungai Nipah, Taman Desa Mutiara, Barat Daya, Pulau Pinang, 11020",
-    images: [
-        "https://placehold.co/400x300",
-        "https://placehold.co/400x300/52341D/fff",
-        "https://placehold.co/400x300/6F4A2D/fff"
-    ]
-};
 
 /**
  * Checks login state via /api/me and updates nav button

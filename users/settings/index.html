@@ -12,9 +12,7 @@
 </head>
 
 <body>
-    <!-- =====================================================
-        LOGIN MODAL
-    ====================================================== -->
+
     <div id="login-modal" class="login-modal">
         <form id="loginForm">
             <div class="login-modal-container">
@@ -31,19 +29,43 @@
                     </div>
                 </div>
 
+                <!-- Content -->
                 <div class="modal-content">
                     <h3>Selamat Kembali ke EasyRent!</h3>
                     <p>Log masuk untuk meneruskan perjalanan anda.</p>
 
+                    <!-- Username -->
                     <div class="input-container">
-                        <input type="text" id="username-login" placeholder="Username atau Email" autocomplete="username">
+                        <input type="text" id="username-login" placeholder="Username atau Email"
+                            autocomplete="username">
                     </div>
 
+                    <!-- Password -->
                     <div class="input-container">
-                        <input type="password" id="password-login" placeholder="Password" autocomplete="current-password">
+                        <input type="password" id="password-login" placeholder="Password"
+                            autocomplete="current-password">
                     </div>
 
-                    <button type="submit" class="loginForm-submit"><span class="btn-text">Log Masuk</span><div class="spinner center loginForm-spinner"></div></button>
+                    <!-- Login -->
+                    <button type="submit" class="loginForm-submit">
+                        <span class="btn-text">Log Masuk</span>
+                        <div class="spinner center loginForm-spinner">
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                        </div>
+                    </button>
+
+                    <!-- Register -->
                     <div class="auth-switch">
                         <span>Belum mempunyai akaun?</span>
                         <a id="register-modal-btn" class="register-modal-btn">Daftar sekarang</a>
@@ -53,10 +75,7 @@
         </form>
     </div>
 
-    <!-- =====================================================
-        REGISTER MODAL
-    ====================================================== -->
-    <div class="register-modal" id="register-modal">
+    <div id="register-modal" class="register-modal">
         <form id="registerForm">
             <div class="register-modal-container">
                 <!-- Close -->
@@ -72,27 +91,52 @@
                     </div>
                 </div>
 
+                <!-- Content -->
                 <div class="modal-content">
                     <h3>Cipta Akaun EasyRent Anda!</h3>
                     <p>Daftar untuk meneroka lebih banyak ciri EasyRent.</p>
 
+                    <!-- Username -->
                     <div class="input-container">
                         <input type="text" id="username-register" placeholder="Username" autocomplete="username">
                     </div>
 
+                    <!-- Email -->
                     <div class="input-container">
                         <input type="email" id="email-register" placeholder="Email" autocomplete="email">
                     </div>
 
+                    <!-- Password -->
                     <div class="input-container">
-                        <input type="password" id="password-register" placeholder="Password" autocomplete="new-password">
+                        <input type="password" id="password-register" placeholder="Password"
+                            autocomplete="new-password">
                     </div>
 
+                    <!-- Repeat Password -->
                     <div class="input-container">
-                        <input type="password" id="repeat_password-register" placeholder="Re-enter Password" autocomplete="new-password">
+                        <input type="password" id="repeat_password-register" placeholder="Re-enter Password"
+                            autocomplete="new-password">
                     </div>
 
-                    <button type="submit" class="registerForm-submit"><span class="btn-text">Daftar Akaun</span><div class="spinner center registerForm-spinner"></div></button>
+                    <button type="submit" class="registerForm-submit">
+                        <span class="btn-text">Daftar Akaun</span>
+                        <div class="spinner center registerForm-spinner">
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                        </div>
+                    </button>
+
+                    <!-- Login -->
                     <div class="auth-switch">
                         <span>Sudah mempunyai akaun?</span>
                         <a class="login-modal-btn">Log masuk</a>
@@ -102,7 +146,62 @@
         </form>
     </div>
 
-    <div id="codeverify-modal" class="codeverify-modal"><form id="codeverifyForm"><div class="codeverify-modal-container"><a class="codeverify-modal-close-btn"><i class="fa-solid fa-xmark"></i></a><div class="modal-content-header"><div class="auth-brand"><i class="fa-solid fa-house"></i><span>EasyRent</span></div></div><div class="modal-content"><h3>Masukkan Kod Pengesahan</h3><p>Kod pengesahan telah dihantar ke email anda <span id="inserted-email">-</span></p><div class="input-container"><input type="text" id="codeverify" placeholder="6 digit kod" autocomplete="one-time-code" inputmode="numeric" maxlength="6"></div><button type="submit" class="codeverifyForm-submit"><span class="btn-text">Sahkan</span><div class="spinner center codeverifyForm-spinner"></div></button><div class="auth-switch"><span>Tak terima kod?</span><a id="resend-code-btn">Hantar semula</a></div></div></div></form></div>
+    <div id="codeverify-modal" class="codeverify-modal">
+        <form id="codeverifyForm">
+            <div class="codeverify-modal-container">
+                <!-- Close -->
+                <a class="codeverify-modal-close-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+
+                <!-- Header -->
+                <div class="modal-content-header">
+                    <div class="auth-brand">
+                        <i class="fa-solid fa-house"></i>
+                        <span>EasyRent</span>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="modal-content">
+                    <h3>Masukkan Kod Pengesahan</h3>
+                    <p>Kod pengesahan telah dihantar ke email anda <span id="inserted-email">-</span></p>
+
+                    <!-- Username -->
+                    <div class="input-container">
+                        <input type="text" id="codeverify" placeholder="6 digit kod" autocomplete="one-time-code"
+                            inputmode="numeric" maxlength="6">
+                    </div>
+
+                    <!-- Verify -->
+                    <button type="submit" class="codeverifyForm-submit">
+                        <span class="btn-text">Sahkan</span>
+                        <div class="spinner center codeverifyForm-spinner">
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                        </div>
+                    </button>
+
+                    <!-- Resend code -->
+                    <div class="auth-switch">
+                        <span>Tak terima kod?</span>
+                        <a id="resend-code-btn">Hantar semula</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="sidebar-overlay"></div>
 
     <div class="sidebar">

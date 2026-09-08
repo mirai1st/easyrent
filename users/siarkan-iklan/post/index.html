@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +11,6 @@
 </head>
 
 <body>
-        <!-- =====================================================
-            LOGIN MODAL
-        ====================================================== -->
     <div id="login-modal" class="login-modal">
         <form id="loginForm">
             <div class="login-modal-container">
@@ -35,14 +32,18 @@
                     <p>Log masuk untuk meneruskan perjalanan anda.</p>
 
                     <div class="input-container">
-                        <input type="text" id="username-login" placeholder="Username atau Email" autocomplete="username">
+                        <input type="text" id="username-login" placeholder="Username atau Email"
+                            autocomplete="username">
                     </div>
 
                     <div class="input-container">
-                        <input type="password" id="password-login" placeholder="Password" autocomplete="current-password">
+                        <input type="password" id="password-login" placeholder="Password"
+                            autocomplete="current-password">
                     </div>
 
-                    <button type="submit" class="loginForm-submit"><span class="btn-text">Log Masuk</span><div class="spinner center loginForm-spinner"></div></button>
+                    <button type="submit" class="loginForm-submit"><span class="btn-text">Log Masuk</span>
+                        <div class="spinner center loginForm-spinner"></div>
+                    </button>
                     <div class="auth-switch">
                         <span>Belum mempunyai akaun?</span>
                         <a id="register-modal-btn" class="register-modal-btn">Daftar sekarang</a>
@@ -52,10 +53,7 @@
         </form>
     </div>
 
-        <!-- =====================================================
-            REGISTER MODAL
-        ====================================================== -->
-        <div class="register-modal" id="register-modal">
+    <div class="register-modal" id="register-modal">
         <form id="registerForm">
             <div class="register-modal-container">
                 <!-- Close -->
@@ -84,14 +82,18 @@
                     </div>
 
                     <div class="input-container">
-                        <input type="password" id="password-register" placeholder="Password" autocomplete="new-password">
+                        <input type="password" id="password-register" placeholder="Password"
+                            autocomplete="new-password">
                     </div>
 
                     <div class="input-container">
-                        <input type="password" id="repeat_password-register" placeholder="Re-enter Password" autocomplete="new-password">
+                        <input type="password" id="repeat_password-register" placeholder="Re-enter Password"
+                            autocomplete="new-password">
                     </div>
 
-                    <button type="submit" class="registerForm-submit"><span class="btn-text">Daftar Akaun</span><div class="spinner center registerForm-spinner"></div></button>
+                    <button type="submit" class="registerForm-submit"><span class="btn-text">Daftar Akaun</span>
+                        <div class="spinner center registerForm-spinner"></div>
+                    </button>
                     <div class="auth-switch">
                         <span>Sudah mempunyai akaun?</span>
                         <a class="login-modal-btn">Log masuk</a>
@@ -101,7 +103,27 @@
         </form>
     </div>
 
-    <div id="codeverify-modal" class="codeverify-modal"><form id="codeverifyForm"><div class="codeverify-modal-container"><a class="codeverify-modal-close-btn"><i class="fa-solid fa-xmark"></i></a><div class="modal-content-header"><div class="auth-brand"><i class="fa-solid fa-house"></i><span>EasyRent</span></div></div><div class="modal-content"><h3>Masukkan Kod Pengesahan</h3><p>Kod pengesahan telah dihantar ke email anda <span id="inserted-email">-</span></p><div class="input-container"><input type="text" id="codeverify" placeholder="6 digit kod" autocomplete="one-time-code" inputmode="numeric" maxlength="6"></div><button type="submit" class="codeverifyForm-submit"><span class="btn-text">Sahkan</span><div class="spinner center codeverifyForm-spinner"></div></button><div class="auth-switch"><span>Tak terima kod?</span><a id="resend-code-btn">Hantar semula</a></div></div></div></form></div>
+    <div id="codeverify-modal" class="codeverify-modal">
+        <form id="codeverifyForm">
+            <div class="codeverify-modal-container"><a class="codeverify-modal-close-btn"><i
+                        class="fa-solid fa-xmark"></i></a>
+                <div class="modal-content-header">
+                    <div class="auth-brand"><i class="fa-solid fa-house"></i><span>EasyRent</span></div>
+                </div>
+                <div class="modal-content">
+                    <h3>Masukkan Kod Pengesahan</h3>
+                    <p>Kod pengesahan telah dihantar ke email anda <span id="inserted-email">-</span></p>
+                    <div class="input-container"><input type="text" id="codeverify" placeholder="6 digit kod"
+                            autocomplete="one-time-code" inputmode="numeric" maxlength="6"></div><button type="submit"
+                        class="codeverifyForm-submit"><span class="btn-text">Sahkan</span>
+                        <div class="spinner center codeverifyForm-spinner"></div>
+                    </button>
+                    <div class="auth-switch"><span>Tak terima kod?</span><a id="resend-code-btn">Hantar semula</a></div>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="sidebar-overlay"></div>
 
     <div class="sidebar">
@@ -110,12 +132,34 @@
         </div>
 
         <ul class="sidebar-nav">
-            <li><a href="/#top"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg> Utama</a></li>
-            <li><a href="/#recommendations"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245" /></svg> Cadangan</a></li>
+            <li><a href="/#top"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                        <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+                        <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                    </svg> Utama</a></li>
+            <li><a href="/#recommendations"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path
+                            d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245" />
+                    </svg> Cadangan</a></li>
             <li><a href="/users/settings"><i class="fa-solid fa-sliders"></i> Tetapan</a></li>
             <li><a href="/users/favourite"><i class="fa-regular fa-heart"></i> Kegemaran</a></li>
-            <li><a href="/sudut-pelajar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M496 240L496 480C496 488.8 488.8 496 480 496L160 496C151.2 496 144 488.8 144 480L144 240L496 240zM485 192L344 192L344 128L431.1 128C436.3 128 441.1 130.5 444.1 134.7L485 192zM296 192L155 192L195.9 134.7C198.9 130.5 203.8 128 208.9 128L296 128L296 192zM107.9 175.3C100.2 186.2 96 199.2 96 212.5L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 212.5C544 199.2 539.8 186.2 532.1 175.3L483.1 106.8C471.1 90 451.7 80 431.1 80L208.9 80C188.3 80 168.9 90 156.9 106.8L107.9 175.3z"/></svg> Sudut Pelajar</a></li>
-            <li><a href="/users/profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg> Profil</a></li>
+            <li><a href="/sudut-pelajar"><svg xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                        <path
+                            d="M496 240L496 480C496 488.8 488.8 496 480 496L160 496C151.2 496 144 488.8 144 480L144 240L496 240zM485 192L344 192L344 128L431.1 128C436.3 128 441.1 130.5 444.1 134.7L485 192zM296 192L155 192L195.9 134.7C198.9 130.5 203.8 128 208.9 128L296 128L296 192zM107.9 175.3C100.2 186.2 96 199.2 96 212.5L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 212.5C544 199.2 539.8 186.2 532.1 175.3L483.1 106.8C471.1 90 451.7 80 431.1 80L208.9 80C188.3 80 168.9 90 156.9 106.8L107.9 175.3z" />
+                    </svg> Sudut Pelajar</a></li>
+            <li><a href="/users/profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                    </svg> Profil</a></li>
         </ul>
 
         <div class="sidebar-footer">
@@ -176,8 +220,10 @@
 
             <div class="nav-right">
                 <ul>
-                    <li><a href="/users/notifications/" class="notification-button nav-right-button"><i class="notification-count fa-regular fa-bell"></i></a></li>
-                    <li><a href="/users/message/" class="message-button nav-right-button"><i class="message-count fa-regular fa-message"></i></a></li>
+                    <li><a href="/users/notifications/" class="notification-button nav-right-button"><i
+                                class="notification-count fa-regular fa-bell"></i></a></li>
+                    <li><a href="/users/message/" class="message-button nav-right-button"><i
+                                class="message-count fa-regular fa-message"></i></a></li>
                     <li><a class="nav-mainbutton login-modal-btn" data-view="mobile-navmainbtn">Log Masuk</a></li>
                 </ul>
             </div>
@@ -212,7 +258,14 @@
                             <div class="body-section">
                                 <div class="form-group">
                                     <label for="title">Nama Rumah <span>*</span></label>
-                                    <input type="text" id="title" name="title" placeholder="Contoh: Rumah Sewa Taman Melati" maxlength="150" required>
+                                    <input type="text" id="title" name="title"
+                                        placeholder="Contoh: Rumah Sewa Taman Melati" maxlength="150" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="price">Harga <span>*</span></label>
+                                    <input type="text" id="price" name="price"
+                                        placeholder="RM 1,000" maxlength="150" required>
                                 </div>
 
                                 <div class="form-row">
@@ -220,7 +273,8 @@
                                         <label for="totalOf_bedroom">Bilangan Bilik <span>*</span></label>
                                         <div class="number-input">
                                             <i class="fa-solid fa-bed"></i>
-                                            <input type="number" id="totalOf_bedroom" name="totalOf_bedroom" min="0" max="5" value="1" required>
+                                            <input type="number" id="totalOf_bedroom" name="totalOf_bedroom" min="0"
+                                                max="5" value="1" required>
                                         </div>
                                     </div>
 
@@ -228,14 +282,17 @@
                                         <label for="totalOf_shower">Bilangan Bilik Air <span>*</span></label>
                                         <div class="number-input">
                                             <i class="fa-solid fa-shower"></i>
-                                            <input type="number" id="totalOf_shower" name="totalOf_shower" min="0" max="5" value="1" required>
+                                            <input type="number" id="totalOf_shower" name="totalOf_shower" min="0"
+                                                max="5" value="1" required>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="post">Penerangan Rumah <span>*</span></label>
-                                    <textarea id="post" name="post" placeholder="Terangkan tentang rumah, kemudahan, peraturan, kawasan sekitar dan perkara penting lain..." maxlength="5000" required></textarea>
+                                    <textarea id="post" name="post"
+                                        placeholder="Terangkan tentang rumah, kemudahan, peraturan, kawasan sekitar dan perkara penting lain..."
+                                        maxlength="5000" required></textarea>
                                     <div class="field-hint"><span id="postCounter">0</span>/5000 aksara</div>
                                 </div>
                             </div>
@@ -255,21 +312,25 @@
                                     <label for="location">Alamat / Lokasi Rumah <span>*</span></label>
                                     <div class="input-with-icon">
                                         <i class="fa-solid fa-location-dot"></i>
-                                        <input type="text" id="location" name="location" placeholder="Contoh: Taman Melati, Kuala Lumpur" maxlength="255" required>
+                                        <input type="text" id="location" name="location"
+                                            placeholder="Contoh: Taman Melati, Kuala Lumpur" maxlength="255" required>
                                     </div>
                                 </div>
 
                                 <div class="coordinate-grid">
                                     <div class="form-group">
                                         <label for="latitud">Latitud <small>(Pilihan)</small></label>
-                                        <input type="number" id="latitud" name="latitud" step="any" placeholder="3.210500">
+                                        <input type="number" id="latitud" name="latitud" step="any"
+                                            placeholder="3.210500">
                                     </div>
                                     <div class="form-group">
                                         <label for="longitud">Longitud <small>(Pilihan)</small></label>
-                                        <input type="number" id="longitud" name="longitud" step="any" placeholder="101.725000">
+                                        <input type="number" id="longitud" name="longitud" step="any"
+                                            placeholder="101.725000">
                                     </div>
                                 </div>
-                                <p class="helper-text"><i class="fa-solid fa-circle-info"></i> Koordinat boleh diisi kemudian jika anda mahu paparkan lokasi pada peta.</p>
+                                <p class="helper-text"><i class="fa-solid fa-circle-info"></i> Koordinat boleh diisi
+                                    kemudian jika anda mahu paparkan lokasi pada peta.</p>
                             </div>
                         </div>
                     </div>
@@ -288,7 +349,8 @@
                             <div class="image-section">
                                 <div class="image-grid" id="imageGrid"></div>
                                 <input type="file" id="images" name="images[]" accept="image/png,image/jpeg" multiple>
-                                <p class="upload-hint"><i class="fa-solid fa-shield-halved"></i> JPG, JPEG atau PNG · Maksimum 5MB setiap gambar</p>
+                                <p class="upload-hint"><i class="fa-solid fa-shield-halved"></i> JPG, JPEG atau PNG ·
+                                    Maksimum 5MB setiap gambar</p>
                             </div>
                         </div>
 
@@ -296,7 +358,8 @@
                             <i class="fa-regular fa-lightbulb"></i>
                             <div>
                                 <strong>Tip untuk iklan yang lebih menarik</strong>
-                                <p>Gunakan gambar yang terang dan tunjukkan ruang utama, bilik, bilik air serta bahagian luar rumah.</p>
+                                <p>Gunakan gambar yang terang dan tunjukkan ruang utama, bilik, bilik air serta bahagian
+                                    luar rumah.</p>
                             </div>
                         </div>
                     </div>
@@ -315,4 +378,5 @@
     <script src="/js/main-ui.js"></script>
     <script src="/js/loginRequest.js"></script>
 </body>
+
 </html>

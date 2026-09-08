@@ -451,6 +451,19 @@ nav a {
     color: #52341D;
 }
 
+.profile-info-item input[type="text"], input[type="email"] {
+    background-color: #00000000;
+    border: 1px solid rgba(0, 0, 0, 0.161);
+    border-radius: 5px;
+    height: 30px;
+    width: 100%;
+    color: #52341d;
+    font-size: 0.95rem;
+    font-weight: bold;
+    outline: none;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
 
 /* =========================
    MOBILE
