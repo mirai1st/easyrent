@@ -15,7 +15,8 @@
  *   That's it — no need to copy-paste the filter HTML into every page.
  *   The component builds its own markup and appends it to <body> once
  *   the DOM is ready, then wires up all interactions (open/close,
- *   accordion sections, steppers, price range, gender radio).
+ *   accordion sections, steppers, price range, gender radio, and now
+ *   an institution search-dropdown for "lokasi").
  *
  * NOTE: The original markup had two elements sharing id="filter-btn"
  * (invalid HTML — ids must be unique). This component avoids that by
@@ -27,13 +28,19 @@
 (function () {
     'use strict';
 
+    // ---- 0. Static institution list ------------------------------------
+    // Edit/extend this list as needed — it's just an array of names.
+    const INSTITUTIONS = [
+        'Politeknik Balik Pulau, Pulau Pinang'
+    ];
+
     // ---- 1. Markup template -----------------------------------------
     const FILTER_HTML = `
     <div id="overlay" class="filter-overlay"></div>
 
     <div id="filter-container" class="filter-container">
         <div class="header">
-            <p>Tapis berdasarkan minat anda</p>
+            <p><i class="fa-solid fa-filter"></i>&nbsp&nbsp Tapis berdasarkan minat anda</p>
             <a class="js-close-filter"><i class="fa-solid fa-xmark"></i></a>
         </div>
         <div class="content">
@@ -41,11 +48,20 @@
             <div class="filter-button">
                 <table>
                     <td width="25px"><i class="fa-solid fa-location-dot"></i></td>
-                    <td>Lokasi <br><span class="subtitle"><span class="data" data-summary="lokasi"></span></span></td>
+                    <td>Pilih Institusi Anda <br>
+                        <span class="subtitle">
+                            <span class="data" data-summary="lokasi"></span>
+                        </span></td>
                     <td style="text-align: right;"><i class="fa-solid fa-chevron-down"></i></td>
                 </table>
                 <div class="filter-content">
-                    <input type="text" class="text-input" data-filter-key="lokasi" placeholder="Cari lokasi...">
+                    <div class="institution-select-wrap">
+                        <button type="button" class="institution-select" data-filter-key="lokasi" aria-expanded="false">
+                            <span class="institution-select-value"></span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="institution-dropdown" data-institution-dropdown role="listbox"></div>
+                    </div>
                 </div>
             </div>
 
@@ -175,12 +191,13 @@
      * Steps:
      * 1. Checks if already injected to prevent duplicates
      * 2. Removes any old static filter markup to avoid duplicate IDs
-     * 3. Creates filter markup from FILTER_HTML template
-     * 4. Appends overlay and container to document body
-     * 5. Caches element references (elOverlay, elContainer)
-     * 6. Binds all event listeners to inputs and controls
-     * 7. Applies saved state values to input fields
-     * 8. Updates summary preview text in each filter button header
+     * 3. Injects scoped CSS for the institution dropdown
+     * 4. Creates filter markup from FILTER_HTML template
+     * 5. Appends overlay and container to document body
+     * 6. Caches element references (elOverlay, elContainer)
+     * 7. Binds all event listeners to inputs and controls
+     * 8. Applies saved state values to input fields
+     * 9. Updates summary preview text in each filter button header
      */
     function inject() {
         if (injected) return;
@@ -215,8 +232,8 @@
      * - Checks the correct radio button for gender selection
      */
     function applyStateToInputs() {
-        const lokasiInput = elContainer.querySelector('[data-filter-key="lokasi"]');
-        lokasiInput.value = state.lokasi;
+        const lokasiSelect = elContainer.querySelector('[data-filter-key="lokasi"]');
+        lokasiSelect.querySelector('.institution-select-value').textContent = state.lokasi;
 
         elContainer.querySelectorAll('.stepper').forEach((stepper) => {
             const key = stepper.dataset.filterKey;
@@ -246,7 +263,7 @@
      */
     function updateSummaries() {
         const lokasiSpan = elContainer.querySelector('[data-summary="lokasi"]');
-        lokasiSpan.textContent = state.lokasi || 'Semua lokasi';
+        lokasiSpan.textContent = state.lokasi || 'Semua institusi';
 
         elContainer.querySelector('[data-summary="bilikAir"]').textContent = state.bilikAir;
         elContainer.querySelector('[data-summary="bilikTidur"]').textContent = state.bilikTidur;
@@ -256,6 +273,55 @@
 
         elContainer.querySelector('[data-summary="jantina"]').textContent = JANTINA_LABEL[state.jantina] || 'Semua';
     }
+
+    // ---- 3d. Institution search-dropdown --------------------------------
+
+    /**
+     * Renders the filtered institution list into the dropdown panel.
+     * @param {string} query - current text typed by the user (case-insensitive substring match)
+     */
+    function renderInstitutionDropdown(query) {
+        const dropdown = elContainer.querySelector('[data-institution-dropdown]');
+        const q = (query || '').trim().toLowerCase();
+        const matches = q
+            ? INSTITUTIONS.filter((name) => name.toLowerCase().includes(q))
+            : INSTITUTIONS;
+
+        if (matches.length === 0) {
+            dropdown.innerHTML = `<div class="institution-dropdown-empty">Tiada institusi dijumpai</div>`;
+            return;
+        }
+
+        dropdown.innerHTML = matches
+            .map((name) => `<div class="institution-dropdown-item" data-value="${name}">${name}</div>`)
+            .join('');
+    }
+
+    function openInstitutionDropdown() {
+        const dropdown = elContainer.querySelector('[data-institution-dropdown]');
+        dropdown.classList.add('open');
+        dropdown.closest('.filter-button').classList.add('institution-open');
+        elContainer.querySelector('[data-filter-key="lokasi"]').setAttribute('aria-expanded', 'true');
+    }
+
+    function closeInstitutionDropdown() {
+        const dropdown = elContainer.querySelector('[data-institution-dropdown]');
+        if (dropdown) {
+            dropdown.classList.remove('open');
+            dropdown.closest('.filter-button').classList.remove('institution-open');
+        }
+        const lokasiSelect = elContainer.querySelector('[data-filter-key="lokasi"]');
+        if (lokasiSelect) lokasiSelect.setAttribute('aria-expanded', 'false');
+    }
+
+    function selectInstitution(name) {
+        state.lokasi = name;
+        const lokasiSelect = elContainer.querySelector('[data-filter-key="lokasi"]');
+        lokasiSelect.querySelector('.institution-select-value').textContent = name;
+        closeInstitutionDropdown();
+        commit();
+    }
+
     /**
      * Opens the filter bottom-sheet component with smooth slide-up animation
      * Steps:
@@ -297,6 +363,7 @@
         if (!injected) return;
         elOverlay.classList.remove('enabled');
         elContainer.classList.remove('enabled');
+        closeInstitutionDropdown();
     }
 
     /**
@@ -304,7 +371,7 @@
      * Handles:
      * - Close button and overlay click events
      * - Accordion toggle for each filter section
-     * - Location text input changes
+     * - Institution search input (open/filter/select dropdown)
      * - Stepper increment/decrement buttons for bathroom and bedroom counts
      * - Price range input validation and updates
      * - Gender radio button selection changes
@@ -327,11 +394,28 @@
             c.addEventListener('click', (e) => e.stopPropagation());
         });
 
-        // Lokasi input
-        const lokasiInput = elContainer.querySelector('[data-filter-key="lokasi"]');
-        lokasiInput.addEventListener('input', (e) => {
-            state.lokasi = e.target.value;
-            commit();
+        // Institution dropdown
+        const lokasiSelect = elContainer.querySelector('[data-filter-key="lokasi"]');
+        const dropdown = elContainer.querySelector('[data-institution-dropdown]');
+
+        lokasiSelect.addEventListener('click', () => {
+            if (dropdown.classList.contains('open')) {
+                closeInstitutionDropdown();
+                return;
+            }
+            renderInstitutionDropdown();
+            openInstitutionDropdown();
+        });
+
+        dropdown.addEventListener('click', (e) => {
+            const item = e.target.closest('.institution-dropdown-item');
+            if (item) selectInstitution(item.dataset.value);
+        });
+
+        elContainer.addEventListener('click', (e) => {
+            if (!lokasiSelect.contains(e.target) && !dropdown.contains(e.target)) {
+                closeInstitutionDropdown();
+            }
         });
 
         // Steppers (Bilik Air / Bilik Tidur)
@@ -428,6 +512,7 @@
     window.EasyRentFilter = {
         open,
         close,
+        institutions: INSTITUTIONS,
         getState: () => ({ ...state }),
         setState: (partial) => {
             Object.assign(state, partial);

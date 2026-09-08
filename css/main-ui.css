@@ -667,7 +667,7 @@ nav .nav-right a {
     max-height: 0;
     overflow: hidden;
     opacity: 0;
-    transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.35s ease;
+    transition: max-height 0.22s ease, opacity 0.16s ease, margin-top 0.22s ease;
     margin-top: 0;
 }
 
@@ -961,6 +961,74 @@ hr {
     margin-top: 10px;
 }
 
+/* Institution dropdown */
+
+.institution-select-wrap {
+    position: relative;
+}
+
+.filter-button.institution-open .filter-content {
+    overflow: visible;
+}
+
+.institution-select {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    background: #fff;
+    color: #2b211b;
+    font-size: 14px;
+    box-sizing: border-box;
+    cursor: pointer;
+    text-align: left;
+}
+
+.institution-select:focus {
+    border-color: #8a5a2b;
+}
+
+.institution-select .fa-chevron-down {
+    transition: transform 0.2s ease;
+}
+
+.institution-select[aria-expanded="true"] .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+.institution-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    max-height: 220px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #e0d9cf;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    z-index: 20;
+}
+
+.institution-dropdown.open {
+    display: block;
+}
+
+.institution-dropdown-item {
+    padding: 10px 12px;
+    color: #2b211b;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.institution-dropdown-item:hover {
+    background: #f7f2ed;
+}
+
 /* =========================================================
    ANIMATIONS
    ========================================================= */
@@ -1246,7 +1314,16 @@ hr {
 }
 
 @media (max-width: 650px) {
-    .filter-container { width: 100%; }
+    .filter-container {
+        width: 100%;
+        transition-duration: 0.2s;
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.18);
+        will-change: transform;
+    }
+
+    .filter-content {
+        transition-duration: 0.18s, 0.12s, 0.18s;
+    }
 }
 
 @media (max-width: 400px) {
