@@ -48,10 +48,23 @@ async function loadNotificationCount() {
 
         if (data.success) {
             const notificationCounts = document.querySelectorAll('.notification-count');
+            const notificationButtons = document.querySelectorAll('.notification-button');
+            const lihatProfileButton = document.querySelector('.lihat-profile');
 
-            notificationCounts.forEach(notificationCount => {
-                notificationCount.textContent = data.unreadCount === 0 ? '' : ` ${data.unreadCount}`;
+            notificationCounts.forEach((notificationCount, index) => {
+                const unreadCount = data.unreadCount;
+                notificationCount.textContent = unreadCount === 0 ? '' : ` ${unreadCount}`;
+
+                if (notificationButtons[index]) {
+                    notificationButtons[index].title = unreadCount === 0
+                        ? 'No new notifications'
+                        : `You have ${unreadCount} new notification${unreadCount > 1 ? 's' : ''}`;
+                }
             });
+
+            if (lihatProfileButton) {
+                lihatProfileButton.style.display = 'block';
+            }
         }
 
     } catch (error) {

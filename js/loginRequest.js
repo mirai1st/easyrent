@@ -50,7 +50,22 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             return;
         }
 
-        window.location = `/?login_success=false&error=${encodeURIComponent(data.message)}`;
+        if (document.referrer) {
+            // Ambil URL page sebelum ni
+            const prevUrl = new URL(document.referrer);
+            
+            // Set parameter login_success dan error pada URL tersebut
+            prevUrl.searchParams.set('login_success', 'false');
+            prevUrl.searchParams.set('error', data.message);
+            
+            // Redirect ke URL asal yang dah siap ada parameter
+            window.location.href = prevUrl.toString();
+        } else {
+            // Fallback: Kalau kes user terus buka link login direct (tiada referrer), 
+            // hantar ke homepage utama dengan parameter tersebut
+            window.location.href = `/?login_success=false&error=${encodeURIComponent(data.message)}`;
+        }
+
     } catch (err) {
         alert("Ralat sambungan. Sila cuba lagi.");
     } finally {

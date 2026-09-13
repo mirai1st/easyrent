@@ -1,3 +1,7 @@
+body {
+  background-color: #fffaf7;
+}
+
 nav {
   padding: 20px 30px;
   background-color: transparent;
@@ -8,25 +12,19 @@ nav {
   top: 0;
   width: 100%;
   z-index: 499;
-  transition:
-    background-color 0.3s ease,
-    padding 0.3s ease;
+  transition: background-color 0.3s ease, padding 0.3s ease;
   box-sizing: border-box;
   background-color: #f7f2ed;
   padding: 20px 30px;
   color: #52341d;
-  box-shadow:
-    rgba(0, 0, 0, 0.12) 0px 1px 4px,
-    rgba(0, 0, 0, 0.24) 0px 1px 5px;
+  border-bottom: 1px solid #52341d3f;
 }
 
 nav.scrolled {
   background-color: #f7f2ed;
   padding: 20px 30px;
   color: #52341d;
-  box-shadow:
-    rgba(0, 0, 0, 0.12) 0px 1px 4px,
-    rgba(0, 0, 0, 0.24) 0px 1px 5px;
+  border-bottom: 1px solid #52341d3f;
 }
 
 nav ul {
@@ -69,7 +67,7 @@ nav .nav-right a {
 /* section top */
 
 #top-search {
-  padding: 100px 50px;
+  padding: 100px clamp(40px, 10vw, 250px);
 }
 
 #top-search.scrolldisable {
@@ -81,6 +79,7 @@ nav .nav-right a {
 /* search container */
 
 .search-container {
+  margin-top: 20px;
   width: 100%;
   position: relative;
 }
@@ -127,7 +126,89 @@ nav .nav-right a {
   display: block;
 }
 
+.desktop-results-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.desktop-results-layout > .card-container {
+  flex: 1;
+  min-width: 0;
+}
+
+.desktop-filter-slot {
+  background-color: white;
+  padding: 20px;
+  flex: 0 1 320px;
+  min-width: 260px;
+  box-sizing: border-box;
+  margin-top: 15px;
+  border: 1px solid #00000023;
+  border-radius: 12px;
+}
+
+.desktop-filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.desktop-filter-form label,
+.desktop-filter-form legend {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.desktop-filter-form select,
+.desktop-filter-form input[type="number"] {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 8px;
+  border: 1px solid #00000023;
+  border-radius: 7px;
+  background-color: white;
+}
+
+.desktop-price-fields {
+  display: flex;
+  gap: 8px;
+}
+
+.desktop-price-fields > div {
+  flex: 1;
+}
+
+.desktop-filter-form fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.desktop-filter-form fieldset legend {
+  flex-basis: 100%;
+}
+
+.desktop-filter-form fieldset label {
+  font-weight: 400;
+}
+
+.desktop-filter-form button {
+  margin-top: 8px;
+  padding: 11px;
+  border: 0;
+  border-radius: 7px;
+  background-color: #7a4f2d;
+  color: white;
+  cursor: pointer;
+}
+
 .card-container .card {
+  margin-bottom: 15px;
   border: 1px solid #00000023;
   border-radius: 12px;
   background-color: white;
@@ -263,9 +344,51 @@ nav .nav-right a {
   cursor: pointer;
 }
 
+#top-search .mobile-view {
+  display: none;
+}
+
 @media (max-width: 768px) {
   #top-search {
-    padding: 100px 30px;
+    padding: 100px 20px;
+  }
+
+  #top-search .mobile-view {
+    display: block;
+  }
+
+  #top-search .desktop-view {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) and (min-width: 769px) {
+  #top-search {
+    padding-inline: 30px;
+  }
+
+  .desktop-results-layout {
+    gap: 12px;
+  }
+
+  .desktop-filter-slot {
+    flex-basis: 280px;
+    min-width: 240px;
+    padding: 16px;
+  }
+
+  .desktop-price-fields {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 560px) {
+  .desktop-filter-form {
+    gap: 6px;
+  }
+
+  .desktop-price-fields {
+    flex-direction: column;
   }
 }
 
@@ -281,6 +404,7 @@ nav a {
 .institution-select-wrap {
   position: relative;
 }
+
 .institution-dropdown {
   display: none;
   position: absolute;
@@ -295,18 +419,22 @@ nav a {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
   z-index: 20;
 }
+
 .institution-dropdown.open {
   display: block;
 }
+
 .institution-dropdown-item {
   padding: 10px 12px;
   font-size: 14px;
   cursor: pointer;
 }
+
 .institution-dropdown-item:hover,
 .institution-dropdown-item.highlighted {
   background: #f7f2ed;
 }
+
 .institution-dropdown-empty {
   padding: 10px 12px;
   font-size: 14px;

@@ -347,3 +347,64 @@ window.addEventListener("resize", function () {
     closeMobileChat();
   }
 });
+
+/* =========================================================
+   FAVOURITE CATEGORIES
+   ========================================================= */
+
+const favouriteEmptyStates = {
+  houses: {
+    icon: "fa-heart",
+    title: "Belum ada rumah kegemaran",
+    text: "Tekan ikon hati pada rumah yang anda suka. Semua pilihan rumah anda akan muncul di sini.",
+    button: "Terokai rumah",
+    link: "/#recommendations",
+  },
+  "student-posts": {
+    icon: "fa-graduation-cap",
+    title: "Belum ada post Sudut Pelajar",
+    text: "Simpan post komuniti yang berguna untuk dirujuk semula bila-bila masa.",
+    button: "Lihat Sudut Pelajar",
+    link: "/sudut-pelajar/",
+  },
+};
+
+function renderFavouriteEmptyState(container, category) {
+  const state = favouriteEmptyStates[category];
+
+  if (!container || !state) {
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="favourite-empty-icon"><i class="fa-solid ${state.icon}"></i></div>
+    <h2>${state.title}</h2>
+    <p>${state.text}</p>
+    <a class="favourite-explore-btn" href="${state.link}">
+      ${state.button} <i class="fa-solid fa-arrow-right"></i>
+    </a>
+  `;
+}
+
+document.querySelectorAll(".favourite-tabs").forEach((tabList) => {
+  tabList.addEventListener("click", (event) => {
+    const selectedTab = event.target.closest("[data-favourite-tab]");
+
+    if (!selectedTab) {
+      return;
+    }
+
+    const category = selectedTab.dataset.favouriteTab;
+
+    document.querySelectorAll("[data-favourite-tab]").forEach((tab) => {
+      const isActive = tab.dataset.favouriteTab === category;
+      tab.classList.toggle("active", isActive);
+      tab.setAttribute("aria-selected", String(isActive));
+    });
+
+    document.querySelectorAll("[data-favourite-empty]").forEach((emptyState) => {
+      emptyState.dataset.favouriteEmpty = category;
+      renderFavouriteEmptyState(emptyState, category);
+    });
+  });
+});

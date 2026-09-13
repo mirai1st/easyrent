@@ -66,6 +66,14 @@ const nav_mainbutton  = document.querySelectorAll(".nav-mainbutton");
 const navright_btn = document.querySelectorAll(".nav-right-button");
 
 let sidebarOpen = false;
+let touchStartX = 0;
+let touchStartY = 0;
+
+function setSidebarState(openState) {
+  sidebarOpen = openState;
+  sidebar.classList.toggle("enabled", sidebarOpen);
+  sidebarOverlay.classList.toggle("enabled", sidebarOpen);
+}
 
 function updateNavState() {
   const scrolledPastThreshold = window.scrollY > 500;
@@ -90,9 +98,7 @@ function updateNavState() {
 }
 
 function toggleSidebar() {
-  sidebarOpen = !sidebarOpen;
-  sidebar.classList.toggle("enabled", sidebarOpen);
-  sidebarOverlay.classList.toggle("enabled", sidebarOpen);
+  setSidebarState(!sidebarOpen);
 }
 
 sidebarNavLinks.forEach(link => {
@@ -111,6 +117,31 @@ sidebarbtn.forEach(btn => {
 
 sidebarclosebtn.addEventListener("click", toggleSidebar);
 sidebarOverlay.addEventListener("click", toggleSidebar);
+
+document.addEventListener("touchstart", (event) => {
+  const touch = event.changedTouches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+}, { passive: true });
+
+document.addEventListener("touchend", (event) => {
+  const touch = event.changedTouches[0];
+  const deltaX = touch.clientX - touchStartX;
+  const deltaY = touch.clientY - touchStartY;
+
+  if (Math.abs(deltaX) < 60 || Math.abs(deltaY) > 50) {
+    return;
+  }
+
+  if (!sidebarOpen && touchStartX < 45 && deltaX > 60) {
+    setSidebarState(true);
+    return;
+  }
+
+  if (sidebarOpen && deltaX < -60) {
+    setSidebarState(false);
+  }
+}, { passive: true });
 
 // Scroll behaviour
 window.addEventListener("scroll", updateNavState);

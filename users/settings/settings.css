@@ -14,10 +14,12 @@ nav {
     z-index: 499;
     transition: background-color 0.3s ease, padding 0.3s ease;
     box-sizing: border-box;
-    background-color: #F7F2ED;
     padding: 20px 30px;
     color: #52341D;
     border-bottom: 1px solid #52341d3f;
+    background-color: #fffaf5ce;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
 }
     
 nav.scrolled {
@@ -83,6 +85,13 @@ nav a {
     min-width: 0; /* elak overflow bila content dalam settings terlalu lebar */
     padding: 0 32px;
     margin-top: 10px;
+    animation: favouriteSlideUp 0.3s ease-out both;
+    will-change: opacity, transform;
+}
+
+@keyframes favouriteSlideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .settings-appearance {
@@ -249,6 +258,18 @@ nav a {
 
 
 @media (max-width: 768px) {
+    .mobile-view {
+        font-size: 0.9rem;
+    }
+
+    .mobile-view h2 {
+        font-size: 1.3rem;
+    }
+
+    .mobile-view h4.header {
+        font-size: 0.95rem;
+    }
+
     .settings-appearance {
         flex-direction: column;
     }

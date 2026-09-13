@@ -1,6 +1,6 @@
 nav {
     padding: 20px 30px;
-    background-color: transparent;
+    background-color: #F7F2ED;
     display: flex;
     justify-content: space-between;
     font-weight: 500;
@@ -10,12 +10,10 @@ nav {
     z-index: 499;
     transition: background-color 0.3s ease, padding 0.3s ease;
     box-sizing: border-box;
-    background-color: #F7F2ED;
-    padding: 20px 30px;
     color: #52341D;
     border-bottom: 1px solid #52341d3f;
 }
-    
+
 nav.scrolled {
     background-color: #F7F2ED;
     padding: 20px 30px;
@@ -31,15 +29,11 @@ nav ul {
 
 .nav-mainbutton {
     padding: 10px 15px;
-    color: rgb(0, 0, 0);
-    border-radius: 50px;
-    border: #52341D47 solid 2px;
-    animation: fadeIn 0.3s ease-in-out forwards;
-    background: #ad6a3623;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    color: #000;
     border-radius: 8px;
+    background: #ad6a3623;
     border: 1px solid rgba(215, 185, 108, 0.3);
+    animation: fadeIn 0.3s ease-in-out forwards;
 }
 
 .nav-mainbutton.scrolled {
@@ -60,8 +54,6 @@ nav .nav-right a {
     cursor: pointer;
 }
 
-/* Override CSS */
-
 nav a {
     color: #52341D;
     text-decoration: none;
@@ -74,45 +66,214 @@ nav a {
     transition: padding 0.3s ease;
 }
 
-.section-picker {
-    margin-top: 15px;
-    display: flex;
-    gap: 10px;
-    background-color: #E3E3E3;
-    padding: 5px;
-    border: 2px solid rgba(0, 0, 0, 0.075);
-    border-radius: 7px;
-    position: relative;
+#top h2 {
+    font-weight: 600;
+    color: #26180f;
 }
 
-.section-picker.your-active .section-picker-indicator {
-    transform: translateX(100%);
+.top-subtitle {
+    color: #7a6359 !important;
 }
 
-.section-picker-indicator {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 100%;
-    background-color: white;
-    border-radius: 7px;
-    transition: transform 0.3s ease;
-    z-index: 0;
+.community-shell {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 26px;
+    margin-top: 28px;
+    align-items: start;
 }
 
-.section-picker a {
-    position: relative;
-    z-index: 1;
-    width: 50%;
-    text-align: center;
-    padding: 10px;
+/* Sidebar: flat panel, not a floating glass card */
+
+.community-sidebar {
+    background: #F1E8DC;
+    border-left: 3px solid #D7B96C;
+    border-radius: 8px;
+    padding: 22px 20px;
+}
+
+.community-panel-header {
+    margin-bottom: 16px;
+}
+
+.mini-label {
+    display: block;
+    font-size: 0.82rem;
+    color: #8b6a52;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.community-panel-header h3 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #26180f;
+}
+
+.community-pill {
+    width: 100%;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid transparent;
+    background: transparent;
+    padding: 12px 4px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #7a6359;
     cursor: pointer;
-    font-weight: bold;
+    transition: color 0.2s ease, border-color 0.2s ease;
 }
 
-.community-section, .you-section {
-    margin-top: 15px;
+.community-pill.active,
+.community-pill:hover {
+    color: #26180f;
+    border-bottom-color: #D7B96C;
+}
+
+.community-side-card {
+    margin-top: 20px;
+    padding: 14px 4px 0;
+    border-top: 1px solid rgba(82, 52, 29, 0.12);
+}
+
+.community-side-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #52341D;
+    font-weight: 600;
+    font-size: 0.92rem;
+}
+
+.community-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Composer: plain lozenge, not a duplicate card */
+
+.composer-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 18px;
+    background: transparent;
+    border: 1px solid rgba(82, 52, 29, 0.18);
+    border-radius: 50px;
+}
+
+.composer-avatar,
+.user-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #52341D;
+    color: #fff;
+    font-family: 'Kameron', serif;
+    font-weight: 700;
+}
+
+.user-badge.alt {
+    background: #8a6a4f;
+}
+
+.composer-input {
+    flex: 1;
+    color: #7a6359;
+    font-weight: 500;
+}
+
+/* Post cards: category-accented, one flat shadow, no blur */
+
+.community-post {
+    background: #fff;
+    border-left: 4px solid #52341D;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(82, 52, 29, 0.07);
+    padding: 20px 22px;
+}
+
+.community-post.tag-carian {
+    border-left-color: #B98247;
+}
+
+.community-post.tag-tips {
+    border-left-color: #6F8F6B;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.post-header h4 {
+    margin: 0;
+    font-family: 'Kameron', serif;
+    color: #20150f;
+    font-size: 1.05rem;
+}
+
+.post-header span {
+    color: #7a6359;
+    font-size: 0.8rem;
+}
+
+.post-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #52341D;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.post-text {
+    margin: 0;
+    color: #38271f;
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+.post-actions {
+    display: flex;
+    gap: 18px;
+    margin-top: 16px;
+    color: #6f584d;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.post-actions span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+    #top {
+        padding: 90px 20px 40px;
+    }
+
+    .community-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .community-sidebar {
+        order: 1;
+    }
+
+    .community-feed {
+        order: 2;
+    }
 }
 
 .card {
@@ -134,9 +295,9 @@ nav a {
 }
 
 .card-image img {
-    width: 100%;            /* Or any width you want (e.g., 500px) */
-    aspect-ratio: 16 / 9;   /* Automatically calculates the height */
-    object-fit: cover;      /* Crops the image to fit without distortion */
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
 }
 
 .card-content .title {
@@ -173,30 +334,30 @@ nav a {
 
 .create-post input[type="text"] {
     margin-top: 15px;
-    width: 100%;                  /* Makes it responsive */              /* Sets a default height */
-    padding: 12px 10px;                /* Adds space inside the box */
-    background-color: #f8f9fa;    /* Changes background color */
-    border: 2px solid #e0e0e0;    /* Custom border */
-    border-radius: 8px;           /* Rounds the corners */
-    font-family: 'Arial', sans-serif; /* Changes the font */
-    font-size: 16px;              /* Increases text size */
-    color: #333333;               /* Changes text color */
-    box-sizing: border-box;       /* Includes padding in width calculation */
+    width: 100%;
+    padding: 12px 10px;
+    background-color: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    color: #333333;
+    box-sizing: border-box;
     resize: none;
 }
 
 .create-post textarea {
     margin-top: 5px;
-    width: 100%;                  /* Makes it responsive */
-    height: 150px;                 /* Sets a default height */
-    padding: 12px;                /* Adds space inside the box */
-    background-color: #f8f9fa;    /* Changes background color */
-    border: 2px solid #e0e0e0;    /* Custom border */
-    border-radius: 8px;           /* Rounds the corners */
-    font-family: 'Arial', sans-serif; /* Changes the font */
-    font-size: 16px;              /* Increases text size */
-    color: #333333;               /* Changes text color */
-    box-sizing: border-box;       /* Includes padding in width calculation */
+    width: 100%;
+    height: 150px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    color: #333333;
+    box-sizing: border-box;
     resize: none;
 }
 
@@ -238,7 +399,6 @@ nav a {
 .submit-post:hover {
     background-color: #482d19;
 }
-
 
 @keyframes fade {
     0% {

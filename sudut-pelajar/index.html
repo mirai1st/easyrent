@@ -14,12 +14,10 @@
     <div id="login-modal" class="login-modal">
         <form id="loginForm">
             <div class="login-modal-container">
-                <!-- Close -->
                 <a class="login-modal-close-btn">
                     <i class="fa-solid fa-xmark"></i>
                 </a>
 
-                <!-- Header -->
                 <div class="modal-content-header">
                     <div class="auth-brand">
                         <i class="fa-solid fa-house"></i>
@@ -27,24 +25,20 @@
                     </div>
                 </div>
 
-                <!-- Content -->
                 <div class="modal-content">
                     <h3>Selamat Kembali ke EasyRent!</h3>
                     <p>Log masuk untuk meneruskan perjalanan anda.</p>
 
-                    <!-- Username -->
                     <div class="input-container">
                         <input type="text" id="username-login" placeholder="Username atau Email"
                             autocomplete="username">
                     </div>
 
-                    <!-- Password -->
                     <div class="input-container">
                         <input type="password" id="password-login" placeholder="Password"
                             autocomplete="current-password">
                     </div>
 
-                    <!-- Login -->
                     <button type="submit" class="loginForm-submit">
                         <span class="btn-text">Log Masuk</span>
                         <div class="spinner center loginForm-spinner">
@@ -63,7 +57,6 @@
                         </div>
                     </button>
 
-                    <!-- Register -->
                     <div class="auth-switch">
                         <span>Belum mempunyai akaun?</span>
                         <a id="register-modal-btn" class="register-modal-btn">Daftar sekarang</a>
@@ -76,12 +69,10 @@
     <div id="register-modal" class="register-modal">
         <form id="registerForm">
             <div class="register-modal-container">
-                <!-- Close -->
                 <a class="register-modal-close-btn">
                     <i class="fa-solid fa-xmark"></i>
                 </a>
 
-                <!-- Header -->
                 <div class="modal-content-header">
                     <div class="auth-brand">
                         <i class="fa-solid fa-house"></i>
@@ -89,28 +80,23 @@
                     </div>
                 </div>
 
-                <!-- Content -->
                 <div class="modal-content">
                     <h3>Cipta Akaun EasyRent Anda!</h3>
                     <p>Daftar untuk meneroka lebih banyak ciri EasyRent.</p>
 
-                    <!-- Username -->
                     <div class="input-container">
                         <input type="text" id="username-register" placeholder="Username" autocomplete="username">
                     </div>
 
-                    <!-- Email -->
                     <div class="input-container">
                         <input type="email" id="email-register" placeholder="Email" autocomplete="email">
                     </div>
 
-                    <!-- Password -->
                     <div class="input-container">
                         <input type="password" id="password-register" placeholder="Password"
                             autocomplete="new-password">
                     </div>
 
-                    <!-- Repeat Password -->
                     <div class="input-container">
                         <input type="password" id="repeat_password-register" placeholder="Re-enter Password"
                             autocomplete="new-password">
@@ -134,7 +120,6 @@
                         </div>
                     </button>
 
-                    <!-- Login -->
                     <div class="auth-switch">
                         <span>Sudah mempunyai akaun?</span>
                         <a class="login-modal-btn">Log masuk</a>
@@ -147,12 +132,10 @@
     <div id="codeverify-modal" class="codeverify-modal">
         <form id="codeverifyForm">
             <div class="codeverify-modal-container">
-                <!-- Close -->
                 <a class="codeverify-modal-close-btn">
                     <i class="fa-solid fa-xmark"></i>
                 </a>
 
-                <!-- Header -->
                 <div class="modal-content-header">
                     <div class="auth-brand">
                         <i class="fa-solid fa-house"></i>
@@ -160,18 +143,15 @@
                     </div>
                 </div>
 
-                <!-- Content -->
                 <div class="modal-content">
                     <h3>Masukkan Kod Pengesahan</h3>
                     <p>Kod pengesahan telah dihantar ke email anda <span id="inserted-email">-</span></p>
 
-                    <!-- Username -->
                     <div class="input-container">
                         <input type="text" id="codeverify" placeholder="6 digit kod" autocomplete="one-time-code"
                             inputmode="numeric" maxlength="6">
                     </div>
 
-                    <!-- Verify -->
                     <button type="submit" class="codeverifyForm-submit">
                         <span class="btn-text">Sahkan</span>
                         <div class="spinner center codeverifyForm-spinner">
@@ -190,7 +170,6 @@
                         </div>
                     </button>
 
-                    <!-- Resend code -->
                     <div class="auth-switch">
                         <span>Tak terima kod?</span>
                         <a id="resend-code-btn">Hantar semula</a>
@@ -199,7 +178,7 @@
             </div>
         </form>
     </div>
-    
+
     <div class="sidebar-overlay"></div>
 
     <div class="sidebar">
@@ -253,7 +232,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/" class="nav-logo">EasyRent</a>
+                    <a class="brand-logo nav-logo" href="/">EasyRent<span>.</span></a>
                 </li>
             </ul>
         </div>
@@ -277,7 +256,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="nav-mainbutton" href="/users/siarkan-iklan/">
+                    <a class="nav-mainbutton" onclick="checkLoginModal('/users/siarkan-iklan/')">
                         Siarkan Iklan
                     </a>
                 </li>
@@ -290,7 +269,7 @@
             <div class="nav-left">
                 <ul>
                     <li><a class="nav-logo" id="sidebarButton"><i class="fa-solid fa-bars"></i></a></li>
-                    <li><a href="/" class="nav-logo">EasyRent</a></li>
+                    <li><a class="brand-logo nav-logo" href="/">EasyRent<span>.</span></a></li>
                 </ul>
             </div>
 
@@ -313,37 +292,70 @@
     </div>
 
     <section id="top">
-        <div class="mobile-view">
-            <h2>Lihat apa yang terjadi sekarang</h2>
-            <p class="top-subtitle" style="color: #000000">Lihat dan berinteraksi dengan semua orang</p>
+        <h2>Lihat apa yang terjadi sekarang</h2>
+        <p class="top-subtitle">Lihat dan berinteraksi dengan semua orang</p>
 
-            <div class="section-picker">
-                <span class="section-picker-indicator"></span>
-                <a class="community-post-btn" data-section="community">Pos Komuniti</a>
-                <a class="your-post-btn" data-section="your">Pos Anda</a>
-            </div>
+        <div class="community-shell">
+            <aside class="community-sidebar">
+                <div class="community-panel-header">
+                    <span class="mini-label">Komuniti</span>
+                    <h3>Ruang pelajar</h3>
+                </div>
 
-            <div class="create-post">
-                <h3>Apakah yang ada di fikiran anda?</h3>
-                <form action="">
-                    <input type="text" name="post_title" placeholder="Tajuk"></input>
-                    <textarea type="text" name="post_val" placeholder="Taip sesuatu disini..."></textarea>
-                    <div class="create-post-footer">
-                        <div class="button-container">
-                            <button type="reset" class="reset-post">Reset <i class="fa-solid fa-trash"></i></button>
-                            <button type="submit" class="submit-post">Sent <i
-                                    class="fa-regular fa-paper-plane"></i></button>
+                <button class="community-pill active" type="button">Komuniti</button>
+                <button class="community-pill" type="button">Anda</button>
+                <button class="community-pill" type="button">Trending</button>
+                <button class="community-pill" type="button">Bantuan</button>
+
+                <div class="community-side-card">
+                    <p class="mini-label">Topik hangat</p>
+                    <ul>
+                        <li>#rumahbersama</li>
+                        <li>#carianrumah</li>
+                        <li>#tipssewa</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <div class="community-feed">
+                <div class="composer-box">
+                    <div class="composer-avatar">A</div>
+                    <div class="composer-input">Apa yang anda ingin bincangkan hari ini?</div>
+                </div>
+
+                <article class="community-post tag-carian">
+                    <div class="post-header">
+                        <div class="user-badge">M</div>
+                        <div>
+                            <h4>Mirai</h4>
+                            <span>2 jam yang lalu</span>
                         </div>
                     </div>
-                </form>
-            </div>
+                    <span class="post-tag">Carian roommate</span>
+                    <p class="post-text">Cari roommate yang tenang dan suka sharing rumah. Prefer area dekat campus dan budget sederhana.</p>
+                    <div class="post-actions">
+                        <span><i class="fa-regular fa-heart"></i> 128</span>
+                        <span><i class="fa-regular fa-comment"></i> 24</span>
+                        <span><i class="fa-regular fa-share-from-square"></i> 9</span>
+                    </div>
+                </article>
 
-            <br>
-            <hr>
-
-            <div class="community-section"></div>
-            <div class="you-section">
-
+                <article class="community-post tag-tips">
+                    <div class="post-header">
+                        <div class="user-badge alt">A</div>
+                        <div>
+                            <h4>Azhar</h4>
+                            <span>5 jam yang lalu</span>
+                        </div>
+                    </div>
+                    <span class="post-tag">Tips &amp; pengalaman</span>
+                    <p class="post-text">Ada tak sesiapa yang pernah sewa rumah dekat KL? Boleh share pengalaman dan tips untuk cari rumah yang selamat.</p>
+                    <div class="post-actions">
+                        <span><i class="fa-regular fa-heart"></i> 94</span>
+                        <span><i class="fa-regular fa-comment"></i> 18</span>
+                        <span><i class="fa-regular fa-share-from-square"></i> 6</span>
+                    </div>
+                </article>
             </div>
         </div>
     </section>

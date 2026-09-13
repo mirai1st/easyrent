@@ -250,7 +250,7 @@
           </a>
         </li>
         <li>
-          <a href="/" class="nav-logo">EasyRent</a>
+          <a class="brand-logo nav-logo" href="/">EasyRent<span>.</span></a>
         </li>
       </ul>
     </div>
@@ -275,7 +275,7 @@
           </a>
         </li>
         <li>
-          <a class="nav-mainbutton" href="/users/siarkan-iklan/">
+          <a class="nav-mainbutton" onclick="checkLoginModal('/users/siarkan-iklan/')">
             Siarkan Iklan
           </a>
         </li>
@@ -288,7 +288,7 @@
       <div class="nav-left">
         <ul>
           <li><a class="nav-logo" id="sidebarButton"><i class="fa-solid fa-bars"></i></a></li>
-          <li><a href="/" class="nav-logo">EasyRent</a></li>
+          <li><a class="brand-logo nav-logo" href="/">EasyRent<span>.</span></a></li>
         </ul>
       </div>
 
@@ -328,17 +328,39 @@
          ===================================================== -->
 
   <section id="top">
-    <!-- =========================
-             MOBILE
-             ========================= -->
+    <div class="mobile-view mobile-favourite-view">
+      <div class="favourite-container">
+        <div class="favourite-header">
+          <div>
+            <span class="favourite-kicker"><i class="fa-solid fa-bookmark"></i> Koleksi anda</span>
+            <h1>Rumah Kegemaran</h1>
+            <p>Simpan rumah yang menarik supaya mudah dicari semula.</p>
+          </div>
+          <div class="favourite-count"><strong>0</strong><span>Disimpan</span></div>
+        </div>
 
-    <div class="mobile-view mobile-message-view">
+        <div class="favourite-toolbar">
+          <div class="favourite-tabs" role="tablist" aria-label="Jenis simpanan">
+            <button class="favourite-tab active" type="button" data-favourite-tab="houses" aria-selected="true">
+              <i class="fa-solid fa-house"></i> Rumah Kegemaran <span>0</span>
+            </button>
+            <button class="favourite-tab" type="button" data-favourite-tab="student-posts" aria-selected="false">
+              <i class="fa-solid fa-graduation-cap"></i> Sudut Pelajar <span>0</span>
+            </button>
+          </div>
+          <span class="favourite-sort"><i class="fa-solid fa-arrow-down-wide-short"></i> Terbaharu</span>
+        </div>
 
+        <div class="favourite-empty" data-favourite-empty="houses">
+          <div class="favourite-empty-icon"><i class="fa-regular fa-heart"></i></div>
+          <h2>Belum ada rumah kegemaran</h2>
+          <p>Tekan ikon hati pada rumah yang anda suka. Semua pilihan anda akan muncul di sini.</p>
+          <a class="favourite-explore-btn" href="/#recommendations">
+            Terokai rumah <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
     </div>
-
-    <!-- =========================
-             DESKTOP
-             ========================= -->
 
     <div class="desktop-view desktop-message-view">
       <div class="side-panel">
@@ -383,12 +405,41 @@
       </div>
 
       <div class="favourite-container">
+        <div class="favourite-header">
+          <div>
+            <span class="favourite-kicker"><i class="fa-solid fa-bookmark"></i> Koleksi anda</span>
+            <h1>Rumah Kegemaran</h1>
+            <p>Simpan rumah yang menarik supaya mudah dicari semula.</p>
+          </div>
+          <div class="favourite-count"><strong>0</strong><span>Disimpan</span></div>
+        </div>
 
+        <div class="favourite-toolbar">
+          <div class="favourite-tabs" role="tablist" aria-label="Jenis simpanan">
+            <button class="favourite-tab active" type="button" data-favourite-tab="houses" aria-selected="true">
+              <i class="fa-solid fa-house"></i> Rumah Kegemaran <span>0</span>
+            </button>
+            <button class="favourite-tab" type="button" data-favourite-tab="student-posts" aria-selected="false">
+              <i class="fa-solid fa-graduation-cap"></i> Sudut Pelajar <span>0</span>
+            </button>
+          </div>
+          <span class="favourite-sort"><i class="fa-solid fa-arrow-down-wide-short"></i> Terbaharu</span>
+        </div>
+
+        <div class="favourite-empty" data-favourite-empty="houses">
+          <div class="favourite-empty-icon"><i class="fa-regular fa-heart"></i></div>
+          <h2>Belum ada rumah kegemaran</h2>
+          <p>Tekan ikon hati pada rumah yang anda suka. Semua pilihan anda akan muncul di sini.</p>
+          <a class="favourite-explore-btn" href="/#recommendations">
+            Terokai rumah <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
       </div>
+    </div>
   </section>
 
   <script src="/js/checkLogin.js"></script>
-  <script src="message.js"></script>
+  <script src="favourite.js"></script>
   <script src="/js/main-ui.js"></script>
   <script src="/js/loginRequest.js"></script>
 </body>

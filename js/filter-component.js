@@ -121,9 +121,9 @@
                     <td style="text-align: right;"><i class="fa-solid fa-chevron-down"></i></td>
                 </table>
                 <div class="filter-content">
+                    <label class="checkbox-row"><input type="radio" name="jantina" value="semua" checked> Semua</label>
                     <label class="checkbox-row"><input type="radio" name="jantina" value="lelaki"> Lelaki</label>
                     <label class="checkbox-row"><input type="radio" name="jantina" value="perempuan"> Perempuan</label>
-                    <label class="checkbox-row"><input type="radio" name="jantina" value="semua" checked> Semua</label>
                 </div>
             </div>
         </div>
@@ -155,7 +155,7 @@
             // Merge with defaults so new keys added later don't break old saves
             return { ...defaultState, ...saved };
         } catch (err) {
-            console.warn('EasyRentFilter: gagal baca localStorage, guna default.', err);
+            console.warn('EasyRentFilter: Error reading localStorage, using the default value...', err);
             return { ...defaultState };
         }
     }
@@ -168,7 +168,7 @@
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         } catch (err) {
-            console.warn('EasyRentFilter: gagal simpan ke localStorage.', err);
+            console.warn('EasyRentFilter: Error saving to localStorage!', err);
         }
     }
 

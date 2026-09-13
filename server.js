@@ -78,7 +78,9 @@ app.patch("/api/notifications/mark-all-read", authenticateToken, notiHandler.mar
 
 // House Fetch -----------------------------------------------------------------
 
-// TODO: This fetching the list of data from table rent according to the filter idk
+// Fetch approved house listings using search and filter query parameters.
+app.get("/api/house/fetch", houseHandler.fetchHouses);
+app.get("/api/house/detail", houseHandler.fetchHouseById);
 
 
 // Chat Handler ----------------------------------------------------------------
@@ -98,8 +100,6 @@ app.get("/api/recommendations", houseHandler.getRecommendations); // For getting
 // TODO: This send user post
 
 // Search handler --------------------------------------------------------------
-
-// TODO: This get the data from user search
 
 
 // Backend Inserter ------------------------------------------------------------
