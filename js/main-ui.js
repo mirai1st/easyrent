@@ -184,36 +184,41 @@ function moveCarousel(btn, direction) {
 let notificationTimeout = null;
 
 function showNotification(msg, type = 'success') {
-    const dialog = document.querySelector('.notification-dialog');
-    const msgElement = document.getElementById('notification-dialog-msg');
-    const notificationIcon = document.getElementById('notification-icon');
+  const popup = document.getElementById('notification-popup');
+  const titleElement = document.getElementById('notification-popup-title');
+  const msgElement = document.getElementById('notification-popup-msg');
+  const iconElement = document.getElementById('notification-popup-icon');
+  const timerElement = popup?.querySelector('.notification-progress-timer');
 
+  if (!popup || !titleElement || !msgElement || !iconElement) return;
     if (notificationTimeout) clearTimeout(notificationTimeout);
 
+  const isError = type === 'error';
+  titleElement.textContent = isError ? 'Ada masalah' : 'Berjaya';
     msgElement.textContent = msg;
+  iconElement.innerHTML = `<i class="fa-solid fa-circle-${isError ? 'xmark' : 'check'}"></i>`;
+  popup.classList.toggle('is-error', isError);
+  popup.classList.remove('show');
+  void popup.offsetWidth;
 
-    if (type === 'success') {
-        dialog.style.backgroundColor = '#4a99125d';
-        notificationIcon.innerHTML = "<i class='fa-solid fa-circle-check'></i>";
-    } else if (type === 'error') {
-        dialog.style.backgroundColor = '#9934125d';
-        dialog.style.borderColor = "#a727115d";
-        notificationIcon.innerHTML = "<i class='fa-solid fa-circle-xmark'></i>";
-    } else {
-        dialog.style.backgroundColor = '';
-        notificationIcon.innerHTML = '';
+  if (timerElement) {
+    timerElement.style.animation = 'none';
+    void timerElement.offsetWidth;
+    timerElement.style.animation = '';
     }
 
-    dialog.classList.remove('show', 'disable');
-    void dialog.offsetWidth; 
-    
-    dialog.classList.add('show');
+  popup.classList.add('show');
 
     notificationTimeout = setTimeout(() => {
-        dialog.classList.remove('show');
-        dialog.classList.add('disable');
-    }, 3000);
+    popup.classList.remove('show');
+  }, 4000);
 }
+
+document.getElementById('notification-popup-close')?.addEventListener('click', () => {
+  const popup = document.getElementById('notification-popup');
+  if (notificationTimeout) clearTimeout(notificationTimeout);
+  popup?.classList.remove('show');
+});
 
 // Parse URL search parameters once
 const urlParams = new URLSearchParams(window.location.search);

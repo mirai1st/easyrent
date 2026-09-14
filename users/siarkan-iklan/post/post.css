@@ -3,12 +3,17 @@
 }
 
 body {
-  background-color: white;
+  min-height: 100vh;
+  background-color: #f7f2ed;
+  background-image: linear-gradient(rgba(255, 252, 248, 0.82), rgba(255, 252, 248, 0.92)), url("https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=2200&q=85");
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 nav {
   padding: 20px 30px;
-  background-color: #f7f2edb4;
+  background-color: #f7f2ed85;
   display: flex;
   justify-content: space-between;
   font-weight: 500;
@@ -699,6 +704,7 @@ nav a {
 #top .form-footer button:active {
   transform: translateY(1px);
 }
+
 
 /* TABLET */
 @media (max-width: 950px) {

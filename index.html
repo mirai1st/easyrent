@@ -16,13 +16,21 @@
         <i class="fa-solid fa-arrow-down"></i>
     </a>
 
-    <div class="notification-dialog">
-        <span id="notification-icon">
-            <i class="fa-solid fa-circle-check"></i>
-        </span>
-        <span id="notification-dialog-msg">
-            Login Successfully
-        </span>
+    <div class="notification-popup" id="notification-popup" role="status" aria-live="polite">
+        <div class="flex">
+            <span class="notification-popup-icon" id="notification-popup-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </span>
+            <span class="notification-popup-content">
+                <strong id="notification-popup-title">Success!</strong>
+                <p id="notification-popup-msg"></p>
+            </span>
+            <button type="button" id="notification-popup-close" aria-label="Tutup notifikasi">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="notification-progress-bg"></div>
+        <div class="notification-progress-timer"></div>
     </div>
 
     <script src="js/filter-component.js"></script>

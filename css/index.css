@@ -378,7 +378,7 @@
     padding: 18px 24.8px;
     border-radius: 100px;
     transition: transform 0.3s ease;
-    z-index: 1000;
+    z-index: 500;
     font-size: large;
     background: #ad6a3623;
     backdrop-filter: blur(10px);
