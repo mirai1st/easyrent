@@ -10,14 +10,15 @@ function generateVerificationCode() {
 async function verifyCode(req, res) {
     try {
         const { email, code } = req.body;
+        const normalizedEmail = String(email || "").trim().toLowerCase();
 
-        if (!email || !code) {
+        if (!normalizedEmail || !code) {
             return res.status(400).json({ success: false, message: "Email dan kod diperlukan." });
         }
 
         const [rows] = await pool.query(
             "SELECT username, is_verified, verification_code, verification_expires FROM Users WHERE email = ?",
-            [email]
+            [normalizedEmail]
         );
 
         if (rows.length === 0) {
@@ -44,7 +45,7 @@ async function verifyCode(req, res) {
 
         await pool.query(
             "UPDATE Users SET is_verified = 1, verification_code = NULL, verification_expires = NULL WHERE email = ?",
-            [email]
+            [normalizedEmail]
         );
 
         return res.status(200).json({ success: true, message: "Akaun berjaya disahkan! Sila log masuk untuk meneruskan." });
@@ -59,14 +60,15 @@ async function verifyCode(req, res) {
 async function resendCode(req, res) {
     try {
         const { email } = req.body;
+        const normalizedEmail = String(email || "").trim().toLowerCase();
 
-        if (!email) {
+        if (!normalizedEmail) {
             return res.status(400).json({ success: false, message: "Email diperlukan." });
         }
 
         const [rows] = await pool.query(
             "SELECT is_verified FROM Users WHERE email = ?",
-            [email]
+            [normalizedEmail]
         );
 
         if (rows.length === 0) {
@@ -79,12 +81,13 @@ async function resendCode(req, res) {
 
         const newCode = generateVerificationCode();
 
+        await sendVerificationEmail(normalizedEmail, newCode);
+
+        // Simpan kod baharu hanya selepas SMTP menerima email.
         await pool.query(
             "UPDATE Users SET verification_code = ?, verification_expires = DATE_ADD(NOW(), INTERVAL 10 MINUTE) WHERE email = ?",
-            [newCode, email]
+            [newCode, normalizedEmail]
         );
-
-        await sendVerificationEmail(email, newCode);
 
         return res.status(200).json({ success: true, message: "Kod pengesahan baharu telah dihantar." });
 

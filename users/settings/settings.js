@@ -63,6 +63,19 @@ document.querySelectorAll('.settings-toggle').forEach(setting => {
             icon.classList.remove('fa-toggle-off');
             icon.classList.add('fa-toggle-on');
         }
+
+        const settingNames = {
+            'notif-email': 'Notifikasi E-mel',
+            'notif-push': 'Notifikasi Push',
+            'hide-profile': 'Sembunyikan profil'
+        };
+        const settingKey = setting.dataset.setting || setting.getAttribute('data');
+        const settingName = settingNames[settingKey] || 'Tetapan';
+        const state = !isOn ? 'dihidupkan' : 'dimatikan';
+
+        if (typeof showNotification === 'function') {
+            showNotification(`${settingName} ${state}.`, 'success', 3000);
+        }
     });
 });
 

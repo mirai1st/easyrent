@@ -16,22 +16,7 @@
         <i class="fa-solid fa-arrow-down"></i>
     </a>
 
-    <div class="notification-popup" id="notification-popup" role="status" aria-live="polite">
-        <div class="flex">
-            <span class="notification-popup-icon" id="notification-popup-icon">
-                <i class="fa-solid fa-circle-check"></i>
-            </span>
-            <span class="notification-popup-content">
-                <strong id="notification-popup-title">Success!</strong>
-                <p id="notification-popup-msg"></p>
-            </span>
-            <button type="button" id="notification-popup-close" aria-label="Tutup notifikasi">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-        <div class="notification-progress-bg"></div>
-        <div class="notification-progress-timer"></div>
-    </div>
+    <div class="notification-toast-container" id="notification-toast-container" aria-live="polite"></div>
 
     <script src="js/filter-component.js"></script>
 
@@ -327,12 +312,12 @@
         <div class="nav-right">
             <ul>
                 <li>
-                    <a href="/users/notifications/" class="notification-button nav-right-button">
+                    <a href="/users/notifications/" class="notification_object notification-button nav-right-button">
                         <i class="notification-count fa-regular fa-bell"></i>
                     </a>
                 </li>
                 <li>
-                    <a href="/users/message/" class="message-button nav-right-button">
+                    <a href="/users/message/" class="notification_object message-button nav-right-button">
                         <i class="message-count fa-regular fa-message"></i>
                     </a>
                 </li>
@@ -369,12 +354,12 @@
             <div class="nav-right">
                 <ul>
                     <li>
-                        <a href="/users/notifications/" class="notification-button nav-right-button">
+                        <a href="/users/notifications/" class="notification_object notification-button nav-right-button">
                             <i class="notification-count fa-regular fa-bell"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="/users/message/" class="message-button nav-right-button">
+                        <a href="/users/message/" class="notification_object message-button nav-right-button">
                             <i class="message-count fa-regular fa-message"></i>
                         </a>
                     </li>

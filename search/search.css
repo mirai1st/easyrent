@@ -146,6 +146,8 @@ nav .nav-right a {
   margin-top: 15px;
   border: 1px solid #00000023;
   border-radius: 12px;
+  position: sticky;
+  top: 90px;
 }
 
 .desktop-filter-form {

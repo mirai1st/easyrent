@@ -12,15 +12,25 @@ const transporter = nodemailer.createTransport({
 });
 
 async function sendEmail(to, title, message, html) {
+    const recipient = String(to || '').trim();
+
+    if (!recipient) {
+        throw new Error('Recipient email is required.');
+    }
+
     const mailOptions = {
         from: '"EasyRent" <' + process.env.EMAIL_USER + '>',
-        to: to,
+        to: recipient,
         subject: title,
         text: message,
         html: html,
     };
 
     return transporter.sendMail(mailOptions);
+}
+
+async function verifyEmailTransport() {
+    return transporter.verify();
 }
 
 async function sendVerificationEmail(to, code) {
@@ -47,4 +57,4 @@ async function sendCustomEmail(to, msg) {
     );
 }
 
-module.exports = { sendEmail, sendVerificationEmail };
+module.exports = { sendEmail, sendVerificationEmail, verifyEmailTransport };

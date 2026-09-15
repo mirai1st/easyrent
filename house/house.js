@@ -22,6 +22,32 @@ function formatDate(value) {
 	return new Date(value).toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+function createStreetViewMarkup(house) {
+	const latitude = Number(house.latitud);
+	const longitude = Number(house.longitud);
+
+	if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+		return '<div class="street-view-unavailable"><i class="fa-solid fa-street-view"></i><span>Street View tidak tersedia kerana koordinat rumah belum ditetapkan.</span></div>';
+	}
+
+	const streetViewUrl = `https://www.google.com/maps?q=&layer=c&cbll=${latitude},${longitude}&cbp=11,0,0,0,0&output=svembed`;
+	const mapsUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${latitude},${longitude}`;
+
+	return `
+		<div class="street-view-frame">
+			<iframe
+				src="${streetViewUrl}"
+				title="Street View lokasi rumah"
+				loading="lazy"
+				referrerpolicy="no-referrer-when-downgrade"
+				allowfullscreen></iframe>
+		</div>
+		<a class="street-view-link" href="${mapsUrl}" target="_blank" rel="noopener noreferrer">
+			<i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Street View dalam Google Maps
+		</a>
+	`;
+}
+
 function calculateDistance(firstPoint, secondPoint) {
 	const earthRadius = 6371;
 	const latitudeDifference = (secondPoint[0] - firstPoint[0]) * Math.PI / 180;
@@ -163,9 +189,20 @@ function renderHouse(house) {
 				<section class="detail-section location-section">
 					<h2>Lokasi</h2>
 					<p><i class="fa-solid fa-location-dot"></i> ${escapeHtml(house.location || 'Lokasi tidak dinyatakan')}</p>
+					<br>
+					<h4>Berikut adalah peta jarak dari rumah ke ${escapeHtml(house.targetInstitution || 'Pelajar')}</h4>
 					<div id="house-map" class="map-placeholder"><i class="fa-solid fa-map-location-dot"></i><span>Memuatkan peta jarak...</span></div>
-                    <br>
-                    <p>Maklumat peta ini adalah berdasarkan API leaflet (OpenStreetMap)</p>
+
+					<div class="street-view-section">
+						<div class="street-view-heading">
+							<h3><i class="fa-solid fa-street-view"></i> Street View</h3>
+							<span>Lihat kawasan sekitar rumah</span>
+						</div>
+						${createStreetViewMarkup(house)}
+					</div>
+
+					<br>
+                    <p>Maklumat peta ini adalah berdasarkan API leaflet (OpenStreetMap), Google Street View berdasarkan API Google Maps</p>
                 </section>
 			</div>
 			<aside class="contact-card">

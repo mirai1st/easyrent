@@ -68,7 +68,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function initialiseLocationMap() {
         loadLeaflet().then(() => {
-            locationMap = L.map(locationMapElement, { scrollWheelZoom: false }).setView([4.2105, 101.9758], 6);
+            locationMap = L.map(locationMapElement, { scrollWheelZoom: false });
+            locationMap.fitBounds([
+                [0.8, 99.5],
+                [7.5, 119.5]
+            ], { padding: [12, 12] });
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; OpenStreetMap contributors'

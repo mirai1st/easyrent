@@ -51,7 +51,7 @@ app.post("/api/update-profile", authenticateToken, upload.uploadProfile.single("
 // This handle when user want to delete the account
 app.delete("/api/delete-account", authenticateToken, userHandler.userAccountDeletion);
 // This handle when user want to update their account profile
-app.post("/api/users/update-profile", authenticateToken, userHandler.updateProfile);
+app.post("/api/users/update-profile", authenticateToken, upload.uploadProfile.single("profileImage"), userHandler.updateProfile);
 
 
 // User Notifications ----------------------------------------------------------

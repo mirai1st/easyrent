@@ -50,21 +50,15 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             return;
         }
 
-        if (document.referrer) {
-            // Ambil URL page sebelum ni
-            const prevUrl = new URL(document.referrer);
-            
-            // Set parameter login_success dan error pada URL tersebut
-            prevUrl.searchParams.set('login_success', 'false');
-            prevUrl.searchParams.set('error', data.message);
-            
-            // Redirect ke URL asal yang dah siap ada parameter
-            window.location.href = prevUrl.toString();
+        const errorMessage = `Ralat ketika mengelog masuk: ${data.message || 'Username atau password salah.'}`;
+        if (typeof showNotification === 'function') {
+            showNotification(errorMessage, 'error');
         } else {
-            // Fallback: Kalau kes user terus buka link login direct (tiada referrer), 
-            // hantar ke homepage utama dengan parameter tersebut
-            window.location.href = `/?login_success=false&error=${encodeURIComponent(data.message)}`;
+            alert(errorMessage);
         }
+
+        // Kekalkan pengguna pada halaman semasa dan biarkan modal login terbuka.
+        document.getElementById('login-modal').style.display = 'block';
 
     } catch (err) {
         alert("Ralat sambungan. Sila cuba lagi.");

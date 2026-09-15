@@ -41,7 +41,7 @@ async function updateProfile(req, res) {
         const file = req.file;
         let profileImg_url;
         if (file) {
-            profileImg_url = `/userdata/uploads/profileImg/${file.filename}`;
+            profileImg_url = file.filename;
         }
 
         let query;
@@ -87,7 +87,8 @@ async function updateProfile(req, res) {
 
         res.json({
             success: true,
-            message: "Profile updated successfully"
+            message: "Profile updated successfully",
+            profileImg_url
         });
 
     } catch (error) {

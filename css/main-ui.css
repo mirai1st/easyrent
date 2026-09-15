@@ -105,6 +105,10 @@ nav .nav-right a {
     color: #e98667;
 }
 
+.notification_object {
+    display: none;
+}
+
 /* =========================================================
    WEBSITE CUSTOM TEXT
    ========================================================= */
@@ -1088,12 +1092,20 @@ hr {
 
 /* New Notification Popup */
 
-.notification-popup {
+.notification-toast-container {
     position: fixed;
     top: 85px;
     right: 24px;
     z-index: 1000;
     width: min(360px, calc(100vw - 32px));
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.notification-popup {
+    position: relative;
     overflow: hidden;
     border: 1px solid rgba(126, 78, 42, 0.16);
     border-radius: 14px;
@@ -1114,6 +1126,11 @@ hr {
     pointer-events: auto;
     transform: translateX(0);
     visibility: visible;
+}
+
+.notification-popup.is-closing {
+    opacity: 0;
+    transform: translateX(20px);
 }
 
 .notification-popup .flex {
@@ -1201,7 +1218,7 @@ hr {
     height: 4px;
     background: #b86d38;
     transform-origin: left;
-    animation: notificationTimer 4s linear both;
+    animation: notificationTimer var(--notification-duration, 10s) linear both;
 }
 
 @keyframes notificationTimer {
@@ -1210,7 +1227,7 @@ hr {
 }
 
 @media (max-width: 600px) {
-    .notification-popup {
+    .notification-toast-container {
         top: 76px;
         right: 16px;
         left: 16px;

@@ -27,6 +27,22 @@ register_buttons.forEach(btn => {
   });
 });
 
+// Navigation buttons are loaded asynchronously from the nav component.
+document.addEventListener("click", (event) => {
+  const loginButton = event.target.closest(".login-modal-btn");
+  const registerButton = event.target.closest(".register-modal-btn");
+
+  if (loginButton && modal && register_modal) {
+    register_modal.style.display = "none";
+    modal.style.display = "block";
+  }
+
+  if (registerButton && modal && register_modal) {
+    modal.style.display = "none";
+    register_modal.style.display = "block";
+  }
+});
+
 // Close buttons
 login_close_btn.onclick = function () {
   modal.style.display = "none";
@@ -71,23 +87,29 @@ let touchStartY = 0;
 
 function setSidebarState(openState) {
   sidebarOpen = openState;
-  sidebar.classList.toggle("enabled", sidebarOpen);
-  sidebarOverlay.classList.toggle("enabled", sidebarOpen);
+  document.querySelector(".sidebar")?.classList.toggle("enabled", sidebarOpen);
+  document.querySelector(".sidebar-overlay")?.classList.toggle("enabled", sidebarOpen);
 }
 
 function updateNavState() {
   const scrolledPastThreshold = window.scrollY > 500;
   const shouldLookScrolled = scrolledPastThreshold || sidebarOpen;
+  const currentNavs = document.querySelectorAll("nav");
+  const currentNavLogos = document.querySelectorAll(".nav-logo");
+  const currentNavButtons = document.querySelectorAll(".nav-mainbutton");
+  const currentNavRightButtons = document.querySelectorAll(".nav-right-button");
 
   if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-    navs.forEach(nav => nav.classList.toggle("scrolled", shouldLookScrolled));
-    buttonToScroll.classList.toggle("rotate", scrolledPastThreshold);
-    buttonToScroll.href = scrolledPastThreshold ? "#top" : "#recommendations";
+    currentNavs.forEach(nav => nav.classList.toggle("scrolled", shouldLookScrolled));
+    buttonToScroll?.classList.toggle("rotate", scrolledPastThreshold);
+    if (buttonToScroll) {
+      buttonToScroll.href = scrolledPastThreshold ? "#top" : "#recommendations";
+    }
   
-    nav_logo.forEach(logo => logo.style.color = scrolledPastThreshold ? "#52341D" : "white");
-    navright_btn.forEach(link => link.style.color = scrolledPastThreshold ? "#52341D" : "white");
+    currentNavLogos.forEach(logo => logo.style.color = scrolledPastThreshold ? "#52341D" : "white");
+    currentNavRightButtons.forEach(link => link.style.color = scrolledPastThreshold ? "#52341D" : "white");
     
-    nav_mainbutton.forEach(btn => {
+    currentNavButtons.forEach(btn => {
       if (scrolledPastThreshold) {
         btn.classList.add("scrolled");
       } else {
@@ -101,22 +123,13 @@ function toggleSidebar() {
   setSidebarState(!sidebarOpen);
 }
 
-sidebarNavLinks.forEach(link => {
-  link.addEventListener("click", () => {
-    if (sidebarOpen) {
-      toggleSidebar();
-    }
-  });
-});
+document.addEventListener("click", (event) => {
+  const target = event.target.closest("#sidebarButton, .sidebar-close-btn, .sidebar-overlay, .sidebar-nav a");
+  if (!target) return;
 
-sidebarbtn.forEach(btn => {
-  btn.addEventListener("click", ()=> {
-    toggleSidebar();
-  })
+  if (target.matches(".sidebar-nav a") && !sidebarOpen) return;
+  toggleSidebar();
 });
-
-sidebarclosebtn.addEventListener("click", toggleSidebar);
-sidebarOverlay.addEventListener("click", toggleSidebar);
 
 document.addEventListener("touchstart", (event) => {
   const touch = event.changedTouches[0];
@@ -181,44 +194,51 @@ function moveCarousel(btn, direction) {
  * 5. Adds 'show' class to trigger notification appearance animation
  * 6. After 3 seconds, adds 'disable' class to fade out the notification
  */
-let notificationTimeout = null;
-
-function showNotification(msg, type = 'success') {
-  const popup = document.getElementById('notification-popup');
-  const titleElement = document.getElementById('notification-popup-title');
-  const msgElement = document.getElementById('notification-popup-msg');
-  const iconElement = document.getElementById('notification-popup-icon');
-  const timerElement = popup?.querySelector('.notification-progress-timer');
-
-  if (!popup || !titleElement || !msgElement || !iconElement) return;
-    if (notificationTimeout) clearTimeout(notificationTimeout);
+function showNotification(msg, type = 'success', timer = 10000) {
+  let container = document.getElementById('notification-toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'notification-toast-container';
+    container.className = 'notification-toast-container';
+    document.body.appendChild(container);
+  }
 
   const isError = type === 'error';
-  titleElement.textContent = isError ? 'Ada masalah' : 'Berjaya';
-    msgElement.textContent = msg;
-  iconElement.innerHTML = `<i class="fa-solid fa-circle-${isError ? 'xmark' : 'check'}"></i>`;
-  popup.classList.toggle('is-error', isError);
-  popup.classList.remove('show');
+  const popup = document.createElement('div');
+  popup.className = `notification-popup ${isError ? 'is-error' : ''}`;
+  popup.setAttribute('role', 'status');
+  popup.innerHTML = `
+    <div class="flex">
+      <span class="notification-popup-icon">
+        <i class="fa-solid fa-circle-${isError ? 'xmark' : 'check'}"></i>
+      </span>
+      <span class="notification-popup-content">
+        <strong>${isError ? 'Ralat Telah Berlaku' : 'Berjaya'}</strong>
+        <p></p>
+      </span>
+      <button type="button" aria-label="Tutup notifikasi">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="notification-progress-bg"></div>
+    <div class="notification-progress-timer"></div>
+  `;
+  popup.querySelector('p').textContent = msg;
+  popup.style.setProperty('--notification-duration', `${timer}ms`);
+  container.appendChild(popup);
   void popup.offsetWidth;
-
-  if (timerElement) {
-    timerElement.style.animation = 'none';
-    void timerElement.offsetWidth;
-    timerElement.style.animation = '';
-    }
-
   popup.classList.add('show');
 
-    notificationTimeout = setTimeout(() => {
-    popup.classList.remove('show');
-  }, 4000);
-}
+  const removePopup = () => {
+    if (!popup.isConnected) return;
+    popup.classList.add('is-closing');
+    popup.addEventListener('transitionend', () => popup.remove(), { once: true });
+    setTimeout(() => popup.remove(), 300);
+  };
 
-document.getElementById('notification-popup-close')?.addEventListener('click', () => {
-  const popup = document.getElementById('notification-popup');
-  if (notificationTimeout) clearTimeout(notificationTimeout);
-  popup?.classList.remove('show');
-});
+  popup.querySelector('button').addEventListener('click', removePopup);
+  setTimeout(removePopup, timer);
+}
 
 // Parse URL search parameters once
 const urlParams = new URLSearchParams(window.location.search);
@@ -228,12 +248,15 @@ const error = urlParams.get("error");
 
 // Priority logic prevents overwriting notifications
 if (loginSuccess === "true") {
-    showNotification("Logged in successfully!", "success");
+    loadUser((user) => {
+      showNotification(`Selamat kembali @${user.username}!`, "success");
+    });
+    
 } else if (loginSuccess === "false") {
-    showNotification(`Login Failed: ${error || 'Invalid credentials'}`, "error");
+    showNotification(`Ralat ketika mengelog masuk: ${error || 'Invalid credentials'}`, "error");
     modal.style.display = "block"; // Open login modal on failed login
 } else if (registerSuccess === "true") {
-    showNotification("Registered successfully!", "success");
+    showNotification("Akaun anda telah didaftarkan! Anda boleh me-log masuk semula akaun anda.", "success");
 } else if (error === "1") {
     showNotification("Uh oh! That action requires you to log in.", "error");
     modal.style.display = "block"; // Open login modal on failed login
@@ -257,27 +280,29 @@ loadUser((user, error) => {
         return;
     }
 
-    console.log("Current user:", user);
-
     const login_btn_m = document.querySelector("[data-view='mobile-navmainbtn']");
     const login_btn_d = document.querySelector("[data-view='desktop-navmainbtn']");
     const login_btn_side = document.querySelectorAll(".sidebar-login-btn");
+    const notification_object = document.querySelectorAll(".notification_object");
 
     if (login_btn_m || login_btn_d) {
-        if (login_btn_m) {
-            login_btn_m.textContent = "Siarkan Iklan";
-            login_btn_m.href = "/users/siarkan-iklan";
-        }
-
         if (login_btn_d) {
             login_btn_d.style.display = "none";
             login_btn_d.style.marginLeft = "0px";
         }
 
+        login_btn_m.style.display = "none";
+
         login_btn_side.forEach(btn => {
           btn.style.display = "none";
         })
+
+        notification_object.forEach(btn => {
+          btn.style.display = "block";
+        });
     }
+
+    
 });
 
 // Alert Box
@@ -290,10 +315,11 @@ function checkLoginModal(url, callback = () => {}) {
     loadUser((user, error) => {
         if (error || !user) {
             modal.style.display = "block";
-            showNotification("You need to log in first to access this feature.", "error");
+            showNotification("Anda perlu mengelog masuk untuk mengakses ciri ini.", "error");
         } else {
             window.location.href = url;
             callback();
         }
     });
 }
+

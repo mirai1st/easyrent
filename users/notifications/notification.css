@@ -2,6 +2,15 @@
     scroll-margin-top: 100px;
 }
 
+body {
+    background-color: #f7f2ed;
+    background-image:
+        repeating-linear-gradient(135deg, rgba(82, 52, 29, 0.025) 0 1px, transparent 1px 26px),
+        radial-gradient(circle at 8% 12%, rgba(215, 185, 108, 0.16), transparent 28%),
+        radial-gradient(circle at 92% 78%, rgba(74, 50, 31, 0.08), transparent 30%);
+    background-attachment: fixed;
+}
+
 nav {
     padding: 20px 30px;
     background-color: transparent;
@@ -81,7 +90,7 @@ nav a {
 
 
 #top {
-    padding: 100px 50px;
+    padding: 100px 150px;
     transition: padding 0.3s ease;
 }
 

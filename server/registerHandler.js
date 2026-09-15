@@ -13,8 +13,9 @@ function generateVerificationCode() {
 async function registerHandler(req, res) {
     try {
         const { username, email, password, repeat_password } = req.body;
+        const normalizedEmail = String(email || "").trim().toLowerCase();
 
-        if (!username || !email || !password || !repeat_password) {
+        if (!username || !normalizedEmail || !password || !repeat_password) {
             return res.status(400).json({ success: false, message: "Please fill all fields!" });
         }
 
@@ -24,7 +25,7 @@ async function registerHandler(req, res) {
 
         const [existing] = await pool.query(
             "SELECT * FROM Users WHERE username = ? OR email = ?",
-            [username, email]
+            [username, normalizedEmail]
         );
 
         if (existing.length > 0) {
@@ -40,7 +41,7 @@ async function registerHandler(req, res) {
         await pool.query(
             `INSERT INTO Users (username, email, password, is_verified, verification_code, verification_expires)
              VALUES (?, ?, ?, 0, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE))`,
-            [username, email, hashedPassword, verificationCode]
+            [username, normalizedEmail, hashedPassword, verificationCode]
         );
 
         await pool.query(`INSERT INTO notifications (username, type, title, message, is_read) VALUES (?, ?, ?, ?, 0)`, [
@@ -48,16 +49,19 @@ async function registerHandler(req, res) {
         ]);
 
         try {
-            await sendVerificationEmail(email, verificationCode);
+            await sendVerificationEmail(normalizedEmail, verificationCode);
         } catch (emailErr) {
             console.error("Failed to send verification email:", emailErr);
-            // Registration still succeeds; user can request the code to be resent later.
+            return res.status(502).json({
+                success: false,
+                message: "Akaun dicipta tetapi email pengesahan gagal dihantar. Sila cuba semula sebentar lagi."
+            });
         }
 
         return res.status(201).json({
             success: true,
             message: "Pendaftaran berjaya! Sila semak email anda untuk kod pengesahan.",
-            email: email
+            email: normalizedEmail
         });
 
     } catch (err) {

@@ -26,6 +26,9 @@ function initHeroBackgroundCarousel() {
 
     hero.prepend(background);
 
+    // Preload semua gambar awal-awal supaya swap tak kena decode on-the-spot
+    images.forEach(src => { new Image().src = src; });
+
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     let currentIndex = 0;
@@ -33,10 +36,17 @@ function initHeroBackgroundCarousel() {
 
     window.setInterval(() => {
         currentIndex = (currentIndex + 1) % images.length;
-        layers[nextLayerIndex].style.backgroundImage = `url("${images[currentIndex]}")`;
-        layers[nextLayerIndex].classList.add('active');
-        layers[1 - nextLayerIndex].classList.remove('active');
-        nextLayerIndex = 1 - nextLayerIndex;
+        const nextSrc = images[currentIndex];
+        const preloadedImg = new Image();
+
+        preloadedImg.onload = () => {
+            layers[nextLayerIndex].style.backgroundImage = `url("${nextSrc}")`;
+            layers[nextLayerIndex].classList.add('active');
+            layers[1 - nextLayerIndex].classList.remove('active');
+            nextLayerIndex = 1 - nextLayerIndex;
+        };
+
+        preloadedImg.src = nextSrc;
     }, 9000);
 }
 
