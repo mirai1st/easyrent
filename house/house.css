@@ -20,6 +20,7 @@ nav {
     border-bottom: 1px solid #52341d3f;
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+    /* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 4px, rgba(0, 0, 0, 0.24) 0px 1px 5px; */
 }
     
 nav.scrolled {

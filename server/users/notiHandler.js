@@ -1,4 +1,4 @@
-const db = require("../../db");
+const db = require("../db");
 
 // Get Unread Notification Counts
 async function getUnreadNotifications(req, res) {

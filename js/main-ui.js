@@ -27,6 +27,8 @@ register_buttons.forEach(btn => {
   });
 });
 
+loadNotificationCount();
+
 // Navigation buttons are loaded asynchronously from the nav component.
 document.addEventListener("click", (event) => {
   const loginButton = event.target.closest(".login-modal-btn");
@@ -275,39 +277,11 @@ if (cleanUrl.href !== window.location.href) {
 
 // Main CheckLogin for all pages
 
-loadUser((user, error) => {
-    if (error) {
-        return;
-    }
 
-    const login_btn_m = document.querySelector("[data-view='mobile-navmainbtn']");
-    const login_btn_d = document.querySelector("[data-view='desktop-navmainbtn']");
-    const login_btn_side = document.querySelectorAll(".sidebar-login-btn");
-    const notification_object = document.querySelectorAll(".notification_object");
-
-    if (login_btn_m || login_btn_d) {
-        if (login_btn_d) {
-            login_btn_d.style.display = "none";
-            login_btn_d.style.marginLeft = "0px";
-        }
-
-        login_btn_m.style.display = "none";
-
-        login_btn_side.forEach(btn => {
-          btn.style.display = "none";
-        })
-
-        notification_object.forEach(btn => {
-          btn.style.display = "block";
-        });
-    }
-
-    
-});
 
 // Alert Box
 
-loadNotificationCount();
+
 
 // Function to open modal login if user is not logged in, otherwise redirect to the specified URL and do callback
 

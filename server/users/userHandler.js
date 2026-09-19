@@ -1,3 +1,4 @@
+// This file contains functions for users backend
 const db = require("../db");
 
 // This functions get the user profile

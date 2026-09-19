@@ -15,7 +15,9 @@ const houseHandler = require("./server/houseHandler");
 // Users Libraries
 const chatHandler = require("./server/users/chatHandler");
 const userHandler = require("./server/users/userHandler");
-const notiHandler = require("./server/users/notifications/notificationsHandler");
+const notiHandler = require("./server/users/notiHandler");
+const favHandler = require("./server/users/favHandler");
+const spHandler = require("./server/users/spHandler")
 
 // Login/Register Handler
 const loginHandler = require("./server/loginHandler");
@@ -95,9 +97,21 @@ app.get("/api/recommendations", houseHandler.getRecommendations); // For getting
 
 // Sudut pelajar ---------------------------------------------------------------
 
-// TODO: This fetch list of post
+// This fetch list of post
+app.get("/api/v1/sp/fetch", spHandler.fetchPost);
+// This send user post
+app.post("/api/v1/sp/insert", authenticateToken, upload.uploadSP.array("imgFile", 5), spHandler.insertPost);
+// This handle delete post
+app.delete("/api/v1/sp/delete/:spID", authenticateToken, spHandler.deletePost);
+// This handle liking post
+app.post("/api/v1/sp/like/:spID", authenticateToken, spHandler.likePost);
+// This handle post user comments
+app.post("/api/v1/sp/posts/:spID/comments", authenticateToken, spHandler.replyPost);
+// This handle fetch comments
+app.get("/api/v1/sp/posts/:spID/comments", spHandler.fetchPostReply);
+// This handle delete comments
+app.delete("/api/v1/sp/posts/delete/:commentId", authenticateToken, spHandler.deletePostReply);
 
-// TODO: This send user post
 
 // Search handler --------------------------------------------------------------
 

@@ -179,7 +179,7 @@ function renderHouse(house) {
 				<section class="detail-section facts-section">
 					<div class="fact"><i class="fa-solid fa-bed"></i><span><strong>${house.totalRoom || 0}</strong> bilik tidur</span></div>
 					<div class="fact"><i class="fa-solid fa-shower"></i><span><strong>${house.totalShower || 0}</strong> bilik air</span></div>
-					<div class="fact"><i class="fa-solid fa-graduation-cap"></i><span><strong>${escapeHtml(house.targetInstitution || 'Pelajar')}</strong></span></div>
+					<div class="fact"><i class="fa-solid fa-graduation-cap"></i><span><strong>${escapeHtml(house.targetInstitution || 'Pelajar')}</strong> Institusi Sasaran</span></div>
 					<div class="fact"><i class="fa-solid fa-users"></i><span><strong>${escapeHtml(house.gender ? `${house.gender} Sahaja` : 'Tidak dinyatakan')}</strong></span></div>
 				</section>
 				<section class="detail-section">

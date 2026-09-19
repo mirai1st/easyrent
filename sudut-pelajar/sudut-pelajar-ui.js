@@ -1,175 +1,403 @@
-// const picker = document.querySelector('.section-picker');
-// const tabs = picker.querySelectorAll('a');
+let currentUsername = null;
 
-// const community_post_sec = document.querySelector(".community-section");
-// const your_post_sec = document.querySelector(".you-section");
+async function loadCurrentUser() {
+    try {
+        const res = await fetch("/api/me");
+        if (!res.ok) return; // belum log masuk
+        const data = await res.json();
+        currentUsername = data.username || (data.user && data.user.username) || null;
+    } catch (err) {
+        currentUsername = null;
+    }
+}
 
-// tabs.forEach((tab, index) => {
-//     tab.addEventListener('click', () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadCurrentUser();
+    fetchAndRenderPosts();
+});
 
-//         tabs.forEach((t) => {
-//             t.classList.remove('active');
-//         });
+// Elak XSS: semua teks dari pengguna mesti melalui fungsi ini sebelum masuk innerHTML
+function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    }[c]));
+}
 
-//         tab.classList.add('active');
+// Avatar: huruf pertama sebagai fallback, gambar profil di atasnya jika ada
+function avatarHtml(name, imgUrl) {
+    const initial = escapeHtml(name.charAt(0).toUpperCase());
+    const img = imgUrl
+        ? `<img src="/userdata/uploads/profileImg/${escapeHtml(imgUrl)}" alt="" loading="lazy" onerror="this.remove()">`
+        : "";
+    return `<div class="sp-avatar">${initial}${img}</div>`;
+}
 
-//         picker.classList.toggle('your-active', index === 1);
+// 1. Ambil & Papar Senarai Post
+async function fetchAndRenderPosts() {
+    try {
+        const res = await fetch("/api/v1/sp/fetch");
+        const data = await res.json();
 
-//         if (index === 0) {
-//             community_post_sec.style.display = "block";
-//             your_post_sec.style.display = "none";
-//         } else {
-//             community_post_sec.style.display = "none";
-//             your_post_sec.style.display = "block";
-//         }
-//     });
-// });
+        if (data.success) {
+            renderFeed(data.posts);
+        } else {
+            console.error("Gagal mengambil hantaran:", data.message);
+        }
+    } catch (err) {
+        console.error("Error fetching posts:", err);
+    }
+}
 
+// 2. Render Feed ke HTML
+function renderFeed(posts) {
+    const feedContainer = document.querySelector(".community-feed");
+    if (!feedContainer) return;
 
-// tabs[0].classList.add('active');
+    let html = `
+        <div class="sp-composer-card">
+            <textarea id="new-post-input" class="sp-composer-textarea" rows="3" placeholder="Apa yang anda ingin bincangkan hari ini?"></textarea>
 
-// community_post_sec.style.display = "block";
-// your_post_sec.style.display = "none";
+            <div id="image-preview-container" class="sp-image-preview" style="display:none;">
+                <img id="image-preview" src="" alt="Preview Gambar">
+                <button type="button" class="sp-btn-remove-img" onclick="removeSelectedImage()" title="Buang gambar" aria-label="Buang gambar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
 
+            <div class="sp-composer-actions">
+                <label for="post-img-input" class="sp-upload-btn" title="Tambah Gambar">
+                    <i class="fa-regular fa-image"></i> Gambar
+                </label>
+                <input type="file" id="post-img-input" accept="image/jpeg,image/png" style="display: none;" onchange="previewImage(event)">
 
-// function renderPost(data, index) {
+                <button id="btn-submit-post" class="sp-btn-submit">Hantar</button>
+            </div>
+        </div>
+    `;
 
-//     let image = '';
+    if (!posts || posts.length === 0) {
+        html += `
+            <div class="sp-empty">
+                <i class="fa-regular fa-comments fa-2x"></i>
+                <p>Tiada hantaran lagi. Mulakan perbincangan pertama anda!</p>
+            </div>
+        `;
+    } else {
+        posts.forEach((post) => {
+            const displayName = post.full_name || post.username;
 
-//     if (data.image) {
-//         image = `<div class='card-image'><img src="${data.image_location}"></div>`;
-//     }
+            let imageHtml = "";
+            if (post.imgFile && post.imgFile.length > 0) {
+                imageHtml = `
+                    <div class="sp-post-image">
+                        <button type="button" class="sp-post-image-btn" data-full="${escapeHtml(post.imgFile[0])}" aria-label="Lihat gambar penuh">
+                            <img src="${escapeHtml(post.imgFile[0])}" alt="Gambar Hantaran" loading="lazy">
+                        </button>
+                    </div>
+                `;
+            }
 
-//     return `
-//         <div class='card'>
-//             ${image}
-//             <div class='card-content'> 
-//                 <p class='title'>${data.title}</p> 
-//                 <p class='subtitle'>${data.subtitle}</p> 
-//             </div> 
-//             <div class='card-footer'> 
-//                 <p class='footer-text'>Dihantar oleh @${data.author} pada ${data.post_date}</p> 
-//             </div> 
-//             <div class='like-icon-btn'> 
-//                 <span class='comment-count'>${data.comment_count}</span>
-//                 <i class="fa-regular fa-comment"></i><span class='divider'>|</span> 
-//                 <span class='like-count' data-index="${index}">${data.like_count}</span>
-//                 <i class="fa-${data.liked ? 'solid' : 'regular'} fa-heart" data-index="${index}"></i> 
-//             </div>
-//         </div>
-//     `;
-// }
+            const deleteBtn = post.username === currentUsername
+                ? `<button type="button" class="sp-btn-delete" onclick="handleDeletePost(${post.spId})" title="Padam Post">
+                        <i class="fa-regular fa-trash-can"></i> Padam
+                    </button>`
+                : "";
 
-// const dummy_post = [
+            html += `
+                <article class="sp-post-card" data-id="${post.spId}" data-aos="fade-up" data-aos-duration="500">
+                    <div class="sp-post-header">
+                        <div class="sp-user-info">
+                            ${avatarHtml(displayName, post.profileImg_url)}
+                            <div class="sp-user-details">
+                                <h4>${escapeHtml(displayName)}</h4>
+                                <span>@${escapeHtml(post.username)}</span>
+                            </div>
+                        </div>
+                        ${deleteBtn}
+                    </div>
 
-//     {
-//         image: true,
-//         image_location: "/users/images/sudut-pelajar/post1dummy.jpg",
-//         title: "Saya perlukan orang segera",
-//         subtitle: "Saya perlukan orang segera untuk masuk dalam rumah ni... Nak bagi murah hehe",
-//         author: "azhar",
-//         post_date: "9/9/2026",
-//         comment_count: "1.5K",
-//         like_count: 10000,
-//         liked: false
-//     },
+                    <p class="sp-post-content">${escapeHtml(post.content)}</p>
 
-//     {
-//         image: false,
-//         image_location: "",
-//         title: "Kenapa website ni macam ni?",
-//         subtitle: "Saja je taip ni, takde isu pun",
-//         author: "mirai",
-//         post_date: "1/8/2026",
-//         comment_count: "12",
-//         like_count: 116,
-//         liked: false
-//     },
+                    ${imageHtml}
 
-//     {
-//         image: false,
-//         image_location: "",
-//         title: "Weh ada rumah kosong tak?",
-//         subtitle: "Kut2 la ada en area sini, kalau ada komen sini boleh?",
-//         author: "mirai",
-//         post_date: "7/7/2026",
-//         comment_count: "4",
-//         like_count: 21,
-//         liked: false
-//     },
+                    <div class="sp-post-actions">
+                        <button type="button" class="sp-action-btn" onclick="handleLikePost(${post.spId}, this)">
+                            <i class="fa-regular fa-heart"></i>
+                            <span id="like-count-${post.spId}">${post.likeCount}</span>
+                        </button>
+                        <button type="button" class="sp-action-btn" onclick="toggleComments(${post.spId})">
+                            <i class="fa-regular fa-comment"></i>
+                            <span id="comment-count-${post.spId}">${post.commentCount}</span> Komen
+                        </button>
+                    </div>
 
-//     {
-//         image: false,
-//         image_location: "",
-//         title: "Rumah dekat KL",
-//         subtitle: "Ada siapa-siapa nak cari rumah dekat KL?",
-//         author: "azhar",
-//         post_date: "10/9/2026",
-//         comment_count: "23",
-//         like_count: 213,
-//         liked: false
-//     }
+                    <div id="comments-section-${post.spId}" class="sp-comments-section">
+                        <div id="comments-list-${post.spId}">
+                            <em style="font-size: 12px; color: #7a6359;">Memuatkan komen...</em>
+                        </div>
+                        <div class="sp-comment-input-box">
+                            <input type="text" id="comment-input-${post.spId}" class="sp-comment-input" placeholder="Tulis komen...">
+                            <button type="button" class="sp-btn-submit" style="padding: 7px 16px; font-size: 0.82rem;" onclick="handleSendComment(${post.spId})">Komen</button>
+                        </div>
+                    </div>
+                </article>
+            `;
+        });
+    }
 
-// ];
+    feedContainer.innerHTML = html;
 
+    const btnSubmit = document.getElementById("btn-submit-post");
+    if (btnSubmit) {
+        btnSubmit.addEventListener("click", handleCreatePost);
+    }
+}
 
-// function parseDate(date) {
-//     const [day, month, year] = date
-//         .split('/')
-//         .map(Number);
+// Fungsi Preview Gambar sebelum hantar
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById("image-preview").src = e.target.result;
+            document.getElementById("image-preview-container").style.display = "block";
+        };
+        reader.readAsDataURL(file);
+    }
+}
 
-//     return new Date(
-//         year,
-//         month - 1,
-//         day
-//     );
-// }
+// Batal / Buang Gambar Pilihan
+function removeSelectedImage() {
+    const fileInput = document.getElementById("post-img-input");
+    if (fileInput) fileInput.value = "";
+    document.getElementById("image-preview-container").style.display = "none";
+    document.getElementById("image-preview").src = "";
+}
 
-// // sorting list (should add more types)
+// 3. Tambah Hantaran Baru (Penghantaran FormData)
+async function handleCreatePost() {
+    const input = document.getElementById("new-post-input");
+    const imgInput = document.getElementById("post-img-input");
+    const content = input.value.trim();
 
-// dummy_post.sort((a, b) => {
-//     return parseDate(b.post_date) - parseDate(a.post_date);
-// });
+    if (!content && (!imgInput.files || imgInput.files.length === 0)) {
+        showNotification("Sila taip atau memuat naik sekurang-kurangnya satu gambar.", "error", 3000);
+        return;
+    }
 
+    const formData = new FormData();
+    formData.append("content", content);
 
-// // Comment and like count (delegated — jalan walau post baru di-render lepas ni)
+    if (imgInput.files && imgInput.files[0]) {
+        // 'imgFile' sepadan dengan upload.uploadSP.array('imgFile', 5) di server
+        formData.append("imgFile", imgInput.files[0]);
+    }
 
-// document.body.addEventListener("click", (e) => {
-//     const likeEl = e.target.closest(".like-count, .fa-heart");
-//     if (!likeEl) return;
+    try {
+        const res = await fetch("/api/v1/sp/insert", {
+            method: "POST",
+            body: formData
+        });
 
-//     const index = likeEl.dataset.index;
-//     const post = dummy_post[index];
+        const data = await res.json();
+        if (data.success) {
+            input.value = "";
+            removeSelectedImage();
+            fetchAndRenderPosts();
+            showNotification("Post anda telah pun berjaya disiarkan!", "success", 3000);
+        } else {
+            showNotification("Sila log masuk akaun sebelum membuat siaran", "error", 3000);
+        }
+    } catch (err) {
+        console.error("Error creating post:", err);
+    }
+}
 
-//     // toggle
-//     post.liked = !post.liked;
-//     post.like_count += post.liked ? 1 : -1;
+// 4. Padam Post
+async function handleDeletePost(spID) {
+    if (!confirm("Adakah anda pasti ingin memadam post ini?")) return;
 
-//     // update semua elemen yang share index sama (community + your-post)
-//     document.querySelectorAll(`.like-count[data-index="${index}"]`)
-//         .forEach(el => el.textContent = post.like_count);
+    try {
+        const res = await fetch(`/api/v1/sp/delete/${spID}`, { method: "DELETE" });
+        const data = await res.json();
+        if (data.success) {
+            fetchAndRenderPosts();
+            showNotification("Post anda telah dipadamkan.", "success", 3000);
+        } else {
+            showNotification("Maaf, anda tidak boleh memadam siaran orang lain.", "error", 3000);
+        }
+    } catch (err) {
+        console.error("Error deleting post:", err);
+    }
+}
 
-//     document.querySelectorAll(`.fa-heart[data-index="${index}"]`)
-//         .forEach(el => {
-//             el.classList.toggle('fa-solid', post.liked);
-//             el.classList.toggle('fa-regular', !post.liked);
-//         });
-// });
+// 5. Tambah Like (kemas kini kiraan terus tanpa render semula feed)
+async function handleLikePost(spID, btn) {
+    try {
+        const res = await fetch(`/api/v1/sp/like/${spID}`, { method: "POST" });
+        const data = await res.json();
+        if (data.success) {
+            const counter = document.getElementById(`like-count-${spID}`);
+            if (counter) counter.textContent = Number(counter.textContent) + 1;
+            if (btn) {
+                btn.classList.add("liked");
+                const icon = btn.querySelector("i");
+                if (icon) icon.className = "fa-solid fa-heart";
+            }
+        } else {
+            showNotification("Sila log masuk untuk menyukai hantaran ini.", "error", 3000);
+        }
+    } catch (err) {
+        console.error("Error liking post:", err);
+    }
+}
 
-// // loadpost
+// Ubah kiraan komen pada kad post tanpa render semula feed
+function adjustCommentCount(spID, delta) {
+    const counter = document.getElementById(`comment-count-${spID}`);
+    if (counter) counter.textContent = Math.max(0, Number(counter.textContent) + delta);
+}
 
-// async function loadPosts() {
+// 6. Buka / Tutup Ruang Komen
+function toggleComments(spID) {
+    const section = document.getElementById(`comments-section-${spID}`);
+    if (section.style.display === "none" || section.style.display === "") {
+        section.style.display = "block";
+        fetchAndRenderComments(spID);
+    } else {
+        section.style.display = "none";
+    }
+}
 
-//     community_post_sec.innerHTML = '';
-//     your_post_sec.innerHTML = '';
+// 7. Ambil & Papar Komen
+async function fetchAndRenderComments(spID) {
+    const commentsList = document.getElementById(`comments-list-${spID}`);
+    try {
+        const res = await fetch(`/api/v1/sp/posts/${spID}/comments`);
+        const data = await res.json();
 
-//     dummy_post.forEach((post, index) => {
-//         community_post_sec.innerHTML += renderPost(post, index);
+        if (data.success) {
+            if (data.comments.length === 0) {
+                commentsList.innerHTML = `<p style="font-size: 12px; color: #7a6359; margin: 0;">Tiada komen lagi.</p>`;
+                return;
+            }
 
-//         if (post.author === "mirai") {
-//             your_post_sec.innerHTML += renderPost(post, index);
-//         }
-//     });
-// }
+            let html = "";
+            data.comments.forEach((comment) => {
+                const name = (comment.full_name && comment.full_name !== "-")
+                    ? comment.full_name
+                    : comment.username;
 
-// // loadPosts();
+                const deleteBtn = comment.username === currentUsername
+                    ? `<button type="button" class="sp-btn-delete" style="font-size: 0.75rem;" onclick="handleDeleteComment(${comment.commentId}, ${spID})">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>`
+                    : "";
+
+                html += `
+                    <div class="sp-comment-item">
+                        <div>
+                            <div class="sp-comment-header">
+                                <strong>${escapeHtml(name)}</strong>
+                                <span>@${escapeHtml(comment.username)}</span>
+                            </div>
+                            <p class="sp-comment-text">${escapeHtml(comment.content)}</p>
+                        </div>
+                        ${deleteBtn}
+                    </div>
+                `;
+            });
+            commentsList.innerHTML = html;
+        }
+    } catch (err) {
+        showNotification("Ralat ketika memuatkan komen", "error", 3000);
+        commentsList.innerHTML = `<p style="color:red; font-size: 12px;">Gagal memuatkan komen.</p>`;
+    }
+}
+
+// 8. Hantar Komen Baru
+async function handleSendComment(spID) {
+    const input = document.getElementById(`comment-input-${spID}`);
+    const content = input.value.trim();
+
+    if (!content) {
+        showNotification("Sila taip komen terlebih dahulu", "error", 3000);
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/v1/sp/posts/${spID}/comments`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: content, imgFile: [], replyTo: "" })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+            input.value = "";
+            adjustCommentCount(spID, 1);
+            fetchAndRenderComments(spID);
+            showNotification("Komen anda telah berjaya dihantar!", "success", 3000);
+        } else {
+            showNotification("Sila log masuk sebelum membuat komen.", "error", 3000);
+        }
+    } catch (err) {
+        console.error("Error sending comment:", err);
+    }
+}
+
+// 9. Padam Komen
+async function handleDeleteComment(commentId, spID) {
+    if (!confirm("Adakah anda pasti ingin memadam komen ini?")) return;
+
+    try {
+        const res = await fetch(`/api/v1/sp/posts/delete/${commentId}`, { method: "DELETE" });
+        const data = await res.json();
+        if (data.success) {
+            adjustCommentCount(spID, -1);
+            fetchAndRenderComments(spID);
+            showNotification("Komen anda telah berjaya dipadamkan.", "success", 3000);
+        } else {
+            showNotification("Gagal memadam komen.", "error", 3000);
+        }
+    } catch (err) {
+        console.error("Error deleting comment:", err);
+    }
+}
+
+// Popup gambar penuh
+function openImageViewer(src) {
+    const overlay = document.createElement("div");
+    overlay.className = "sp-lightbox";
+    overlay.innerHTML = `
+        <button type="button" class="sp-lightbox-close" aria-label="Tutup">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <img src="${escapeHtml(src)}" alt="Gambar Hantaran">
+    `;
+
+    const close = () => {
+        overlay.remove();
+        document.removeEventListener("keydown", onKey);
+    };
+    const onKey = (e) => {
+        if (e.key === "Escape") close();
+    };
+
+    // Klik di mana-mana selain gambar akan menutup popup
+    overlay.addEventListener("click", (e) => {
+        if (e.target.tagName !== "IMG") close();
+    });
+    document.addEventListener("keydown", onKey);
+    document.body.appendChild(overlay);
+}
+
+// Satu listener untuk semua gambar dalam feed
+document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".sp-post-image-btn");
+    if (btn) openImageViewer(btn.dataset.full);
+});

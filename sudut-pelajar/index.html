@@ -7,10 +7,12 @@
     <title>EasyRent - Sudut Pelajar</title>
     <link rel="stylesheet" href="../css/main-ui.css">
     <link rel="stylesheet" href="sudut-pelajar.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <script src="https://kit.fontawesome.com/7a8114958c.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
+    <!-- Login Modal -->
     <div id="login-modal" class="login-modal">
         <form id="loginForm">
             <div class="login-modal-container">
@@ -30,13 +32,11 @@
                     <p>Log masuk untuk meneruskan perjalanan anda.</p>
 
                     <div class="input-container">
-                        <input type="text" id="username-login" placeholder="Username atau Email"
-                            autocomplete="username">
+                        <input type="text" id="username-login" placeholder="Username atau Email" autocomplete="username">
                     </div>
 
                     <div class="input-container">
-                        <input type="password" id="password-login" placeholder="Password"
-                            autocomplete="current-password">
+                        <input type="password" id="password-login" placeholder="Password" autocomplete="current-password">
                     </div>
 
                     <button type="submit" class="loginForm-submit">
@@ -66,6 +66,7 @@
         </form>
     </div>
 
+    <!-- Register Modal -->
     <div id="register-modal" class="register-modal">
         <form id="registerForm">
             <div class="register-modal-container">
@@ -93,13 +94,11 @@
                     </div>
 
                     <div class="input-container">
-                        <input type="password" id="password-register" placeholder="Password"
-                            autocomplete="new-password">
+                        <input type="password" id="password-register" placeholder="Password" autocomplete="new-password">
                     </div>
 
                     <div class="input-container">
-                        <input type="password" id="repeat_password-register" placeholder="Re-enter Password"
-                            autocomplete="new-password">
+                        <input type="password" id="repeat_password-register" placeholder="Re-enter Password" autocomplete="new-password">
                     </div>
 
                     <button type="submit" class="registerForm-submit">
@@ -129,6 +128,7 @@
         </form>
     </div>
 
+    <!-- Code Verify Modal -->
     <div id="codeverify-modal" class="codeverify-modal">
         <form id="codeverifyForm">
             <div class="codeverify-modal-container">
@@ -148,8 +148,7 @@
                     <p>Kod pengesahan telah dihantar ke email anda <span id="inserted-email">-</span></p>
 
                     <div class="input-container">
-                        <input type="text" id="codeverify" placeholder="6 digit kod" autocomplete="one-time-code"
-                            inputmode="numeric" maxlength="6">
+                        <input type="text" id="codeverify" placeholder="6 digit kod" autocomplete="one-time-code" inputmode="numeric" maxlength="6">
                     </div>
 
                     <button type="submit" class="codeverifyForm-submit">
@@ -179,6 +178,7 @@
         </form>
     </div>
 
+    <!-- Sidebar Overlay & Menu -->
     <div class="sidebar-overlay"></div>
 
     <div class="sidebar">
@@ -190,7 +190,7 @@
 
         <ul class="sidebar-nav">
             <li>
-                <a href="#top">
+                <a href="/#top">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -203,7 +203,7 @@
             </li>
 
             <li>
-                <a href="#recommendations">
+                <a href="/#recommendations">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -265,6 +265,7 @@
         </div>
     </div>
 
+    <!-- Desktop Navigation (Default) -->
     <nav class="desktop-view">
         <div class="nav-left">
             <ul>
@@ -306,6 +307,7 @@
         </div>
     </nav>
 
+    <!-- Mobile Navigation (Default) -->
     <div class="mobile-view">
         <nav class="mobile-view-nav">
             <div class="nav-left">
@@ -343,6 +345,7 @@
         </nav>
     </div>
 
+    <!-- Main Content: Sudut Pelajar Section -->
     <section id="top">
         <h2>Lihat apa yang terjadi sekarang</h2>
         <p class="top-subtitle">Lihat dan berinteraksi dengan semua orang</p>
@@ -369,46 +372,8 @@
                 </div>
             </aside>
 
-            <div class="community-feed">
-                <div class="composer-box">
-                    <div class="composer-avatar">A</div>
-                    <div class="composer-input">Apa yang anda ingin bincangkan hari ini?</div>
-                </div>
-
-                <article class="community-post tag-carian">
-                    <div class="post-header">
-                        <div class="user-badge">M</div>
-                        <div>
-                            <h4>Mirai</h4>
-                            <span>2 jam yang lalu</span>
-                        </div>
-                    </div>
-                    <span class="post-tag">Carian roommate</span>
-                    <p class="post-text">Cari roommate yang tenang dan suka sharing rumah. Prefer area dekat campus dan budget sederhana.</p>
-                    <div class="post-actions">
-                        <span><i class="fa-regular fa-heart"></i> 128</span>
-                        <span><i class="fa-regular fa-comment"></i> 24</span>
-                        <span><i class="fa-regular fa-share-from-square"></i> 9</span>
-                    </div>
-                </article>
-
-                <article class="community-post tag-tips">
-                    <div class="post-header">
-                        <div class="user-badge alt">A</div>
-                        <div>
-                            <h4>Azhar</h4>
-                            <span>5 jam yang lalu</span>
-                        </div>
-                    </div>
-                    <span class="post-tag">Tips &amp; pengalaman</span>
-                    <p class="post-text">Ada tak sesiapa yang pernah sewa rumah dekat KL? Boleh share pengalaman dan tips untuk cari rumah yang selamat.</p>
-                    <div class="post-actions">
-                        <span><i class="fa-regular fa-heart"></i> 94</span>
-                        <span><i class="fa-regular fa-comment"></i> 18</span>
-                        <span><i class="fa-regular fa-share-from-square"></i> 6</span>
-                    </div>
-                </article>
-            </div>
+            <!-- Container dinamik untuk diproses oleh sudut-pelajar-ui.js -->
+            <div class="community-feed"></div>
         </div>
     </section>
 
@@ -416,6 +381,8 @@
     <script src="sudut-pelajar-ui.js"></script>
     <script src="../js/main-ui.js"></script>
     <script src="../js/loginRequest.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>AOS.init();</script>
 </body>
 
 </html>
