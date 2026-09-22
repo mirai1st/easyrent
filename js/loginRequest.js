@@ -39,7 +39,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         const data = await response.json();
 
         if (data.success) {
-            window.location = `/?login_success=true`;
+            window.location.reload();
             return;
         }
 
@@ -128,7 +128,8 @@ document.getElementById("codeverifyForm").addEventListener("submit", async (e) =
         const data = await response.json();
 
         if (data.success) {
-            window.location = "/?register_success=true";
+            const cleanURL = window.location.origin + window.location.pathname
+            window.location = `${cleanURL}?register_success=true`;
         } else {
             showNotification("Ralat sambungan! Sila cuba sebentar lagi.", "error", 3000);
         }

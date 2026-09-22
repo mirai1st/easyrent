@@ -236,8 +236,6 @@ async function getLikedPosts(req, res) {
     }
 }
 
-
-
 module.exports = {
     insertPost,
     fetchPost,

@@ -33,7 +33,6 @@ app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:4000", credentials: true }));
 
 app.use(express.static(path.join(__dirname)));
-app.use("/api/v1/chat", chatRouter);
 
 // Login/Register Handler ------------------------------------------------------
 
@@ -85,12 +84,9 @@ app.post("/api/favourite/toggle", authenticateToken, favHandler.toggleFavourite)
 app.get("/api/house/fetch", houseHandler.fetchHouses);
 app.get("/api/house/detail", houseHandler.fetchHouseById);
 
-
 // Chat Handler ----------------------------------------------------------------
 
-// TODO: This is not done yet
-// app.use("/api", chatHandler); 
-
+app.use("/api/v1/chat", chatRouter);
 
 // Recommendation Handler ------------------------------------------------------
 
@@ -106,6 +102,8 @@ app.post("/api/v1/sp/insert", authenticateToken, upload.uploadSP.array("imgFile"
 app.delete("/api/v1/sp/delete/:spID", authenticateToken, spHandler.deletePost);
 // This handle liking post
 app.post("/api/v1/sp/like/:spID", authenticateToken, spHandler.likePost);
+// Add this line in server.js
+app.get("/api/v1/sp/likes", authenticateToken, spHandler.getLikedPosts);
 // This handle post user comments
 app.post("/api/v1/sp/posts/:spID/comments", authenticateToken, spHandler.replyPost);
 // This handle fetch comments

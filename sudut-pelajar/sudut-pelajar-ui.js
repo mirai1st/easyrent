@@ -1,9 +1,14 @@
 let currentUsername = null;
+let likedPostIds = new Set();
 
+// 1. Dapatkan user semasa dulu
 async function loadCurrentUser() {
     try {
         const res = await fetch("/api/me");
-        if (!res.ok) return; // belum log masuk
+        if (!res.ok) {
+            currentUsername = null;
+            return;
+        }
         const data = await res.json();
         currentUsername = data.username || (data.user && data.user.username) || null;
     } catch (err) {
@@ -11,28 +16,37 @@ async function loadCurrentUser() {
     }
 }
 
-// Id post yang sudah di-like oleh user semasa (untuk isi hati bila feed dimuatkan)
-let likedPostIds = new Set();
-
+// 2. Ambil senarai ID post yang di-like (disimpan sebagai STRING)
 async function loadLikedPosts() {
     likedPostIds = new Set();
-    if (!currentUsername) return; // belum log masuk
+    if (!currentUsername) return; // Belum log masuk
 
     try {
+        // Guna endpoint /api/v1/sp/likes
         const res = await fetch("/api/v1/sp/likes");
+        
+        // Elak SyntaxError jika server pulangkan 404/500 HTML
+        if (!res.ok) return; 
+
         const data = await res.json();
-        if (data.success) likedPostIds = new Set(data.spIds);
+        if (data.success && Array.isArray(data.spIds)) {
+            // Tukar semua ID ke String supaya perbandingan .has() sentiasa TEPAT
+            likedPostIds = new Set(data.spIds.map(id => String(id)));
+        }
     } catch (err) {
         console.error("Error fetching liked posts:", err);
     }
 }
 
+// Dom Content Loaded Sequence
 document.addEventListener("DOMContentLoaded", async () => {
+    // MESTI tunggu loadCurrentUser siap 100% dulu
     await loadCurrentUser();
-    fetchAndRenderPosts();
+    // Kemudian baru fetch posts & likes
+    await fetchAndRenderPosts();
 });
 
-// Elak XSS: semua teks dari pengguna mesti melalui fungsi ini sebelum masuk innerHTML
+// Elak XSS
 function escapeHtml(value) {
     return String(value ?? "").replace(/[&<>"']/g, (c) => ({
         "&": "&amp;",
@@ -43,7 +57,7 @@ function escapeHtml(value) {
     }[c]));
 }
 
-// Avatar: huruf pertama sebagai fallback, gambar profil di atasnya jika ada
+// Avatar helper
 function avatarHtml(name, imgUrl) {
     const initial = escapeHtml(name.charAt(0).toUpperCase());
     const img = imgUrl
@@ -52,10 +66,16 @@ function avatarHtml(name, imgUrl) {
     return `<div class="sp-avatar">${initial}${img}</div>`;
 }
 
-// 1. Ambil & Papar Senarai Post
+// 3. Ambil Posts & Likes secara berurutan supaya data lengkap sebelum lukis UI
 async function fetchAndRenderPosts() {
     try {
-        const [res] = await Promise.all([fetch("/api/v1/sp/fetch"), loadLikedPosts()]);
+        // Ambil liked posts dulu
+        await loadLikedPosts();
+
+        // Kemudian ambil feed post
+        const res = await fetch("/api/v1/sp/fetch");
+        if (!res.ok) throw new Error("Gagal mengambil hantaran dari server");
+
         const data = await res.json();
 
         if (data.success) {
@@ -68,7 +88,7 @@ async function fetchAndRenderPosts() {
     }
 }
 
-// 2. Render Feed ke HTML
+// 4. Render Feed ke HTML
 function renderFeed(posts) {
     const feedContainer = document.querySelector(".community-feed");
     if (!feedContainer) return;
@@ -123,7 +143,8 @@ function renderFeed(posts) {
                     </button>`
                 : "";
 
-            const isLiked = likedPostIds.has(post.spId);
+            // PERBAIKAN PENTING: Paksa post.spId jadi String semasa check .has()
+            const isLiked = likedPostIds.has(String(post.spId));
 
             html += `
                 <article class="sp-post-card" data-id="${post.spId}" data-aos="fade-up" data-aos-duration="500">
@@ -175,7 +196,7 @@ function renderFeed(posts) {
     }
 }
 
-// Fungsi Preview Gambar sebelum hantar
+// Image Preview & Removal
 function previewImage(event) {
     const file = event.target.files[0];
     if (file) {
@@ -188,7 +209,6 @@ function previewImage(event) {
     }
 }
 
-// Batal / Buang Gambar Pilihan
 function removeSelectedImage() {
     const fileInput = document.getElementById("post-img-input");
     if (fileInput) fileInput.value = "";
@@ -196,7 +216,7 @@ function removeSelectedImage() {
     document.getElementById("image-preview").src = "";
 }
 
-// 3. Tambah Hantaran Baru (Penghantaran FormData)
+// 5. Tambah Post Baru
 async function handleCreatePost() {
     const input = document.getElementById("new-post-input");
     const imgInput = document.getElementById("post-img-input");
@@ -211,7 +231,6 @@ async function handleCreatePost() {
     formData.append("content", content);
 
     if (imgInput.files && imgInput.files[0]) {
-        // 'imgFile' sepadan dengan upload.uploadSP.array('imgFile', 5) di server
         formData.append("imgFile", imgInput.files[0]);
     }
 
@@ -235,7 +254,7 @@ async function handleCreatePost() {
     }
 }
 
-// 4. Padam Post
+// 6. Padam Post
 async function handleDeletePost(spID) {
     if (!confirm("Adakah anda pasti ingin memadam post ini?")) return;
 
@@ -253,9 +272,7 @@ async function handleDeletePost(spID) {
     }
 }
 
-// 5. Like / Unlike (satu user satu like sahaja; klik lagi = unlike).
-// Like sama dengan simpan ke Kegemaran, jadi post yang disukai muncul di /users/favourite.
-// Kiraan dan keadaan hati sentiasa ikut jawapan server, bukan tekaan di browser.
+// 7. Like / Unlike Post
 async function handleLikePost(spID, btn) {
     if (!currentUsername) {
         showNotification("Sila log masuk untuk menyukai hantaran ini.", "error", 3000);
@@ -263,7 +280,7 @@ async function handleLikePost(spID, btn) {
     }
 
     if (btn.disabled) return;
-    btn.disabled = true; // elak klik dua kali semasa tunggu server
+    btn.disabled = true;
 
     try {
         const res = await fetch(`/api/v1/sp/like/${spID}`, { method: "POST" });
@@ -279,7 +296,13 @@ async function handleLikePost(spID, btn) {
             const icon = btn.querySelector("i");
             if (icon) icon.className = `fa-${data.liked ? "solid" : "regular"} fa-heart`;
 
-            // Like == kegemaran: bagitahu user post ni masuk / keluar dari senarai kegemaran
+            // Kemaskini Set tempatan supaya sync serta-merta
+            if (data.liked) {
+                likedPostIds.add(String(spID));
+            } else {
+                likedPostIds.delete(String(spID));
+            }
+
             showNotification(data.liked ? "Disukai dan disimpan ke Kegemaran." : "Dibuang dari Kegemaran.", "success", 2000);
         } else if (res.status === 401) {
             showNotification("Sila log masuk untuk menyukai hantaran ini.", "error", 3000);
@@ -294,13 +317,12 @@ async function handleLikePost(spID, btn) {
     }
 }
 
-// Ubah kiraan komen pada kad post tanpa render semula feed
 function adjustCommentCount(spID, delta) {
     const counter = document.getElementById(`comment-count-${spID}`);
     if (counter) counter.textContent = Math.max(0, Number(counter.textContent) + delta);
 }
 
-// 6. Buka / Tutup Ruang Komen
+// 8. Komen Logic
 function toggleComments(spID) {
     const section = document.getElementById(`comments-section-${spID}`);
     if (section.style.display === "none" || section.style.display === "") {
@@ -311,7 +333,6 @@ function toggleComments(spID) {
     }
 }
 
-// 7. Ambil & Papar Komen
 async function fetchAndRenderComments(spID) {
     const commentsList = document.getElementById(`comments-list-${spID}`);
     try {
@@ -357,7 +378,6 @@ async function fetchAndRenderComments(spID) {
     }
 }
 
-// 8. Hantar Komen Baru
 async function handleSendComment(spID) {
     const input = document.getElementById(`comment-input-${spID}`);
     const content = input.value.trim();
@@ -388,7 +408,6 @@ async function handleSendComment(spID) {
     }
 }
 
-// 9. Padam Komen
 async function handleDeleteComment(commentId, spID) {
     if (!confirm("Adakah anda pasti ingin memadam komen ini?")) return;
 
@@ -407,7 +426,7 @@ async function handleDeleteComment(commentId, spID) {
     }
 }
 
-// Popup gambar penuh
+// Lightbox Viewer
 function openImageViewer(src) {
     const overlay = document.createElement("div");
     overlay.className = "sp-lightbox";
@@ -426,7 +445,6 @@ function openImageViewer(src) {
         if (e.key === "Escape") close();
     };
 
-    // Klik di mana-mana selain gambar akan menutup popup
     overlay.addEventListener("click", (e) => {
         if (e.target.tagName !== "IMG") close();
     });
@@ -434,34 +452,6 @@ function openImageViewer(src) {
     document.body.appendChild(overlay);
 }
 
-async function initializeLikedPosts() {
-    if (!currentUsername) return;
-
-    try {
-        const res = await fetch("/api/v1/sp/liked");
-
-        if (res.status === 401) return;
-
-        const data = await res.json();
-
-        if (!data.success) return;
-
-        data.spIds.forEach((spID) => {
-            const btn = document.querySelector(
-                `[data-sp-id="${spID}"]`
-            );
-
-            if (btn) {
-                changeToLike(btn, true);
-            }
-        });
-
-    } catch (err) {
-        console.error("Error initializing liked posts:", err);
-    }
-}
-
-// Satu listener untuk semua gambar dalam feed
 document.addEventListener("click", (e) => {
     const btn = e.target.closest(".sp-post-image-btn");
     if (btn) openImageViewer(btn.dataset.full);

@@ -297,3 +297,31 @@ function checkLoginModal(url, callback = () => {}) {
     });
 }
 
+// main-ui.js
+
+async function startChat(username) {
+    try {
+        const res = await fetch("/api/v1/chat/conversations", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                username: username
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.error || "Failed to start conversation");
+        }
+
+        window.location.href =
+            `/users/message/?conversation=${data.conversation_id}`;
+
+    } catch (err) {
+        console.error("Start chat error:", err);
+    }
+}

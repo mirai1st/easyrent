@@ -311,8 +311,7 @@ function renderHouse(house) {
 	}, { passive: true });
 	setupSaveButton(house);
 	detailRoot.querySelector('.contact-button').addEventListener('click', () => {
-		document.querySelector('#register-modal').style.display = 'none';
-		document.querySelector('#login-modal').style.display = 'block';
+		startChat(house.originalposter);
 	});
 	renderLocationMap(house);
 
