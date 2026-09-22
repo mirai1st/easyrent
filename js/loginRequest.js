@@ -39,7 +39,11 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         const data = await response.json();
 
         if (data.success) {
-            window.location.reload();
+            const url = new URL(window.location.href);
+            url.searchParams.set('login_success', 'true');
+            
+            // Buka semula URL yang disunting (contoh: /house/?id=9&login_success=true)
+            window.location.href = url.toString();
             return;
         }
 
@@ -59,6 +63,8 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
         // Kekalkan pengguna pada halaman semasa dan biarkan modal login terbuka.
         document.getElementById('login-modal').style.display = 'block';
+
+
 
     } catch (err) {
         showNotification("Ralat sambungan! Sila cuba sebentar lagi.", "error", 3000);

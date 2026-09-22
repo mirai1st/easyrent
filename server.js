@@ -125,7 +125,8 @@ app.post( "/api/rent", authenticateToken, upload.uploadHouse.array("images", 5),
 
 // Socket.IO attach to HTTP
 const server = http.createServer(app);
-initSocket(server);
+const io = initSocket(server);
+app.set("io", io);
 
 server.listen(4000, "0.0.0.0", () =>
   console.log("Server running on port 4000"),

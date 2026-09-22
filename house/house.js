@@ -272,7 +272,7 @@ function renderHouse(house) {
 				<div class="price">RM ${formatPrice(house.price)} <small>/bulan</small></div>
 				<div class="contact-divider"></div>
 				<p>Minat dengan rumah ini? Hubungi tuan rumah untuk semak ketersediaan dan buat lawatan.</p>
-				<button class="contact-button login-modal-btn" type="button"><i class="fa-regular fa-message"></i> Hubungi tuan rumah</button>
+				<button class="contact-button" type="button"><i class="fa-regular fa-message"></i> Hubungi tuan rumah</button>
 				<p class="contact-note"><i class="fa-solid fa-shield-heart"></i> Jangan buat bayaran sebelum melihat rumah.</p>
 			</aside>
 		</div>
@@ -311,12 +311,29 @@ function renderHouse(house) {
 	}, { passive: true });
 	setupSaveButton(house);
 	detailRoot.querySelector('.contact-button').addEventListener('click', () => {
-		startChat(house.originalposter);
+		console.log(house.originalposter);
+		contact(house.originalposter);
 	});
 	renderLocationMap(house);
 
 	loadingState.classList.add('is-hidden');
 	detailRoot.classList.remove('is-hidden');
+}
+
+async function contact(posterUsername) {
+    const { user, error } = await loadUser();
+	
+    if (error) {
+        checkLoginModal();
+        return;
+    }
+
+	if (user.username == posterUsername) {
+		showNotification("You cannot chat with yourself!", "error", 3000);
+		return;
+	}
+
+    startChat(posterUsername);
 }
 
 async function loadHouse() {

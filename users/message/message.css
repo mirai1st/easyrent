@@ -3,6 +3,10 @@
   box-sizing: border-box;
 }
 
+/* =========================================================
+   NAVBAR (ASAL - UNTOUCHED)
+   ========================================================= */
+
 nav {
   padding: 20px 30px;
   background-color: #f7f2ed;
@@ -91,7 +95,7 @@ nav a {
 }
 
 /* =========================================================
-   MESSAGE LIST
+   MESSAGE LIST / SIDEPANEL (ASAL - UNTOUCHED)
    ========================================================= */
 
 .message-list {
@@ -195,7 +199,7 @@ nav a {
 }
 
 /* =========================================================
-   CHAT
+   CHAT (IMPROVED RESPONSIVENESS & TEXT WRAPPING)
    ========================================================= */
 
 .chat-container {
@@ -238,6 +242,9 @@ nav a {
   margin: 0;
   font-size: 0.95rem;
   color: #52341d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chat-status {
@@ -276,12 +283,12 @@ nav a {
 }
 
 /* =========================================================
-   MESSAGES
+   MESSAGES (FIXED OVERFLOW & BREAKING WORDS)
    ========================================================= */
 
 .chat-messages {
   flex: 1;
-  padding: 25px;
+  padding: 20px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -320,6 +327,8 @@ nav a {
   font-size: 0.85rem;
   line-height: 1.45;
   color: #52341d;
+  word-break: break-word; /* Elak teks panjang melepasi bubble */
+  overflow-wrap: break-word;
 }
 
 .received .message-bubble {
@@ -400,7 +409,47 @@ nav a {
 }
 
 /* =========================================================
-   MOBILE
+   AVATAR IMAGE FIX (FIT TO CIRCLE CONTAINER)
+   ========================================================= */
+
+/* Pastikan container avatar sentiasa bulat & potong limpahan imej */
+.conversation-avatar,
+.chat-avatar {
+  overflow: hidden; /* Potong lebihan gambar luar bulatan */
+  position: relative;
+}
+
+/* Kawal saiz gambar di dalam avatar */
+.conversation-avatar img,
+.chat-avatar img,
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Korbankan lebihan aspek nisbah tanpa penyekkan gambar */
+  border-radius: 50%;
+  display: block;
+}
+
+/* =========================================================
+   TABLET RESPONSIVE (768px - 1024px)
+   ========================================================= */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  #top {
+    padding: 90px 30px 20px; /* Kurangkan padding tepi desktop yang terlalu luas (150px) */
+  }
+
+  .message-container {
+    height: calc(100vh - 120px);
+  }
+
+  .message {
+    max-width: 80%; /* Lebih lebar untuk skrin sederhana */
+  }
+}
+
+/* =========================================================
+   MOBILE RESPONSIVE (< 767px)
    ========================================================= */
 
 @media (max-width: 767px) {
@@ -413,7 +462,7 @@ nav a {
   }
 
   #top {
-    padding: 60px 0;
+    padding: 67px 0 0 0;
   }
 
   .mobile-message-view {
@@ -423,7 +472,7 @@ nav a {
   .mobile-message-view .message-container {
     position: relative;
     width: 100%;
-    height: calc(100vh - 75px);
+    height: calc(100dvh - 60px); /* Gunakan 100dvh untuk elak isu URL bar mobile browser */
     min-height: 0;
     border: none;
     border-radius: 0;
@@ -463,7 +512,7 @@ nav a {
     display: flex;
     z-index: 50;
     transform: translateX(100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
   }
 
@@ -482,21 +531,15 @@ nav a {
   .mobile-message-view .chat-back-btn {
     width: 40px;
     height: 40px;
-
     margin-right: 5px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     flex-shrink: 0;
-
     border: none;
     border-radius: 50%;
-
     background: transparent;
     color: #52341d;
-
     cursor: pointer;
   }
 
@@ -518,12 +561,12 @@ nav a {
   /* MESSAGES */
 
   .mobile-message-view .chat-messages {
-    padding: 18px 15px;
+    padding: 15px;
     gap: 10px;
   }
 
   .mobile-message-view .message {
-    max-width: 82%;
+    max-width: 85%;
   }
 
   .mobile-message-view .message-bubble {
@@ -535,6 +578,7 @@ nav a {
   .mobile-message-view .chat-input-container {
     min-height: 65px;
     padding: 10px;
+    margin-bottom:15px;
   }
 
   .mobile-message-view .chat-input {
@@ -543,7 +587,7 @@ nav a {
 }
 
 /* =========================================================
-   TABLET + DESKTOP
+   DESKTOP VIEW (> 768px)
    ========================================================= */
 
 @media (min-width: 768px) {

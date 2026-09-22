@@ -22,15 +22,25 @@ router.get("/conversations", authenticateToken, async (req, res) => {
                     ELSE c.user1 
                 END AS other_user,
 
+                u.profileImg_url AS other_user_avatar, -- <--- Nama column database kau
+
                 m.message AS last_message,
                 m.sent_at AS last_message_time
 
             FROM conversation c
 
-            LEFT JOIN messages m 
+            LEFT JOIN Users u 
+                ON u.username = (
+                    CASE 
+                        WHEN c.user1 = ? THEN c.user2 
+                        ELSE c.user1 
+                    END
+                )
+
+            LEFT JOIN message m 
                 ON m.message_id = (
                     SELECT m2.message_id
-                    FROM messages m2
+                    FROM message m2
                     WHERE m2.conversation_id = c.conversation_id
                     ORDER BY m2.sent_at DESC
                     LIMIT 1
@@ -42,6 +52,7 @@ router.get("/conversations", authenticateToken, async (req, res) => {
             ORDER BY last_message_time DESC
             `,
             [
+                username,
                 username,
                 username,
                 username
@@ -81,7 +92,6 @@ router.post("/conversations", authenticateToken, async (req, res) => {
             });
         }
 
-        // Pastikan A-B dan B-A dianggap conversation yang sama
         const users = [
             currentUser,
             otherUser
@@ -152,20 +162,24 @@ router.get(
                 });
             }
 
-            // Get messages
+            // Get messages bersama profile picture sender
             const [messages] = await db.execute(
                 `
                 SELECT 
-                    message_id,
-                    sender,
-                    message,
-                    sent_at
+                    m.message_id,
+                    m.sender,
+                    u.profileImg_url AS sender_avatar, -- <--- Nama column database kau
+                    m.message,
+                    m.sent_at
 
-                FROM messages
+                FROM message m
 
-                WHERE conversation_id = ?
+                LEFT JOIN Users u 
+                    ON u.username = m.sender
 
-                ORDER BY sent_at ASC
+                WHERE m.conversation_id = ?
+
+                ORDER BY m.sent_at ASC
                 `,
                 [
                     conversationId
@@ -245,7 +259,7 @@ router.post("/messages", authenticateToken, async (req, res) => {
         // Save message
         const [result] = await db.execute(
             `
-            INSERT INTO messages
+            INSERT INTO message
                 (
                     conversation_id,
                     sender,
@@ -261,6 +275,20 @@ router.post("/messages", authenticateToken, async (req, res) => {
                 message.trim()
             ]
         );
+
+
+        // Push the new message live to everyone in this conversation's room
+        const io = req.app.get("io");
+
+        if (io) {
+            io.to(`conversation_${conversation_id}`).emit("new_message", {
+                message_id: result.insertId,
+                conversation_id,
+                sender,
+                message: message.trim(),
+                sent_at: new Date()
+            });
+        }
 
 
         res.json({

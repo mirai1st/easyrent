@@ -205,6 +205,16 @@ function showNotification(msg, type = 'success', timer = 10000) {
     document.body.appendChild(container);
   }
 
+  // --- HADKAN MAKSIMUM 3 NOTIFIKASI ---
+  const MAX_NOTIFICATIONS = 3;
+  const existingPopups = container.querySelectorAll('.notification-popup');
+  
+  if (existingPopups.length >= MAX_NOTIFICATIONS) {
+    // Buang notifikasi paling lama (elemen pertama)
+    existingPopups[0].remove();
+  }
+  // ------------------------------------
+
   const isError = type === 'error';
   const popup = document.createElement('div');
   popup.className = `notification-popup ${isError ? 'is-error' : ''}`;
@@ -292,7 +302,7 @@ function checkLoginModal(url, callback = () => {}) {
             showNotification("Anda perlu mengelog masuk untuk mengakses ciri ini.", "error");
         } else {
             window.location.href = url;
-            callback();
+            callback(user);
         }
     });
 }
