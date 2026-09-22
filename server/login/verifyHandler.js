@@ -1,4 +1,4 @@
-const pool = require("./db");
+const pool = require("../system/db");
 const crypto = require("crypto");
 const { sendVerificationEmail } = require("./EmailRequest");
 

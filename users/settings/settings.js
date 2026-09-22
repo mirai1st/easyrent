@@ -72,10 +72,6 @@ document.querySelectorAll('.settings-toggle').forEach(setting => {
         const settingKey = setting.dataset.setting || setting.getAttribute('data');
         const settingName = settingNames[settingKey] || 'Tetapan';
         const state = !isOn ? 'dihidupkan' : 'dimatikan';
-
-        if (typeof showNotification === 'function') {
-            showNotification(`${settingName} ${state}.`, 'success', 3000);
-        }
     });
 });
 

@@ -214,10 +214,6 @@ nav a {
     display: flex;
 }
 
-.side-panel {
-    flex: 0 0 260px; /* width tetap untuk panel kiri, adjust ikut design */
-}
-
 /* Add your custom profile styles here */
 
 /* sidepanel */

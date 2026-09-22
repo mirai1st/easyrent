@@ -2,6 +2,9 @@ const container = document.querySelector('.recommendations-cards');
 const containerDesktop = document.querySelector('.recommendations-cards-desktop'); // TUKAR ikut selector desktop sebenar
 const loadingDiv = document.querySelector(".center-body");
 
+// Siap bila keadaan hati (rumah mana yang dah disimpan) selesai dimuatkan
+let favouritesReady = Promise.resolve();
+
 function initHeroBackgroundCarousel() {
     const hero = document.querySelector('#top');
     if (!hero) return;
@@ -78,6 +81,9 @@ async function renderCards() {
     container.innerHTML += html;
     if (containerDesktop) containerDesktop.innerHTML += html;
     initCarousels(); // pasang nav button + dot logic lepas card masuk DOM
+
+    favouritesReady = markSavedHouses(); // isi hati untuk rumah yang dah disimpan
+    await favouritesReady;
 }
 
 /**
@@ -109,6 +115,12 @@ function createCard(data) {
         `<span class="dot ${i === 0 ? 'active' : ''}"></span>`
     ).join('');
 
+    let gender = "Semua Jantina";
+
+    if (data.gender != "Semua") {
+        gender = `${data.gender} Sahaja`;
+    }
+
     return `
         <div class="card" data-aos="fade-up" data-aos-duration="1000">
             <div class="card-header">
@@ -127,7 +139,8 @@ function createCard(data) {
                 <h3>${data.title}</h3>
                 <p class="subtitle">
                     <i class="fa-solid fa-bed"></i>&nbsp ${data.beds} &nbsp
-                    <i class="fa-solid fa-shower"></i>&nbsp ${data.baths}
+                    <i class="fa-solid fa-shower"></i>&nbsp ${data.baths} &nbsp&nbsp · &nbsp
+                     ${gender}
                     <br>
                     <p class="location-text"><i class="fa-solid fa-location-dot"></i>&nbsp ${data.location}</p>
                 </p>
@@ -139,7 +152,8 @@ function createCard(data) {
                 </a>
             </div>
 
-            <a class="button-fav"><i class="fa-regular fa-heart"></i></a>
+            <a class="button-fav" role="button" tabindex="0" data-house-id="${data.house_id}"
+               aria-pressed="false" aria-label="Simpan rumah ini"><i class="fa-regular fa-heart"></i></a>
         </div>
     `;
 }
@@ -187,3 +201,87 @@ function initCarousels() {
 /**
  * Checks login state via /api/me and updates nav button
  */
+
+// ===== Favourite (butang hati pada kad cadangan) =====
+// Guna loadUser, loadFavouriteIds dan toggleFavourite dari js/checkLogin.js
+
+// Kemas kini SEMUA butang untuk rumah yang sama (kad boleh wujud di mobile + desktop)
+function setFavouriteButtons(houseId, saved) {
+    document.querySelectorAll(`.button-fav[data-house-id="${houseId}"]`).forEach(button => {
+        button.classList.toggle('is-saved', saved);
+        button.setAttribute('aria-pressed', String(saved));
+        button.setAttribute('aria-label', saved ? 'Buang dari kegemaran' : 'Simpan rumah ini');
+        button.innerHTML = `<i class="fa-${saved ? 'solid' : 'regular'} fa-heart"></i>`;
+    });
+}
+
+// Lepas kad dirender: kalau dah log masuk, hati rumah yang dah disimpan terus penuh
+async function markSavedHouses() {
+    const { user } = await loadUser();
+    if (!user) return;
+
+    const favourites = await loadFavouriteIds();
+    if (!favourites || !favourites.success) return;
+
+    const saved = new Set(favourites.house);
+    document.querySelectorAll('.button-fav').forEach(button => {
+        const houseId = Number(button.dataset.houseId);
+        if (saved.has(houseId)) setFavouriteButtons(houseId, true);
+    });
+}
+
+function notifyError(message) {
+    if (typeof showNotification === 'function') showNotification(message, 'error');
+}
+
+async function toggleHouseFavourite(button) {
+    if (button.classList.contains('is-pending')) return; // tunggu jawapan server dulu
+
+    await favouritesReady; // pastikan keadaan hati dah tahu sebelum tukar
+
+    // Belum log masuk: buka modal log masuk (sama macam checkLoginModal)
+    const { user } = await loadUser();
+    if (!user) {
+        document.getElementById('login-modal').style.display = 'block';
+        notifyError('Anda perlu mengelog masuk untuk menyimpan rumah.');
+        return;
+    }
+
+    const houseId = Number(button.dataset.houseId);
+    const wasSaved = button.classList.contains('is-saved');
+
+    setFavouriteButtons(houseId, !wasSaved); // tukar terus supaya rasa laju
+    document.querySelectorAll(`.button-fav[data-house-id="${houseId}"]`)
+        .forEach(item => item.classList.add('is-pending'));
+
+    const data = await toggleFavourite('house', houseId);
+
+    if (data && data.success) {
+        setFavouriteButtons(houseId, data.favourited); // ikut jawapan server
+    } else {
+        setFavouriteButtons(houseId, wasSaved); // gagal: kembalikan
+        notifyError('Gagal mengemas kini kegemaran. Cuba lagi.');
+    }
+
+    document.querySelectorAll(`.button-fav[data-house-id="${houseId}"]`)
+        .forEach(item => item.classList.remove('is-pending'));
+}
+
+// Satu listener untuk semua kad (termasuk kad yang dirender kemudian)
+document.addEventListener('click', (event) => {
+    const button = event.target.closest('.button-fav');
+    if (!button) return;
+
+    event.preventDefault();
+    toggleHouseFavourite(button);
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+
+    const button = event.target.closest('.button-fav');
+    if (!button) return;
+
+    event.preventDefault();
+    toggleHouseFavourite(button);
+});

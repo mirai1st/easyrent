@@ -54,14 +54,14 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         if (typeof showNotification === 'function') {
             showNotification(errorMessage, 'error');
         } else {
-            alert(errorMessage);
+            showNotification(errorMessage, "error", 3000);
         }
 
         // Kekalkan pengguna pada halaman semasa dan biarkan modal login terbuka.
         document.getElementById('login-modal').style.display = 'block';
 
     } catch (err) {
-        alert("Ralat sambungan. Sila cuba lagi.");
+        showNotification("Ralat sambungan! Sila cuba sebentar lagi.", "error", 3000);
     } finally {
         loginBtn.classList.remove('loading');
         loginBtn.disabled = false;
@@ -92,10 +92,10 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
         if (data.success) {
             openCodeverifyModal(data.email);
         } else {
-            alert(data.message);
+            showNotification(data.message, "error", 3000);
         }
     } catch (err) {
-        alert("Ralat sambungan. Sila cuba lagi.");
+        showNotification("Ralat sambungan! Sila cuba sebentar lagi.", "error", 3000);
     } finally {
         registerBtn.classList.remove('loading');
         registerBtn.disabled = false;
@@ -107,7 +107,7 @@ document.getElementById("codeverifyForm").addEventListener("submit", async (e) =
     e.preventDefault();
 
     if (!pendingVerificationEmail) {
-        alert("Sesi pengesahan tamat. Sila daftar semula.");
+        showNotification("Sesi pengesahan tamat! Sila daftar semula.", "error", 3000);
         return;
     }
 
@@ -130,10 +130,10 @@ document.getElementById("codeverifyForm").addEventListener("submit", async (e) =
         if (data.success) {
             window.location = "/?register_success=true";
         } else {
-            alert(data.message);
+            showNotification("Ralat sambungan! Sila cuba sebentar lagi.", "error", 3000);
         }
     } catch (err) {
-        alert("Ralat sambungan. Sila cuba lagi.");
+        showNotification("Ralat sambungan! Sila cuba sebentar lagi.", "error", 3000);
     } finally {
         codeverifyBtn.classList.remove('loading');
         codeverifyBtn.disabled = false;
@@ -143,7 +143,7 @@ document.getElementById("codeverifyForm").addEventListener("submit", async (e) =
 // ---- Resend code ----
 resendCodeBtn.addEventListener("click", async () => {
     if (!pendingVerificationEmail) {
-        alert("Sesi pengesahan tamat. Sila daftar semula.");
+        showNotification("Sesi pengesahan tamat. Sila daftar semula.", "error", 3000);
         return;
     }
 
@@ -160,7 +160,7 @@ resendCodeBtn.addEventListener("click", async () => {
         const data = await response.json();
         alert(data.message);
     } catch (err) {
-        alert("Ralat sambungan. Sila cuba lagi.");
+        showNotification("Ralat sambungan! Sila cuba sebentar lagi.", "error", 3000);
     } finally {
         resendCodeBtn.style.pointerEvents = "auto";
     }

@@ -1,5 +1,6 @@
 // This file contains functions for Sudut Pelajar backend
-const db = require("../db");
+const db = require("../system/db");
+const { toggleCommunityFavourite } = require("../users/favourite");
 
 async function fetchPost(req, res) {
     const query = `
@@ -90,6 +91,13 @@ async function deletePost(req, res) {
         if (result.affectedRows === 0) {
             return res.status(403).json({ success: false, message: "Tindakan dilarang atau post tidak wujud." });
         }
+        // Like == favourite, so remove the favourites that pointed to this post
+        try {
+            await db.execute(`DELETE FROM Favourite WHERE type = 'community' AND postId = ?`, [spID]);
+        } catch (cleanupErr) {
+            console.error("Error cleaning favourites of deleted post:", cleanupErr);
+        }
+
         return res.status(200).json({ success: true, message: "Post berjaya dipadam." });
     } catch (err) {
         console.error("Error deleting post:", err);
@@ -181,23 +189,54 @@ async function deletePostReply(req, res) {
     }
 }
 
+// Like == favourite (type "community" in the Favourite table).
+// One like per user per post. Click again = unlike (removed from the favourites, likeCount - 1).
+// The response carries the real likeCount so the UI never drifts from the database.
 async function likePost(req, res) {
-    const { spID } = req.params;
+    const spId = Number(req.params.spID);
+    const username = req.user.username;
+
+    if (!Number.isInteger(spId) || spId < 1) {
+        return res.status(400).json({ success: false, message: "ID post tidak sah." });
+    }
 
     try {
-        const query = `UPDATE spPost SET likeCount = likeCount + 1 WHERE spId = ?`;
-        const [result] = await db.execute(query, [spID]);
+        const result = await toggleCommunityFavourite(username, spId);
 
-        if (result.affectedRows === 0) {
+        if (!result) {
             return res.status(404).json({ success: false, message: "Post tidak dijumpai." });
         }
 
-        return res.status(200).json({ success: true, message: "Like berjaya dikemas kini." });
+        return res.status(200).json({
+            success: true,
+            liked: result.favourited,
+            likeCount: result.likeCount
+        });
     } catch (err) {
         console.error("Error liking post:", err);
         return res.status(500).json({ success: false, message: "Server error" });
     }
 }
+
+// Ids of the posts the current user has liked = their community favourites
+// (used to fill the hearts when the feed loads)
+async function getLikedPosts(req, res) {
+    const username = req.user.username;
+
+    try {
+        const [rows] = await db.execute(
+            `SELECT postId FROM Favourite WHERE username = ? AND type = 'community'`,
+            [username]
+        );
+
+        return res.status(200).json({ success: true, spIds: rows.map((row) => Number(row.postId)) });
+    } catch (err) {
+        console.error("Error fetching liked posts:", err);
+        return res.status(500).json({ success: false, message: "Server error" });
+    }
+}
+
+
 
 module.exports = {
     insertPost,
@@ -206,5 +245,6 @@ module.exports = {
     replyPost,
     fetchPostReply,
     deletePostReply,
-    likePost
+    likePost,
+    getLikedPosts
 };

@@ -87,31 +87,47 @@ async function loadMessageCount() {
 
 // ===== Favourite =====
 
-async function loadFavouriteList() {
+// type: "house" atau "community"
+// Pulangkan { success, type, counts: { house, community }, items: [...] }
+async function loadFavouriteList(type = "house") {
     try {
-        const response = await fetch("/api/favourite/get", {
-            method: "GET",
+        const response = await fetch(`/api/favourite/get?type=${encodeURIComponent(type)}`, {
             credentials: "include"
         });
 
-        const data = await response.json();
-        return data;
+        return await response.json();
     } catch (err) {
         console.error("Error getting user favourite list.", err);
     }
 }
 
-async function InsertFavourite() {
+// Pulangkan { success, house: [7, 9], community: [6] } untuk tandakan ikon hati
+async function loadFavouriteIds() {
     try {
-        const response = await fetch("/api/favourite/insert", {
-            method: "GET",
+        const response = await fetch("/api/favourite/ids", {
             credentials: "include"
         });
 
-        const data = await response.json();
-        return data;
+        return await response.json();
     } catch (err) {
-        console.error("Error inserting user favourite.", err);
+        console.error("Error getting user favourite ids.", err);
+    }
+}
+
+// Tambah kalau belum ada, buang kalau dah ada
+// Pulangkan { success, favourited: true/false }
+async function toggleFavourite(type, postId) {
+    try {
+        const response = await fetch("/api/favourite/toggle", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type, postId })
+        });
+
+        return await response.json();
+    } catch (err) {
+        console.error("Error toggling user favourite.", err);
     }
 }
 

@@ -11,6 +11,22 @@ async function loadCurrentUser() {
     }
 }
 
+// Id post yang sudah di-like oleh user semasa (untuk isi hati bila feed dimuatkan)
+let likedPostIds = new Set();
+
+async function loadLikedPosts() {
+    likedPostIds = new Set();
+    if (!currentUsername) return; // belum log masuk
+
+    try {
+        const res = await fetch("/api/v1/sp/likes");
+        const data = await res.json();
+        if (data.success) likedPostIds = new Set(data.spIds);
+    } catch (err) {
+        console.error("Error fetching liked posts:", err);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     await loadCurrentUser();
     fetchAndRenderPosts();
@@ -39,7 +55,7 @@ function avatarHtml(name, imgUrl) {
 // 1. Ambil & Papar Senarai Post
 async function fetchAndRenderPosts() {
     try {
-        const res = await fetch("/api/v1/sp/fetch");
+        const [res] = await Promise.all([fetch("/api/v1/sp/fetch"), loadLikedPosts()]);
         const data = await res.json();
 
         if (data.success) {
@@ -107,6 +123,8 @@ function renderFeed(posts) {
                     </button>`
                 : "";
 
+            const isLiked = likedPostIds.has(post.spId);
+
             html += `
                 <article class="sp-post-card" data-id="${post.spId}" data-aos="fade-up" data-aos-duration="500">
                     <div class="sp-post-header">
@@ -125,8 +143,8 @@ function renderFeed(posts) {
                     ${imageHtml}
 
                     <div class="sp-post-actions">
-                        <button type="button" class="sp-action-btn" onclick="handleLikePost(${post.spId}, this)">
-                            <i class="fa-regular fa-heart"></i>
+                        <button type="button" class="sp-action-btn${isLiked ? " liked" : ""}" onclick="handleLikePost(${post.spId}, this)" aria-pressed="${isLiked}">
+                            <i class="fa-${isLiked ? "solid" : "regular"} fa-heart"></i>
                             <span id="like-count-${post.spId}">${post.likeCount}</span>
                         </button>
                         <button type="button" class="sp-action-btn" onclick="toggleComments(${post.spId})">
@@ -235,24 +253,44 @@ async function handleDeletePost(spID) {
     }
 }
 
-// 5. Tambah Like (kemas kini kiraan terus tanpa render semula feed)
+// 5. Like / Unlike (satu user satu like sahaja; klik lagi = unlike).
+// Like sama dengan simpan ke Kegemaran, jadi post yang disukai muncul di /users/favourite.
+// Kiraan dan keadaan hati sentiasa ikut jawapan server, bukan tekaan di browser.
 async function handleLikePost(spID, btn) {
+    if (!currentUsername) {
+        showNotification("Sila log masuk untuk menyukai hantaran ini.", "error", 3000);
+        return;
+    }
+
+    if (btn.disabled) return;
+    btn.disabled = true; // elak klik dua kali semasa tunggu server
+
     try {
         const res = await fetch(`/api/v1/sp/like/${spID}`, { method: "POST" });
         const data = await res.json();
+
         if (data.success) {
             const counter = document.getElementById(`like-count-${spID}`);
-            if (counter) counter.textContent = Number(counter.textContent) + 1;
-            if (btn) {
-                btn.classList.add("liked");
-                const icon = btn.querySelector("i");
-                if (icon) icon.className = "fa-solid fa-heart";
-            }
-        } else {
+            if (counter) counter.textContent = data.likeCount;
+
+            btn.classList.toggle("liked", data.liked);
+            btn.setAttribute("aria-pressed", String(data.liked));
+
+            const icon = btn.querySelector("i");
+            if (icon) icon.className = `fa-${data.liked ? "solid" : "regular"} fa-heart`;
+
+            // Like == kegemaran: bagitahu user post ni masuk / keluar dari senarai kegemaran
+            showNotification(data.liked ? "Disukai dan disimpan ke Kegemaran." : "Dibuang dari Kegemaran.", "success", 2000);
+        } else if (res.status === 401) {
             showNotification("Sila log masuk untuk menyukai hantaran ini.", "error", 3000);
+        } else {
+            showNotification("Gagal menyukai hantaran. Cuba lagi.", "error", 3000);
         }
     } catch (err) {
         console.error("Error liking post:", err);
+        showNotification("Gagal menyukai hantaran. Cuba lagi.", "error", 3000);
+    } finally {
+        btn.disabled = false;
     }
 }
 
@@ -394,6 +432,33 @@ function openImageViewer(src) {
     });
     document.addEventListener("keydown", onKey);
     document.body.appendChild(overlay);
+}
+
+async function initializeLikedPosts() {
+    if (!currentUsername) return;
+
+    try {
+        const res = await fetch("/api/v1/sp/liked");
+
+        if (res.status === 401) return;
+
+        const data = await res.json();
+
+        if (!data.success) return;
+
+        data.spIds.forEach((spID) => {
+            const btn = document.querySelector(
+                `[data-sp-id="${spID}"]`
+            );
+
+            if (btn) {
+                changeToLike(btn, true);
+            }
+        });
+
+    } catch (err) {
+        console.error("Error initializing liked posts:", err);
+    }
 }
 
 // Satu listener untuk semua gambar dalam feed

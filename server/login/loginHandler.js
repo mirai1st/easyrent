@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const pool = require("./db");
+const pool = require("../system/db");
 const crypto = require('crypto');
 require("dotenv").config();
 

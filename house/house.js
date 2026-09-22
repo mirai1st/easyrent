@@ -147,6 +147,62 @@ function showError() {
 	errorState.classList.remove('is-hidden');
 }
 
+// Butang hati: simpan rumah ke kegemaran / buang semula.
+// Guna loadUser, loadFavouriteIds dan toggleFavourite dari js/checkLogin.js
+async function setupSaveButton(house) {
+	const button = detailRoot.querySelector('.save-house');
+	if (!button) return;
+
+	function setSaved(saved) {
+		button.classList.toggle('is-saved', saved);
+		button.setAttribute('aria-pressed', String(saved));
+		button.setAttribute('aria-label', saved ? 'Buang dari kegemaran' : 'Simpan rumah ini');
+		button.innerHTML = `<i class="fa-${saved ? 'solid' : 'regular'} fa-heart"></i>`;
+	}
+
+	function showError(message) {
+		if (typeof showNotification === 'function') showNotification(message, 'error');
+	}
+
+	button.addEventListener('click', async () => {
+		// Belum log masuk: buka modal log masuk (sama macam butang "Hubungi tuan rumah")
+		const { user } = await loadUser();
+		if (!user) {
+			document.querySelector('#register-modal').style.display = 'none';
+			document.querySelector('#login-modal').style.display = 'block';
+			showNotification("Anda perlu mengelog masuk untuk menyimpan rumah.", "error", 3000);
+			return;
+		}
+
+		const wasSaved = button.classList.contains('is-saved');
+		setSaved(!wasSaved); // tukar ikon terus supaya rasa laju
+		button.disabled = true; // elak klik dua kali masa tunggu server
+
+		if (!wasSaved) {
+			showNotification("Siaran ini telah berjaya disimpan di kegemaran anda", "success", 3000);
+		}
+
+		const data = await toggleFavourite('house', house.house_id);
+		button.disabled = false;
+
+		if (data && data.success) {
+			setSaved(data.favourited); // ikut jawapan server
+		} else {
+			setSaved(wasSaved); // gagal: kembalikan ikon asal
+			showNotification("Gagal mengemas kini kegemaran. Cuba lagi.", "error", 3000);
+		}
+	});
+
+	// Keadaan awal: kalau dah log masuk dan rumah ni dah disimpan, hati terus penuh
+	const { user } = await loadUser();
+	if (!user) return;
+
+	const favourites = await loadFavouriteIds();
+	if (favourites && favourites.success && favourites.house.includes(Number(house.house_id))) {
+		setSaved(true);
+	}
+}
+
 function renderHouse(house) {
 	const images = house.images?.length ? house.images : ['https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85'];
 	const gallery = images.map((image, index) => `
@@ -157,6 +213,12 @@ function renderHouse(house) {
 	const galleryDots = images.map((_, index) => `
 		<button class="gallery-dot ${index === 0 ? 'is-active' : ''}" type="button" aria-label="Lihat gambar ${index + 1}" aria-current="${index === 0 ? 'true' : 'false'}"></button>
 	`).join('');
+
+	let gender = "Semua Jantina";
+
+	if (house.gender && house.gender !== "Semua") {
+		gender = `${house.gender} Sahaja`;
+	}
 
 	detailRoot.innerHTML = `
 		<div class="detail-gallery" aria-label="Galeri gambar rumah">
@@ -172,7 +234,7 @@ function renderHouse(house) {
 				<h1>${escapeHtml(house.title)}</h1>
 				<p class="detail-meta">Disiarkan oleh <strong>@${escapeHtml(house.originalposter || 'Tuan rumah')}</strong> · ${formatDate(house.dateCreated)}</p>
 			</div>
-			<button class="save-house" type="button" aria-label="Simpan rumah ini"><i class="fa-regular fa-heart"></i></button>
+			<button class="save-house" type="button" aria-label="Simpan rumah ini" aria-pressed="false"><i class="fa-regular fa-heart"></i></button>
 		</div>
 		<div class="detail-layout">
 			<div class="detail-main">
@@ -180,7 +242,7 @@ function renderHouse(house) {
 					<div class="fact"><i class="fa-solid fa-bed"></i><span><strong>${house.totalRoom || 0}</strong> bilik tidur</span></div>
 					<div class="fact"><i class="fa-solid fa-shower"></i><span><strong>${house.totalShower || 0}</strong> bilik air</span></div>
 					<div class="fact"><i class="fa-solid fa-graduation-cap"></i><span><strong>${escapeHtml(house.targetInstitution || 'Pelajar')}</strong> Institusi Sasaran</span></div>
-					<div class="fact"><i class="fa-solid fa-users"></i><span><strong>${escapeHtml(house.gender ? `${house.gender} Sahaja` : 'Tidak dinyatakan')}</strong></span></div>
+					<div class="fact"><i class="fa-solid fa-users"></i><span><strong>${gender}</strong></span></div>
 				</section>
 				<section class="detail-section">
 					<h2>Perihal rumah</h2>
@@ -247,10 +309,7 @@ function renderHouse(house) {
 		const distance = event.changedTouches[0].screenX - touchStartX;
 		if (Math.abs(distance) > 45) showSlide(activeSlide + (distance < 0 ? 1 : -1));
 	}, { passive: true });
-	detailRoot.querySelector('.save-house').addEventListener('click', (event) => {
-		event.currentTarget.classList.toggle('is-saved');
-		event.currentTarget.innerHTML = `<i class="fa-${event.currentTarget.classList.contains('is-saved') ? 'solid' : 'regular'} fa-heart"></i>`;
-	});
+	setupSaveButton(house);
 	detailRoot.querySelector('.contact-button').addEventListener('click', () => {
 		document.querySelector('#register-modal').style.display = 'none';
 		document.querySelector('#login-modal').style.display = 'block';

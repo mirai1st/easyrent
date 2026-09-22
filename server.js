@@ -6,23 +6,23 @@ const path = require("path");
 const http = require("http");
 
 // System Libraries
-const db = require("./server/db");
-const upload = require("./server/uploadConfig");
-const initSocket = require("./server/socket");
-const { authenticateToken } = require("./server/commonFunctions");
-const houseHandler = require("./server/houseHandler");
+const db = require("./server/system/db");
+const upload = require("./server/system/uploadConfig");
+const initSocket = require("./server/system/socket");
+const { authenticateToken } = require("./server/system/common");
+const houseHandler = require("./server/system/houseHandler");
 
 // Users Libraries
-const chatHandler = require("./server/users/chatHandler");
-const userHandler = require("./server/users/userHandler");
-const notiHandler = require("./server/users/notiHandler");
-const favHandler = require("./server/users/favHandler");
-const spHandler = require("./server/users/spHandler")
+const chatRouter = require("./server/users/chat");
+const userHandler = require("./server/users/user");
+const notiHandler = require("./server/users/notifications");
+const favHandler = require("./server/users/favourite");
+const spHandler = require("./server/users/sp")
 
 // Login/Register Handler
-const loginHandler = require("./server/loginHandler");
-const registerHandler = require("./server/registerHandler");
-const { verifyCode, resendCode } = require("./server/verifyHandler");
+const loginHandler = require("./server/login/loginHandler");
+const registerHandler = require("./server/login/registerHandler");
+const { verifyCode, resendCode } = require("./server/login/verifyHandler");
 
 // -----------------------------------------------------------------------------
 
@@ -33,6 +33,7 @@ app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:4000", credentials: true }));
 
 app.use(express.static(path.join(__dirname)));
+app.use("/api/v1/chat", chatRouter);
 
 // Login/Register Handler ------------------------------------------------------
 
@@ -70,12 +71,12 @@ app.patch("/api/notifications/mark-all-read", authenticateToken, notiHandler.mar
 
 // User Favourite --------------------------------------------------------------
 
-// TODO: This get the user favourite object
-// app.get("/api/favourite/get", authenticateToken)
-// TODO: This insert user favourite object
-// app.get("/api/favourite/insert", authenticateToken)
-// TODO: This delete user favourite object
-// app.get("/api/favourite/delete", authenticateToken)
+// This get the user favourite list (?type=house or ?type=community) with the tab counts
+app.get("/api/favourite/get", authenticateToken, favHandler.getFavourites);
+// This get only the favourite ids, to fill the heart icons on house/post cards
+app.get("/api/favourite/ids", authenticateToken, favHandler.getFavouriteIds);
+// This add the post to favourite, or remove it if it is already there
+app.post("/api/favourite/toggle", authenticateToken, favHandler.toggleFavourite);
 
 
 // House Fetch -----------------------------------------------------------------

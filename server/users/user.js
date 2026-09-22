@@ -1,5 +1,5 @@
 // This file contains functions for users backend
-const db = require("../db");
+const db = require("../system/db");
 
 // This functions get the user profile
 async function getProfile(req, res) {
@@ -82,8 +82,6 @@ async function updateProfile(req, res) {
             ];
         }
 
-        console.log("req.body:", req.body);
-        console.log("values:", values);
         await db.execute(query, values);
 
         res.json({

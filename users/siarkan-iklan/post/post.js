@@ -376,6 +376,7 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.append('totalOf_bedroom', bedroom.value);
             formData.append('totalOf_shower', shower.value);
             formData.append('post', description.value.trim());
+            formData.append('gender', document.getElementById('target_gender').value);
             formData.append('location', document.getElementById('location').value.trim());
             formData.append('target_institution', document.getElementById('target_institution').value);
 

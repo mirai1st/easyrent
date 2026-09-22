@@ -261,9 +261,6 @@ nav a {
     display: flex;
 }
 
-.side-panel {
-    flex: 0 0 260px; /* width tetap untuk panel kiri, adjust ikut design */
-}
 
 
 @media (max-width: 768px) {
@@ -311,7 +308,6 @@ nav a {
     background-color: white;
     overflow: hidden;
     padding: 20px;
-    flex: 0 0 260px;
     align-self: flex-start;
     position: sticky;
     animation: slideRight .3s ease-in-out forwards;

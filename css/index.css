@@ -259,6 +259,15 @@
     padding: 10px;
 }
 
+.card .button-fav.is-saved {
+    color: #c2543a;
+}
+
+.card .button-fav.is-pending {
+    opacity: 0.6;
+    cursor: default;
+}
+
 /* Card Image Carousel */
 
 .carousel {

@@ -146,7 +146,7 @@ function renderProfile(user) {
             <div class="account-created" style="margin-top: 10px; gap: 10px; overflow:hidden;">
                 <span>Session Active</span>
                 <strong class="session-time"
-                    style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">00:00:00</strong>
+                    style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">Retrieving...</strong>
             </div>
         </div>
     </div>`;
@@ -487,10 +487,10 @@ async function initProfile() {
         return;
     }
 
+    startSessionTimer(user.sessionStart);
     renderProfile(user);
     setupEditProfile();
     setupLogoutButtons();
-    startSessionTimer(user.sessionStart);
 }
 
 initProfile();

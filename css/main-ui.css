@@ -61,7 +61,7 @@ nav a {
 nav ul {
     list-style-type: none;
     display: flex;
-    gap: 20px;
+    gap: 20px
 }
 
 .nav-mainbutton {
@@ -966,12 +966,13 @@ hr {
 }
 
 .side-panel {
+    box-sizing: border-box; /* supaya lebar sama walaupun page ada/tiada * { box-sizing } */
     border: 1px solid #00000023;
     border-radius: 12px;
     background-color: white;
     overflow: hidden;
     padding: 20px;
-    flex: 0 0 260px;
+    flex: 0 0 302px;
     align-self: flex-start;
     position: sticky;
     /* animation: slideUp .3s ease-in-out forwards; */
@@ -1517,6 +1518,7 @@ hr {
     .register-modal .modal-content { padding: 26px 22px; }
     .modal-content h3 { font-size: 1.3rem; }
     .auth-brand { left: 24px; bottom: 18px; }
+    .alert-box { width: 300px;}
 
     footer {
         padding: 48px 22px 20px;

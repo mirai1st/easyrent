@@ -8,6 +8,7 @@ async function postHandler(req, res) {
         totalOf_shower,
         price,
         post,
+        gender,
         location,
         target_institution,
         latitud,
@@ -59,8 +60,8 @@ async function postHandler(req, res) {
     try {
         const [result] = await db.execute(
             `INSERT INTO Rent
-                     (username, title, totalOf_bedroom, totalOf_shower, description, location, target_institution, price, latitud, longitud, img_url)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                     (username, title, totalOf_bedroom, totalOf_shower, description, location, target_institution, price, latitud, longitud, img_url, gender)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 username,
                 title,
@@ -72,7 +73,8 @@ async function postHandler(req, res) {
                 numericPrice,
                 numericLatitude,
                 numericLongitude,
-                JSON.stringify(imagePaths)
+                JSON.stringify(imagePaths),
+                gender
             ]
         );
 
@@ -91,7 +93,7 @@ async function postHandler(req, res) {
 async function getRecommendations(req, res) {
     try {
         const [rows] = await db.query(
-            `SELECT rentID, title, totalOf_bedroom, totalOf_shower, img_url, location, price
+            `SELECT rentID, title, totalOf_bedroom, totalOf_shower, img_url, location, price, gender
              FROM Rent
              WHERE isAdminApprove = 'true'
              ORDER BY RAND()
@@ -108,6 +110,7 @@ async function getRecommendations(req, res) {
             beds: row.totalOf_bedroom,
             baths: row.totalOf_shower,
             location: row.location,
+            gender: row.gender,
             price: row.price,
             images: normalizeImagePaths(row.img_url)
         }));

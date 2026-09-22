@@ -56,13 +56,13 @@ document.querySelectorAll('.back-button').forEach((btn) => {
         if (currentStep > 0) {
             goToStep(currentStep - 1);
         } else {
-            // close modal/redirect
+            history.back();
         }
     });
 });
 
 document.getElementById('add-listing-btn')?.addEventListener('click', () => {
-    window.location.href = '/tambah-hartanah';
+    window.location.href = './post';
 });
 
 document.getElementById('later-btn')?.addEventListener('click', () => {
@@ -70,17 +70,17 @@ document.getElementById('later-btn')?.addEventListener('click', () => {
 });
 
 
-// TODO: Check this later
-loadUser((user, error) => {
-    if (error) {
-        window.location.href = "/?error=1";
-    }
+// // TODO: Check this later
+// loadUser((user, error) => {
+//     if (error) {
+//         window.location.href = "/?error=1";
+//     }
     
-    if (user.email && user.phoneNo && user.full_name) {
-        window.location.href = "/users/siarkan-iklan/post/"
-    }
+//     if (user.email && user.phoneNo && user.full_name) {
+//         window.location.href = "/users/siarkan-iklan/post/"
+//     }
 
-    if (user.success) {
-        console.error("Success fetch user, redirecting...");
-    }
-});
+//     if (user.success) {
+//         console.error("Success fetch user, redirecting...");
+//     }
+// });
