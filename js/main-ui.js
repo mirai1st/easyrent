@@ -309,7 +309,7 @@ function checkLoginModal(url, callback = () => {}) {
 
 // main-ui.js
 
-async function startChat(username) {
+async function startChat(username, id) {
     try {
         const res = await fetch("/api/v1/chat/conversations", {
             method: "POST",
@@ -328,8 +328,10 @@ async function startChat(username) {
             throw new Error(data.error || "Failed to start conversation");
         }
 
+        const content = `Hi! saya berminat untuk menyewa rumah ini, /house/?house=${id}`;
+
         window.location.href =
-            `/users/message/?conversation=${data.conversation_id}`;
+            `/users/message/?conversation=${data.conversation_id}&message=${content}`;
 
     } catch (err) {
         console.error("Start chat error:", err);

@@ -116,6 +116,14 @@ async function openConversation(conversationId, username, avatar = null) {
     joinConversation(conversationId);
     checkOnlineStatus(username);
 
+    let params = new URLSearchParams(document.location.search);
+
+    if (params.get("message")) {
+        document.querySelectorAll(".chat-input").forEach(chat => {
+            chat.value = params.get("message");
+        });
+    }
+
     // Mobile view state
     document.querySelector(".mobile-message-view .message-container")?.classList.add("chat-open");
 

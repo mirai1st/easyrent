@@ -71,16 +71,16 @@ document.getElementById('later-btn')?.addEventListener('click', () => {
 
 
 // // TODO: Check this later
-// loadUser((user, error) => {
-//     if (error) {
-//         window.location.href = "/?error=1";
-//     }
+loadUser((user, error) => {
+    if (error) {
+        window.location.href = "/?error=1";
+    }
     
-//     if (user.email && user.phoneNo && user.full_name) {
-//         window.location.href = "/users/siarkan-iklan/post/"
-//     }
+    if (user.email && user.phoneNo && user.full_name && (user.role == "Tuan Rumah" || user.role == "Ejen Hartanah" || user.role == "Admin")) {
+        window.location.href = "/users/siarkan-iklan/post/"
+    }
 
-//     if (user.success) {
-//         console.error("Success fetch user, redirecting...");
-//     }
-// });
+    if (user.success) {
+        console.error("Success fetch user, redirecting...");
+    }
+});
