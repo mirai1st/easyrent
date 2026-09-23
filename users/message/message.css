@@ -408,6 +408,16 @@ nav a {
   opacity: 0.9;
 }
 
+.conversation-unread-badge {
+  margin-top: 4px;
+  font-size: 0.65rem;
+  padding: 2px 5px;
+  margin-left: 10px;
+  background-color: #52341d;
+  color: white;
+  border-radius: 10px;
+}
+
 /* =========================================================
    AVATAR IMAGE FIX (FIT TO CIRCLE CONTAINER)
    ========================================================= */

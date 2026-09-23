@@ -1,4 +1,5 @@
-const socket = io();
+// Reuses the single socket.io connection created in main-ui.js (must load first)
+const socket = window.appSocket || io();
 
 let currentUser = null;
 let currentConversationId = null;
@@ -29,6 +30,7 @@ async function loadConversations() {
 
         const conversations = await res.json();
         renderConversations(conversations);
+        updateGlobalUnreadBadge();
 
         // Auto open conversation if query param exists
         const params = new URLSearchParams(window.location.search);
@@ -40,8 +42,8 @@ async function loadConversations() {
             );
             if (conversation) {
                 await openConversation(
-                    conversation.conversation_id, 
-                    conversation.other_user, 
+                    conversation.conversation_id,
+                    conversation.other_user,
                     conversation.other_user_avatar
                 );
             }
@@ -75,11 +77,20 @@ function createConversationElement(conversation) {
     const avatar = conversation.other_user_avatar;
     const preview = conversation.last_message || "Belum ada mesej";
     const time = conversation.last_message_time ? formatTime(conversation.last_message_time) : "";
+    const unreadCount = Number(conversation.unread_count) || 0;
+
+    if (unreadCount > 0) {
+        element.classList.add("has-unread");
+    }
 
     // Guna gambar profileImg_url jika wujud, jika tiada tunjuk huruf pertama
-    const avatarHtml = avatar 
+    const avatarHtml = avatar
         ? `<img src="/userdata/uploads/profileImg/${escapeHtml(avatar)}" alt="${escapeHtml(username)}" class="avatar-img" />`
         : escapeHtml(username.charAt(0).toUpperCase());
+
+    const unreadBadgeHtml = unreadCount > 0
+        ? `<span class="conversation-unread-badge">${unreadCount > 99 ? "99+" : unreadCount}</span>`
+        : "";
 
     element.innerHTML = `
         <div class="conversation-avatar">
@@ -87,11 +98,12 @@ function createConversationElement(conversation) {
         </div>
         <div class="conversation-info">
             <div class="conversation-top">
-                <span class="conversation-name">@${escapeHtml(username)}</span>
+                <span class="conversation-name">${escapeHtml(username)} ${unreadBadgeHtml}</span>
                 <span class="conversation-time">${time}</span>
             </div>
             <p class="conversation-preview">${escapeHtml(preview)}</p>
         </div>
+        
     `;
 
     element.addEventListener("click", () => {
@@ -112,17 +124,10 @@ async function openConversation(conversationId, username, avatar = null) {
 
     updateChatHeader(username, avatar);
     await loadMessages(conversationId);
-    
+
     joinConversation(conversationId);
     checkOnlineStatus(username);
-
-    let params = new URLSearchParams(document.location.search);
-
-    if (params.get("message")) {
-        document.querySelectorAll(".chat-input").forEach(chat => {
-            chat.value = params.get("message");
-        });
-    }
+    await markConversationRead(conversationId);
 
     // Mobile view state
     document.querySelector(".mobile-message-view .message-container")?.classList.add("chat-open");
@@ -225,6 +230,73 @@ async function startChat(username) {
     }
 }
 
+// ========================================================
+// READ / UNREAD HANDLING
+// ========================================================
+
+async function markConversationRead(conversationId) {
+    try {
+        const res = await fetch(`/api/v1/chat/conversations/${conversationId}/read`, {
+            method: "PUT",
+            credentials: "include"
+        });
+
+        if (!res.ok) throw new Error("Failed to mark conversation as read");
+
+        // Clear the badge for this conversation in the list immediately
+        document.querySelectorAll(".conversation").forEach((item) => {
+            if (String(item.dataset.id) !== String(conversationId)) return;
+            item.classList.remove("has-unread");
+            item.querySelector(".conversation-unread-badge")?.remove();
+        });
+
+        updateGlobalUnreadBadge();
+    } catch (err) {
+        console.error("Mark as read error:", err);
+    }
+}
+
+async function updateGlobalUnreadBadge() {
+    try {
+        const res = await fetch("/api/v1/chat/unread-count");
+        if (!res.ok) throw new Error("Failed to load unread count");
+
+        const data = await res.json();
+        const count = Number(data.unread_count) || 0;
+
+        // Adjust this selector to match your navbar's notification badge element
+        document.querySelectorAll(".chat-unread-badge").forEach((badge) => {
+            if (count > 0) {
+                badge.textContent = count > 99 ? "99+" : count;
+                badge.style.display = "";
+            } else {
+                badge.style.display = "none";
+            }
+        });
+    } catch (err) {
+        console.error("Update global unread badge error:", err);
+    }
+}
+
+function bumpConversationUnread(conversationId) {
+    document.querySelectorAll(".conversation").forEach((item) => {
+        if (String(item.dataset.id) !== String(conversationId)) return;
+
+        item.classList.add("has-unread");
+
+        let badge = item.querySelector(".conversation-unread-badge");
+        if (!badge) {
+            badge = document.createElement("span");
+            badge.className = "conversation-unread-badge";
+            item.appendChild(badge);
+        }
+
+        const current = Number(badge.textContent) || 0;
+        const next = current + 1;
+        badge.textContent = next > 99 ? "99+" : next;
+    });
+}
+
 function updateChatHeader(username, avatar = null) {
     document.querySelectorAll(".chat-header-username").forEach((element) => {
         element.textContent = username;
@@ -293,12 +365,28 @@ function joinConversation(conversationId) {
 }
 
 socket.on("new_message", (message) => {
-    if (String(message.conversation_id) !== String(currentConversationId)) return;
-
-    appendMessageToAll(message);
-    scrollToBottom(desktopMessages);
-    scrollToBottom(mobileMessages);
     updateConversationPreview(message);
+
+    const isCurrentConversation = String(message.conversation_id) === String(currentConversationId);
+    const isOwnMessage = message.sender === currentUser;
+
+    if (isCurrentConversation) {
+        appendMessageToAll(message);
+        scrollToBottom(desktopMessages);
+        scrollToBottom(mobileMessages);
+
+        // I'm already looking at this conversation, so mark it read right away
+        if (!isOwnMessage) {
+            markConversationRead(currentConversationId);
+        }
+        return;
+    }
+
+    // Message arrived for a conversation I'm not currently viewing
+    if (!isOwnMessage) {
+        bumpConversationUnread(message.conversation_id);
+        updateGlobalUnreadBadge();
+    }
 });
 
 socket.on("user_status_changed", (data) => {

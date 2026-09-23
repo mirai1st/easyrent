@@ -82,7 +82,39 @@ async function loadNotificationCount() {
 }
 
 async function loadMessageCount() {
-    
+    try {
+        const response = await fetch("/api/v1/chat/unread-count", {
+            method: "GET",
+            credentials: "include"
+        });
+
+        const data = await response.json();
+
+        // Mengendalikan data berstruktur { messageCount: ... } atau { success: true, messageCount: ... }
+        if (data && data.unread_count !== undefined) {
+            await domReady();
+
+            const messageCounts = document.querySelectorAll(".message-count");
+            const messageButtons = document.querySelectorAll(".message-button");
+
+            messageCounts.forEach((messageCount, index) => {
+                const count = Number(data.unread_count) || 0;
+                
+                // Paparkan format '99+' jika melebihi 99, atau kosong jika 0
+                const formattedCount = count > 99 ? "99+" : count;
+                messageCount.textContent = count === 0 ? "" : `\u00A0 ${formattedCount}`;
+
+                if (messageButtons[index]) {
+                    messageButtons[index].title = count === 0
+                        ? "No new messages"
+                        : `You have ${count} new message${count > 1 ? "s" : ""}`;
+                }
+            });
+        }
+
+    } catch (error) {
+        console.error("Error loading message count:", error);
+    }
 }
 
 // ===== Favourite =====
@@ -145,6 +177,7 @@ async function initNavbar() {
         const [{ user, error }] = await Promise.all([
             loadUser(),
             loadNotificationCount(),
+            loadMessageCount(),
             domReady()
         ]);
 

@@ -45,9 +45,11 @@ function createUpload(directory) {
 const uploadHouse = createUpload('../userdata/uploads/houses');
 const uploadProfile = createUpload('../userdata/uploads/profileImg');
 const uploadSP = createUpload('../userdata/uploads/sp');
+const uploadMessage = createUpload('../userdata/uploads/message');
 
 module.exports = {
     uploadHouse,
     uploadProfile,
-    uploadSP
+    uploadSP,
+    uploadMessage
 };

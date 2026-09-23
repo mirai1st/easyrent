@@ -196,7 +196,7 @@ function moveCarousel(btn, direction) {
  * 5. Adds 'show' class to trigger notification appearance animation
  * 6. After 3 seconds, adds 'disable' class to fade out the notification
  */
-function showNotification(msg, type = 'success', timer = 10000) {
+function showNotification(msg, type = 'success', timer = 10000, messageUrl = '/users/message') {
   let container = document.getElementById('notification-toast-container');
   if (!container) {
     container = document.createElement('div');
@@ -210,31 +210,57 @@ function showNotification(msg, type = 'success', timer = 10000) {
   const existingPopups = container.querySelectorAll('.notification-popup');
   
   if (existingPopups.length >= MAX_NOTIFICATIONS) {
-    // Buang notifikasi paling lama (elemen pertama)
     existingPopups[0].remove();
   }
   // ------------------------------------
 
-  const isError = type === 'error';
+  // Pemetaan Ikon & Tajuk mengikut 'type'
+  const config = {
+    error: {
+      icon: 'circle-xmark',
+      title: 'Ralat Telah Berlaku',
+      class: 'is-error'
+    },
+    message: {
+      icon: 'comment',
+      title: 'Mesej Baharu',
+      class: 'is-message'
+    },
+    success: {
+      icon: 'circle-check',
+      title: 'Berjaya',
+      class: 'is-success'
+    }
+  };
+
+  const currentConfig = config[type] || config.success;
+
+  // Sediakan HTML button jika type === 'message'
+  const messageButtonHtml = type === 'message' 
+    ? `<a href="${messageUrl}" class="btn-go-to-message">Go to message <i class="fa-solid fa-arrow-right"></i></a><br><br>` 
+    : '';
+
   const popup = document.createElement('div');
-  popup.className = `notification-popup ${isError ? 'is-error' : ''}`;
+  popup.className = `notification-popup ${currentConfig.class}`;
   popup.setAttribute('role', 'status');
   popup.innerHTML = `
     <div class="flex">
       <span class="notification-popup-icon">
-        <i class="fa-solid fa-circle-${isError ? 'xmark' : 'check'}"></i>
+        <i class="fa-solid fa-${currentConfig.icon}"></i>
       </span>
       <span class="notification-popup-content">
-        <strong>${isError ? 'Ralat Telah Berlaku' : 'Berjaya'}</strong>
+        <strong>${currentConfig.title}</strong>
         <p></p>
       </span>
-      <button type="button" aria-label="Tutup notifikasi">
+      <button type="button" aria-label="Tutup notifikasi" class="btn-close-toast">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
+    ${messageButtonHtml}
     <div class="notification-progress-bg"></div>
     <div class="notification-progress-timer"></div>
   `;
+  
   popup.querySelector('p').textContent = msg;
   popup.style.setProperty('--notification-duration', `${timer}ms`);
   container.appendChild(popup);
@@ -248,7 +274,7 @@ function showNotification(msg, type = 'success', timer = 10000) {
     setTimeout(() => popup.remove(), 300);
   };
 
-  popup.querySelector('button').addEventListener('click', removePopup);
+  popup.querySelector('.btn-close-toast').addEventListener('click', removePopup);
   setTimeout(removePopup, timer);
 }
 
@@ -337,3 +363,25 @@ async function startChat(username, id) {
         console.error("Start chat error:", err);
     }
 }
+
+const appSocket = io();
+window.appSocket = appSocket;
+ 
+appSocket.on("connect_error", () => {
+  // Not logged in / bad token — nothing to do, guests just don't get live updates
+});
+ 
+appSocket.on("message_notification", (data) => {
+  // Don't toast on the messages page at all — chat.js already updates
+  // the conversation list / unread badges inline there.
+  const onMessagesPage = window.location.pathname.startsWith("/users/message");
+ 
+  if (onMessagesPage) return;
+ 
+  showNotification(`${data.sender}: ${data.message}`, "message", 3000);
+  loadMessageCount();
+ 
+  if (typeof updateGlobalUnreadBadge === "function") {
+    updateGlobalUnreadBadge();
+  }
+});

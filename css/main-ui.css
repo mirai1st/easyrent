@@ -1222,6 +1222,16 @@ hr {
     animation: notificationTimer var(--notification-duration, 10s) linear both;
 }
 
+.btn-go-to-message {
+    color: white;
+    background-color: #52341d;
+    font-size: 14px;
+    padding: 3px 12px;
+    margin-left: 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
 @keyframes notificationTimer {
     from { transform: scaleX(1); }
     to { transform: scaleX(0); }
