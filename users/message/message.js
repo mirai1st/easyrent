@@ -5,6 +5,9 @@ let currentUser = null;
 let currentConversationId = null;
 let currentConversationUsername = null;
 
+const MAX_IMAGES = 5;
+let pendingImages = []; // File objects staged for the next send
+
 const desktopConversationList = document.querySelector("#desktopConversationList");
 const mobileConversationList = document.querySelector("#mobileConversationList");
 const desktopMessages = document.querySelector("#desktopChatMessages");
@@ -172,33 +175,112 @@ function appendMessage(message, container) {
     const element = document.createElement("div");
     element.className = `message ${isSent ? "sent" : "received"}`;
 
+    const images = message.images || [];
+
+    const imagesHtml = images.length
+        ? `<div class="message-images">
+            ${images.map((img) => `<img src="/userdata/uploads/message/${escapeHtml(img)}" class="message-image" onclick="window.open('/userdata/uploads/message/${escapeHtml(img)}', '_blank')" />`).join("")}
+           </div>`
+        : "";
+
+    const textHtml = message.message
+        ? `<div class="message-bubble">${escapeHtml(message.message)}</div>`
+        : "";
+
     element.innerHTML = `
-        <div class="message-bubble">${escapeHtml(message.message)}</div>
+        ${imagesHtml}
+        ${textHtml}
         <span class="message-time">${formatTime(message.sent_at)}</span>
     `;
 
     container.appendChild(element);
 }
 
+// ========================================================
+// IMAGE ATTACHMENT STAGING (before send)
+// ========================================================
+
+function handleFilesSelected(fileList) {
+    const incoming = Array.from(fileList);
+    const room = MAX_IMAGES - pendingImages.length;
+
+    if (room <= 0) {
+        console.warn(`Maximum ${MAX_IMAGES} images per message`);
+        return;
+    }
+
+    pendingImages = pendingImages.concat(incoming.slice(0, room));
+    renderPendingImagePreview();
+}
+
+function removePendingImage(index) {
+    pendingImages.splice(index, 1);
+    renderPendingImagePreview();
+}
+
+function renderPendingImagePreview() {
+    document.querySelectorAll(".pending-image-preview").forEach((preview) => preview.remove());
+
+    if (pendingImages.length === 0) return;
+
+    document.querySelectorAll(".chat-input-container").forEach((container) => {
+        const preview = document.createElement("div");
+        preview.className = "pending-image-preview";
+
+        pendingImages.forEach((file, index) => {
+            const url = URL.createObjectURL(file);
+            const thumb = document.createElement("div");
+            thumb.className = "pending-image-thumb";
+            thumb.innerHTML = `
+                <img src="${url}" />
+                <button type="button" class="pending-image-remove">&times;</button>
+            `;
+            thumb.querySelector(".pending-image-remove").addEventListener("click", () => removePendingImage(index));
+            preview.appendChild(thumb);
+        });
+
+        container.prepend(preview);
+    });
+}
+
+document.querySelectorAll(".chat-attachment-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/jpeg,image/png";
+        fileInput.multiple = true;
+        fileInput.style.display = "none";
+
+        fileInput.addEventListener("change", () => {
+            handleFilesSelected(fileInput.files);
+            fileInput.remove();
+        });
+
+        document.body.appendChild(fileInput);
+        fileInput.click();
+    });
+});
+
 async function sendMessage(input) {
     if (!input) return;
     const message = input.value.trim();
 
-    if (!message) return;
+    if (!message && pendingImages.length === 0) return;
     if (!currentConversationId) {
         console.warn("No conversation selected");
         return;
     }
 
     try {
+        const formData = new FormData();
+        formData.append("conversation_id", currentConversationId);
+        if (message) formData.append("message", message);
+        pendingImages.forEach((file) => formData.append("images", file));
+
         const res = await fetch("/api/v1/chat/messages", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify({
-                conversation_id: currentConversationId,
-                message
-            })
+            body: formData
         });
 
         if (!res.ok) {
@@ -207,6 +289,8 @@ async function sendMessage(input) {
         }
 
         input.value = "";
+        pendingImages = [];
+        renderPendingImagePreview();
     } catch (err) {
         console.error("Send message error:", err);
     }
@@ -321,7 +405,7 @@ function updateChatHeader(username, avatar = null) {
     // Kemaskini avatar di header jika ada element class .chat-header-avatar
     document.querySelectorAll(".chat-header-avatar").forEach((headerAvatar) => {
         if (avatar) {
-            headerAvatar.innerHTML = `<img src="${escapeHtml(avatar)}" alt="${escapeHtml(username)}" class="avatar-img" />`;
+            headerAvatar.innerHTML = `<img src="/userdata/uploads/profileImg/${escapeHtml(avatar)}" alt="${escapeHtml(username)}" class="avatar-img" />`;
         } else {
             headerAvatar.innerHTML = escapeHtml(username.charAt(0).toUpperCase());
         }
@@ -355,7 +439,9 @@ function updateConversationPreview(message) {
         const preview = conversation.querySelector(".conversation-preview");
         const time = conversation.querySelector(".conversation-time");
 
-        if (preview) preview.textContent = message.message;
+        const previewText = message.message || (message.images?.length ? "📷 Gambar" : "");
+
+        if (preview) preview.textContent = previewText;
         if (time) time.textContent = formatTime(message.sent_at);
     });
 }

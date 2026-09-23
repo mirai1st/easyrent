@@ -1,11 +1,12 @@
 const express = require("express");
 const db = require("../system/db");
 const { authenticateToken } = require("../system/common");
+const { uploadMessage } = require("../system/uploadConfig"); // adjust path if uploadConfig.js lives elsewhere
 
 const router = express.Router();
 
 // ========================================================
-// GET USER CONVERSATIONS (now with unread_count per conversation)
+// GET USER CONVERSATIONS (unread_count + image-aware preview)
 // ========================================================
 
 router.get("/conversations", authenticateToken, async (req, res) => {
@@ -24,7 +25,15 @@ router.get("/conversations", authenticateToken, async (req, res) => {
 
                 u.profileImg_url AS other_user_avatar,
 
-                m.message AS last_message,
+                CASE
+                    WHEN m.message IS NOT NULL AND m.message != '' THEN m.message
+                    WHEN EXISTS (
+                        SELECT 1 FROM message_attachment ma
+                        WHERE ma.message_id = m.message_id
+                    ) THEN '📷 Gambar'
+                    ELSE m.message
+                END AS last_message,
+
                 m.sent_at AS last_message_time,
 
                 (
@@ -133,7 +142,7 @@ router.post("/conversations", authenticateToken, async (req, res) => {
 
 
 // ========================================================
-// GET MESSAGES
+// GET MESSAGES (now includes image attachments per message)
 // ========================================================
 
 router.get(
@@ -171,7 +180,7 @@ router.get(
                 });
             }
 
-            // Get messages bersama profile picture sender
+            // Get messages bersama profile picture sender + attached images (comma-joined)
             const [messages] = await db.execute(
                 `
                 SELECT 
@@ -180,14 +189,20 @@ router.get(
                     u.profileImg_url AS sender_avatar,
                     m.message,
                     m.is_read,
-                    m.sent_at
+                    m.sent_at,
+                    GROUP_CONCAT(ma.file_name ORDER BY ma.attachment_id SEPARATOR ',') AS images
 
                 FROM message m
 
                 LEFT JOIN Users u 
                     ON u.username = m.sender
 
+                LEFT JOIN message_attachment ma
+                    ON ma.message_id = m.message_id
+
                 WHERE m.conversation_id = ?
+
+                GROUP BY m.message_id
 
                 ORDER BY m.sent_at ASC
                 `,
@@ -196,7 +211,12 @@ router.get(
                 ]
             );
 
-            res.json(messages);
+            const formatted = messages.map((row) => ({
+                ...row,
+                images: row.images ? row.images.split(",") : []
+            }));
+
+            res.json(formatted);
 
         } catch (err) {
 
@@ -309,128 +329,153 @@ router.get("/unread-count", authenticateToken, async (req, res) => {
 
 
 // ========================================================
-// SEND MESSAGE
+// SEND MESSAGE (text and/or up to 5 images)
 // ========================================================
 
-router.post("/messages", authenticateToken, async (req, res) => {
+router.post(
+    "/messages",
+    authenticateToken,
+    uploadMessage.array("images", 5),
+    async (req, res) => {
 
-    try {
+        try {
 
-        const sender = req.user.username;
+            const sender = req.user.username;
 
-        const {
-            conversation_id,
-            message
-        } = req.body;
-
-
-        if (!conversation_id || !message?.trim()) {
-
-            return res.status(400).json({
-                error: "Conversation ID and message are required"
-            });
-
-        }
-
-
-        // Check user belongs to conversation
-        const [conversation] = await db.execute(
-            `
-            SELECT conversation_id, user1, user2
-
-            FROM conversation
-
-            WHERE conversation_id = ?
-
-            AND (
-                user1 = ?
-                OR user2 = ?
-            )
-            `,
-            [
+            const {
                 conversation_id,
-                sender,
-                sender
-            ]
-        );
+                message
+            } = req.body;
+
+            const trimmedMessage = message?.trim() || null;
+            const files = req.files || [];
+
+            if (!conversation_id) {
+                return res.status(400).json({
+                    error: "Conversation ID is required"
+                });
+            }
+
+            if (!trimmedMessage && files.length === 0) {
+                return res.status(400).json({
+                    error: "Message text or at least one image is required"
+                });
+            }
 
 
-        if (conversation.length === 0) {
+            // Check user belongs to conversation
+            const [conversation] = await db.execute(
+                `
+                SELECT conversation_id, user1, user2
 
-            return res.status(403).json({
-                error: "You are not part of this conversation"
-            });
+                FROM conversation
 
-        }
+                WHERE conversation_id = ?
 
-        const recipient =
-            conversation[0].user1 === sender
-                ? conversation[0].user2
-                : conversation[0].user1;
-
-
-        // Save message (is_read defaults to 0)
-        const [result] = await db.execute(
-            `
-            INSERT INTO message
-                (
+                AND (
+                    user1 = ?
+                    OR user2 = ?
+                )
+                `,
+                [
                     conversation_id,
                     sender,
-                    message
-                )
-
-            VALUES
-                (?, ?, ?)
-            `,
-            [
-                conversation_id,
-                sender,
-                message.trim()
-            ]
-        );
+                    sender
+                ]
+            );
 
 
-        // Push the new message live to everyone in this conversation's room
-        const io = req.app.get("io");
+            if (conversation.length === 0) {
 
-        if (io) {
-            io.to(`conversation_${conversation_id}`).emit("new_message", {
-                message_id: result.insertId,
-                conversation_id,
-                sender,
-                message: message.trim(),
-                is_read: 0,
-                sent_at: new Date()
+                return res.status(403).json({
+                    error: "You are not part of this conversation"
+                });
+
+            }
+
+            const recipient =
+                conversation[0].user1 === sender
+                    ? conversation[0].user2
+                    : conversation[0].user1;
+
+
+            // Save message (text may be null if image-only)
+            const [result] = await db.execute(
+                `
+                INSERT INTO message
+                    (
+                        conversation_id,
+                        sender,
+                        message
+                    )
+
+                VALUES
+                    (?, ?, ?)
+                `,
+                [
+                    conversation_id,
+                    sender,
+                    trimmedMessage
+                ]
+            );
+
+            const messageId = result.insertId;
+            const imageNames = files.map((file) => file.filename);
+
+            if (imageNames.length > 0) {
+                const values = imageNames.map((name) => [messageId, name]);
+
+                await db.query(
+                    `INSERT INTO message_attachment (message_id, file_name) VALUES ?`,
+                    [values]
+                );
+            }
+
+
+            // Push the new message live to everyone in this conversation's room
+            const io = req.app.get("io");
+
+            if (io) {
+                io.to(`conversation_${conversation_id}`).emit("new_message", {
+                    message_id: messageId,
+                    conversation_id,
+                    sender,
+                    message: trimmedMessage,
+                    images: imageNames,
+                    is_read: 0,
+                    sent_at: new Date()
+                });
+
+                // Push a toast-style notification straight to the recipient,
+                // even if they're not on the messages page at all
+                io.to(`user_${recipient}`).emit("message_notification", {
+                    conversation_id,
+                    sender,
+                    message: trimmedMessage || "📷 Gambar",
+                    sent_at: new Date()
+                });
+            }
+
+
+            res.json({
+                success: true,
+                message_id: messageId,
+                images: imageNames
             });
 
-            // Push a toast-style notification straight to the recipient,
-            // even if they're not on the messages page at all
-            io.to(`user_${recipient}`).emit("message_notification", {
-                conversation_id,
-                sender,
-                message: message.trim(),
-                sent_at: new Date()
+
+        } catch (err) {
+
+            console.error("Send message error:", err);
+
+            res.status(500).json({
+                error: err.message || "Failed to send message"
             });
+
         }
 
-
-        res.json({
-            success: true,
-            message_id: result.insertId
-        });
-
-
-    } catch (err) {
-
-        console.error("Send message error:", err);
-
-        res.status(500).json({
-            error: "Failed to send message"
-        });
-
     }
-
-});
+);
 
 
 module.exports = router;

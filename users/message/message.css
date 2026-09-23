@@ -356,6 +356,7 @@ nav a {
   padding: 12px 15px;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   border-top: 1px solid #00000012;
   background: #fff;
@@ -406,6 +407,68 @@ nav a {
 
 .chat-send-btn:hover {
   opacity: 0.9;
+}
+
+/* =========================================================
+   MESSAGE IMAGES (sent/received)
+   ========================================================= */
+
+.message-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.message-image {
+  max-width: 160px;
+  max-height: 160px;
+  border-radius: 12px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+/* =========================================================
+   PENDING IMAGE PREVIEW (before sending)
+   ========================================================= */
+
+.pending-image-preview {
+  order: -1;
+  flex: 0 0 100%;
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  padding: 8px 0;
+  flex-wrap: wrap;
+}
+
+.pending-image-thumb {
+  position: relative;
+  width: 56px;
+  height: 56px;
+}
+
+.pending-image-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #00000018;
+}
+
+.pending-image-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  line-height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: #52341d;
+  color: white;
+  font-size: 0.7rem;
+  cursor: pointer;
 }
 
 .conversation-unread-badge {
