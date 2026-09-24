@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 22, 2026 at 07:48 PM
+-- Generation Time: Sep 23, 2026 at 08:04 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -92,37 +92,164 @@ CREATE TABLE `message` (
   `message_id` int(11) NOT NULL,
   `conversation_id` int(11) NOT NULL,
   `sender` varchar(255) NOT NULL,
-  `message` text NOT NULL,
-  `sent_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `message` text DEFAULT NULL,
+  `sent_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_read` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `message`
 --
 
-INSERT INTO `message` (`message_id`, `conversation_id`, `sender`, `message`, `sent_at`) VALUES
-(1, 1, 'DevAcc', 'helo', '2026-09-22 15:50:43'),
-(2, 1, 'mirai1st', 'pebende ko', '2026-09-22 15:51:03'),
-(3, 1, 'DevAcc', 'helep', '2026-09-22 15:52:28'),
-(4, 1, 'mirai1st', 'Apo', '2026-09-22 15:52:32'),
-(5, 2, 'mirai1st', 'Hai', '2026-09-22 15:58:49'),
-(6, 2, 'mirai1st', 'Hai', '2026-09-22 15:58:49'),
-(7, 2, 'mirai1st', 'Hai', '2026-09-22 15:59:02'),
-(8, 2, 'mirai1st', 'Hai', '2026-09-22 15:59:02'),
-(9, 2, 'mirai1st', 'Hai', '2026-09-22 15:59:02'),
-(10, 2, 'naim', 'Skit ii dh la comey', '2026-09-22 15:59:09'),
-(11, 2, 'mirai1st', 'Hai', '2026-09-22 15:59:10'),
-(12, 2, 'mirai1st', 'Hai', '2026-09-22 15:59:10'),
-(13, 2, 'mirai1st', 'Byt', '2026-09-22 15:59:43'),
-(14, 1, 'mirai1st', 'Oi', '2026-09-22 16:31:57'),
-(15, 1, 'DevAcc', 'aik', '2026-09-22 16:32:02'),
-(16, 1, 'DevAcc', 'tolong aku', '2026-09-22 16:49:29'),
-(17, 1, 'mirai1st', 'Kenapa ko ni', '2026-09-22 16:49:36'),
-(18, 1, 'DevAcc', 'tak ada orang kacau aku ni ha', '2026-09-22 16:49:46'),
-(19, 1, 'mirai1st', 'Wtf?', '2026-09-22 16:49:49'),
-(20, 1, 'DevAcc', 'sape pulak', '2026-09-22 16:49:55'),
-(21, 1, 'mirai1st', 'Tak tau', '2026-09-22 16:50:01'),
-(22, 1, 'DevAcc', 'ish', '2026-09-22 16:50:06');
+INSERT INTO `message` (`message_id`, `conversation_id`, `sender`, `message`, `sent_at`, `is_read`) VALUES
+(1, 1, 'DevAcc', 'helo', '2026-09-22 15:50:43', 1),
+(2, 1, 'mirai1st', 'pebende ko', '2026-09-22 15:51:03', 1),
+(3, 1, 'DevAcc', 'helep', '2026-09-22 15:52:28', 1),
+(4, 1, 'mirai1st', 'Apo', '2026-09-22 15:52:32', 1),
+(5, 2, 'mirai1st', 'Hai', '2026-09-22 15:58:49', 0),
+(6, 2, 'mirai1st', 'Hai', '2026-09-22 15:58:49', 0),
+(7, 2, 'mirai1st', 'Hai', '2026-09-22 15:59:02', 0),
+(8, 2, 'mirai1st', 'Hai', '2026-09-22 15:59:02', 0),
+(9, 2, 'mirai1st', 'Hai', '2026-09-22 15:59:02', 0),
+(10, 2, 'naim', 'Skit ii dh la comey', '2026-09-22 15:59:09', 1),
+(11, 2, 'mirai1st', 'Hai', '2026-09-22 15:59:10', 0),
+(12, 2, 'mirai1st', 'Hai', '2026-09-22 15:59:10', 0),
+(13, 2, 'mirai1st', 'Byt', '2026-09-22 15:59:43', 0),
+(14, 1, 'mirai1st', 'Oi', '2026-09-22 16:31:57', 1),
+(15, 1, 'DevAcc', 'aik', '2026-09-22 16:32:02', 1),
+(16, 1, 'DevAcc', 'tolong aku', '2026-09-22 16:49:29', 1),
+(17, 1, 'mirai1st', 'Kenapa ko ni', '2026-09-22 16:49:36', 1),
+(18, 1, 'DevAcc', 'tak ada orang kacau aku ni ha', '2026-09-22 16:49:46', 1),
+(19, 1, 'mirai1st', 'Wtf?', '2026-09-22 16:49:49', 1),
+(20, 1, 'DevAcc', 'sape pulak', '2026-09-22 16:49:55', 1),
+(21, 1, 'mirai1st', 'Tak tau', '2026-09-22 16:50:01', 1),
+(22, 1, 'DevAcc', 'ish', '2026-09-22 16:50:06', 1),
+(23, 2, 'mirai1st', 'what', '2026-09-22 18:06:14', 0),
+(24, 1, 'DevAcc', 'Oi', '2026-09-22 18:06:26', 1),
+(25, 1, 'mirai1st', 'eh diam la', '2026-09-22 18:07:23', 1),
+(26, 1, 'DevAcc', 'Mfk', '2026-09-22 18:10:41', 1),
+(27, 1, 'mirai1st', 'woi', '2026-09-22 18:10:44', 1),
+(28, 1, 'mirai1st', 'mencarut apo', '2026-09-22 18:10:48', 1),
+(29, 1, 'DevAcc', 'Mana ada', '2026-09-22 18:10:55', 1),
+(30, 1, 'DevAcc', 'Fitnah saje', '2026-09-22 18:11:01', 1),
+(31, 1, 'mirai1st', 'mfk tu apa', '2026-09-22 18:11:09', 1),
+(32, 1, 'DevAcc', '👀', '2026-09-22 18:11:22', 1),
+(33, 1, 'mirai1st', 'aku ban account ko kang', '2026-09-22 18:11:49', 1),
+(34, 1, 'DevAcc', 'Wtf', '2026-09-22 18:11:51', 1),
+(35, 2, 'mirai1st', 'wat', '2026-09-23 09:24:22', 0),
+(36, 1, 'DevAcc', 'What the heck', '2026-09-23 09:25:31', 1),
+(37, 1, 'DevAcc', 'Ape', '2026-09-23 09:25:43', 1),
+(38, 1, 'DevAcc', 'Apeeeee', '2026-09-23 09:25:48', 1),
+(39, 1, 'DevAcc', 'No', '2026-09-23 09:26:37', 1),
+(40, 1, 'DevAcc', 'So skrg?', '2026-09-23 09:28:24', 1),
+(41, 1, 'DevAcc', 'What', '2026-09-23 09:28:33', 1),
+(42, 1, 'DevAcc', 'Tkde pun', '2026-09-23 09:28:43', 1),
+(43, 1, 'DevAcc', 'Something wrong', '2026-09-23 09:29:54', 1),
+(44, 1, 'DevAcc', 'Tolong', '2026-09-23 09:30:02', 1),
+(45, 1, 'mirai1st', 'test', '2026-09-23 09:31:13', 1),
+(46, 1, 'mirai1st', 'test', '2026-09-23 09:31:19', 1),
+(47, 1, 'mirai1st', 'goks', '2026-09-23 09:31:22', 1),
+(48, 1, 'DevAcc', 'Goks', '2026-09-23 09:31:27', 1),
+(49, 1, 'DevAcc', 'Goks', '2026-09-23 09:31:35', 1),
+(50, 1, 'mirai1st', 'what', '2026-09-23 09:31:42', 1),
+(51, 1, 'DevAcc', 'Ajixbakxbiahxiahdoha', '2026-09-23 09:32:20', 1),
+(52, 1, 'mirai1st', 'barua', '2026-09-23 09:36:04', 1),
+(53, 1, 'mirai1st', 'barua', '2026-09-23 09:36:11', 1),
+(54, 1, 'mirai1st', 'barua', '2026-09-23 09:36:14', 1),
+(55, 1, 'DevAcc', 'Gay', '2026-09-23 09:36:23', 1),
+(56, 1, 'DevAcc', 'Fay', '2026-09-23 09:36:32', 1),
+(57, 1, 'DevAcc', 'Jxvnianzlbalxbad', '2026-09-23 09:36:39', 1),
+(58, 1, 'DevAcc', 'Jshsjs', '2026-09-23 09:36:44', 1),
+(59, 1, 'DevAcc', 'Test', '2026-09-23 09:39:26', 1),
+(60, 1, 'DevAcc', 'Test', '2026-09-23 09:40:31', 1),
+(61, 1, 'DevAcc', 'Test', '2026-09-23 09:42:44', 1),
+(62, 1, 'DevAcc', 'Tkdepun', '2026-09-23 09:43:07', 1),
+(63, 1, 'mirai1st', 'tkde  pun', '2026-09-23 09:43:18', 1),
+(64, 1, 'mirai1st', 'test', '2026-09-23 09:43:59', 1),
+(65, 1, 'mirai1st', 'test', '2026-09-23 09:44:06', 1),
+(66, 1, 'DevAcc', 'test', '2026-09-23 09:47:43', 1),
+(67, 1, 'DevAcc', 'test dooo', '2026-09-23 09:47:50', 1),
+(68, 1, 'DevAcc', 'Test', '2026-09-23 09:51:14', 1),
+(69, 1, 'DevAcc', 'Test', '2026-09-23 09:51:26', 1),
+(70, 1, 'DevAcc', 'Test', '2026-09-23 09:51:32', 1),
+(71, 1, 'DevAcc', 'Weh tolong', '2026-09-23 09:51:41', 1),
+(72, 1, 'mirai1st', 'apa dia', '2026-09-23 09:51:50', 1),
+(73, 1, 'DevAcc', 'Test', '2026-09-23 09:53:52', 1),
+(74, 1, 'DevAcc', 'Test', '2026-09-23 09:54:38', 1),
+(75, 1, 'DevAcc', 'Test', '2026-09-23 09:54:56', 1),
+(76, 1, 'DevAcc', 'Test', '2026-09-23 09:55:55', 1),
+(77, 1, 'DevAcc', 'Test', '2026-09-23 09:57:07', 1),
+(78, 1, 'DevAcc', 'Test', '2026-09-23 09:57:30', 1),
+(79, 1, 'DevAcc', 'Test', '2026-09-23 09:58:05', 1),
+(80, 1, 'DevAcc', 'Test', '2026-09-23 09:58:23', 1),
+(81, 1, 'DevAcc', 'Test', '2026-09-23 09:58:31', 1),
+(82, 1, 'DevAcc', 'Test', '2026-09-23 09:58:53', 1),
+(83, 1, 'DevAcc', 'Test', '2026-09-23 09:59:06', 1),
+(84, 1, 'DevAcc', 'Test', '2026-09-23 09:59:35', 1),
+(85, 1, 'DevAcc', 'Test', '2026-09-23 09:59:46', 1),
+(86, 1, 'DevAcc', 'Test', '2026-09-23 10:00:00', 1),
+(87, 1, 'DevAcc', 'Test', '2026-09-23 10:01:30', 1),
+(88, 1, 'DevAcc', 'Test', '2026-09-23 10:01:46', 1),
+(89, 1, 'DevAcc', 'Test', '2026-09-23 10:02:07', 1),
+(90, 1, 'DevAcc', 'Test', '2026-09-23 10:02:24', 1),
+(91, 1, 'DevAcc', 'Test', '2026-09-23 10:02:45', 1),
+(92, 1, 'DevAcc', 'Test', '2026-09-23 10:02:56', 1),
+(93, 1, 'DevAcc', 'Test', '2026-09-23 10:03:10', 1),
+(94, 1, 'DevAcc', 'Test', '2026-09-23 10:03:22', 1),
+(95, 1, 'DevAcc', 'Test', '2026-09-23 10:03:39', 1),
+(96, 1, 'DevAcc', 'Test', '2026-09-23 10:03:44', 1),
+(97, 1, 'DevAcc', 'Test', '2026-09-23 10:03:58', 1),
+(98, 1, 'DevAcc', 'Test', '2026-09-23 10:04:31', 1),
+(99, 1, 'DevAcc', 'Test', '2026-09-23 10:04:52', 1),
+(100, 1, 'DevAcc', 'Test', '2026-09-23 10:05:11', 1),
+(101, 1, 'DevAcc', 'Test', '2026-09-23 10:49:23', 1),
+(102, 1, 'DevAcc', 'Test', '2026-09-23 10:49:42', 1),
+(103, 1, 'mirai1st', 'Test', '2026-09-23 10:51:56', 1),
+(104, 1, 'mirai1st', 'What the heck ko test2', '2026-09-23 10:52:05', 1),
+(105, 1, 'DevAcc', 'T', '2026-09-23 10:54:31', 1),
+(106, 1, 'DevAcc', 'T', '2026-09-23 10:54:37', 1),
+(107, 1, 'DevAcc', 'Test', '2026-09-23 10:58:42', 1),
+(108, 1, 'DevAcc', 'Test', '2026-09-23 11:02:02', 1),
+(109, 1, 'DevAcc', 'Test', '2026-09-23 11:03:45', 1),
+(110, 1, 'DevAcc', 'Test', '2026-09-23 11:03:50', 1),
+(111, 1, 'DevAcc', 'Test', '2026-09-23 11:05:25', 1),
+(112, 1, 'mirai1st', 'dffgdfdsfdsfdf', '2026-09-23 11:18:59', 1),
+(113, 1, 'mirai1st', 'uiyoo', '2026-09-23 11:19:20', 1),
+(114, 1, 'DevAcc', 'Uiyoo', '2026-09-23 11:19:24', 1),
+(115, 1, 'DevAcc', 'hoN', '2026-09-23 11:19:33', 1),
+(116, 1, 'DevAcc', 'Test', '2026-09-23 15:57:33', 1),
+(117, 1, 'DevAcc', 'Test', '2026-09-23 15:57:41', 1),
+(118, 1, 'DevAcc', 'Help', '2026-09-23 15:57:48', 1),
+(119, 1, 'DevAcc', 'Help', '2026-09-23 15:57:53', 1),
+(120, 1, 'DevAcc', 'Help', '2026-09-23 15:57:58', 1),
+(121, 1, 'DevAcc', 'Help', '2026-09-23 15:58:03', 1),
+(122, 1, 'DevAcc', 'Hai', '2026-09-23 17:27:04', 1),
+(123, 1, 'mirai1st', 'hello', '2026-09-23 17:27:13', 1),
+(124, 1, 'DevAcc', 'Realtime', '2026-09-23 17:27:19', 1),
+(125, 1, 'DevAcc', 'Test', '2026-09-23 17:36:59', 1),
+(126, 1, 'DevAcc', 'Hello', '2026-09-23 17:37:31', 1),
+(127, 1, 'DevAcc', 'Goks', '2026-09-23 17:38:12', 1),
+(128, 1, 'DevAcc', 'Hello', '2026-09-23 17:38:26', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message_attachment`
+--
+
+CREATE TABLE `message_attachment` (
+  `attachment_id` int(11) NOT NULL,
+  `message_id` int(11) NOT NULL,
+  `file_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `message_attachment`
+--
+
+INSERT INTO `message_attachment` (`attachment_id`, `message_id`, `file_name`) VALUES
+(1, 112, '1790162339322-777505814.jpeg'),
+(2, 115, '1790162373087-28505600.jpg');
 
 -- --------------------------------------------------------
 
@@ -258,6 +385,8 @@ CREATE TABLE `Users` (
   `verification_code` varchar(6) DEFAULT NULL,
   `verification_expires` datetime DEFAULT NULL,
   `email` varchar(100) NOT NULL,
+  `address` text NOT NULL,
+  `description` text NOT NULL,
   `phoneNo` varchar(20) DEFAULT NULL,
   `full_name` varchar(255) DEFAULT NULL,
   `profileImg_url` varchar(255) DEFAULT NULL,
@@ -270,14 +399,14 @@ CREATE TABLE `Users` (
 -- Dumping data for table `Users`
 --
 
-INSERT INTO `Users` (`username`, `password`, `is_verified`, `verification_code`, `verification_expires`, `email`, `phoneNo`, `full_name`, `profileImg_url`, `role`, `isAnonymous`, `dateCreated`) VALUES
-('ammarsyakir', '$2b$10$zC8wv7DqRnQ42K36hS1krOMslxNKGclc7DoFh/cUfYs/mTbXzkZdC', 1, NULL, NULL, 'ammarsyakir890@gmail.com', '01170195954', 'Callmeshark', '1789830085357-857051506.jpg', 'Pengguna', 0, '2026-09-19 14:59:09'),
-('asanatika', '$2b$10$oiS92hi9N0CTCyliWXMmEuGReLTYObmIqtiTQL1M7lEVZP6v7nmUS', 1, NULL, NULL, 'amirrulashraf099@gmail.com', NULL, NULL, NULL, 'Pengguna', 0, '2026-09-22 12:48:36'),
-('DevAcc', '$2b$10$Ko9QF.tXLcFKPNqPIt4gkukVhu06T5nwTnzXrFIybMOGkl2CuJE7K', 1, NULL, NULL, 'oretachi099@gmail.com', '-', '-', '1790095866644-937562289.png', 'Tuan Rumah', 0, '2026-09-16 12:47:14'),
-('ipe', '$2b$10$j1Bgk8mec4JVFnhssShvjumf5OEugqzMJUUY58dEdAQqK6ia5XkZO', 1, NULL, NULL, 'mi9162970@gmail.com', '-999', '-ipang paruk', NULL, 'Pengguna', 0, '2026-09-19 14:58:47'),
-('mirai1st', '$2b$10$BpdtOaTKJlLU3Y..Fzlmo.gOpN/GG1crolVw4d.TJmQAQ3vjQzs1.', 1, NULL, NULL, 'mirai1st04@gmail.com', '018-5799311', 'Mirai1st', '1789893056777-978345455.jpg', 'Admin', 0, '2026-09-05 07:27:43'),
-('naim', '$2b$10$z7aCcHUY3OjV9B0GhtO4N.5WixsXqvyvaKNDJcHWz1xzB7m/wI822', 1, NULL, NULL, 'munawwarnaim04@gmail.com', '782935', 'Naim', '1789895573693-950981489.jpg', 'Pengguna', 0, '2026-09-20 09:10:12'),
-('nordnorazmi04', '$2b$10$2iI0M5nBZNJ3pC3VEOO3C.eF30Dx15hVLbBC0fiXMKz/85un5i2ka', 1, NULL, NULL, 'nordnorazmi04@gmail.com', NULL, NULL, NULL, 'Pengguna', 0, '2026-09-19 09:28:46');
+INSERT INTO `Users` (`username`, `password`, `is_verified`, `verification_code`, `verification_expires`, `email`, `address`, `description`, `phoneNo`, `full_name`, `profileImg_url`, `role`, `isAnonymous`, `dateCreated`) VALUES
+('ammarsyakir', '$2b$10$zC8wv7DqRnQ42K36hS1krOMslxNKGclc7DoFh/cUfYs/mTbXzkZdC', 1, NULL, NULL, 'ammarsyakir890@gmail.com', '', '', '01170195954', 'Callmeshark', '1789830085357-857051506.jpg', 'Pengguna', 0, '2026-09-19 14:59:09'),
+('asanatika', '$2b$10$oiS92hi9N0CTCyliWXMmEuGReLTYObmIqtiTQL1M7lEVZP6v7nmUS', 1, NULL, NULL, 'amirrulashraf099@gmail.com', '', '', NULL, NULL, NULL, 'Pengguna', 0, '2026-09-22 12:48:36'),
+('DevAcc', '$2b$10$Ko9QF.tXLcFKPNqPIt4gkukVhu06T5nwTnzXrFIybMOGkl2CuJE7K', 1, NULL, NULL, 'oretachi099@gmail.com', '', '', '-', '-', '1790161616560-783996945.jpg', 'Tuan Rumah', 0, '2026-09-16 12:47:14'),
+('ipe', '$2b$10$j1Bgk8mec4JVFnhssShvjumf5OEugqzMJUUY58dEdAQqK6ia5XkZO', 1, NULL, NULL, 'mi9162970@gmail.com', '', '', '-999', '-ipang paruk', NULL, 'Pengguna', 0, '2026-09-19 14:58:47'),
+('mirai1st', '$2b$10$BpdtOaTKJlLU3Y..Fzlmo.gOpN/GG1crolVw4d.TJmQAQ3vjQzs1.', 1, NULL, NULL, 'mirai1st04@gmail.com', '', '', '018-5799311', 'Mirai1st', '1789893056777-978345455.jpg', 'Admin', 0, '2026-09-05 07:27:43'),
+('naim', '$2b$10$z7aCcHUY3OjV9B0GhtO4N.5WixsXqvyvaKNDJcHWz1xzB7m/wI822', 1, NULL, NULL, 'munawwarnaim04@gmail.com', '', '', '782935', 'Naim', '1789895573693-950981489.jpg', 'Pengguna', 0, '2026-09-20 09:10:12'),
+('nordnorazmi04', '$2b$10$2iI0M5nBZNJ3pC3VEOO3C.eF30Dx15hVLbBC0fiXMKz/85un5i2ka', 1, NULL, NULL, 'nordnorazmi04@gmail.com', '', '', NULL, NULL, NULL, 'Pengguna', 0, '2026-09-19 09:28:46');
 
 --
 -- Indexes for dumped tables
@@ -310,8 +439,15 @@ ALTER TABLE `Favourite`
 --
 ALTER TABLE `message`
   ADD PRIMARY KEY (`message_id`),
-  ADD KEY `conversation_id` (`conversation_id`),
-  ADD KEY `sender` (`sender`);
+  ADD KEY `sender` (`sender`),
+  ADD KEY `idx_conversation_read` (`conversation_id`,`sender`,`is_read`);
+
+--
+-- Indexes for table `message_attachment`
+--
+ALTER TABLE `message_attachment`
+  ADD PRIMARY KEY (`attachment_id`),
+  ADD KEY `idx_message_id` (`message_id`);
 
 --
 -- Indexes for table `notifications`
@@ -357,7 +493,7 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `conversation`
 --
 ALTER TABLE `conversation`
-  MODIFY `conversation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `conversation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `Favourite`
@@ -369,7 +505,13 @@ ALTER TABLE `Favourite`
 -- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
+
+--
+-- AUTO_INCREMENT for table `message_attachment`
+--
+ALTER TABLE `message_attachment`
+  MODIFY `attachment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `notifications`
@@ -412,6 +554,12 @@ ALTER TABLE `conversation`
 ALTER TABLE `message`
   ADD CONSTRAINT `message_ibfk_1` FOREIGN KEY (`conversation_id`) REFERENCES `conversation` (`conversation_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `message_ibfk_2` FOREIGN KEY (`sender`) REFERENCES `Users` (`username`);
+
+--
+-- Constraints for table `message_attachment`
+--
+ALTER TABLE `message_attachment`
+  ADD CONSTRAINT `fk_attachment_message` FOREIGN KEY (`message_id`) REFERENCES `message` (`message_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `notifications`

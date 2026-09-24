@@ -232,7 +232,7 @@ function renderHouse(house) {
 			<div>
 				<p class="detail-eyebrow"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(house.location || 'Lokasi tidak dinyatakan')}</p>
 				<h1>${escapeHtml(house.title)}</h1>
-				<p class="detail-meta">Disiarkan oleh <strong>@${escapeHtml(house.originalposter || 'Tuan rumah')}</strong> · ${formatDate(house.dateCreated)}</p>
+				<p class="detail-meta">Disiarkan oleh <strong><a href="/users/user/?username=${encodeURIComponent(house.originalposter || 'Tuan rumah')}" class="poster-link">@${escapeHtml(house.originalposter || 'Tuan rumah')}</a></strong> · ${formatDate(house.dateCreated)}</p>
 			</div>
 			<button class="save-house" type="button" aria-label="Simpan rumah ini" aria-pressed="false"><i class="fa-regular fa-heart"></i></button>
 		</div>

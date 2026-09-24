@@ -14,6 +14,24 @@ function esc(value) {
     }[c]));
 }
 
+function validateProfileInput({ full_name, email, phoneNo }) {
+    if (!full_name || full_name.trim().length < 2) {
+        return "Nama profil perlu diisi sekurang-kurangnya 2 huruf.";
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email.trim())) {
+        return "Format email tidak sah. Contoh: nama@email.com";
+    }
+
+    const phoneDigits = (phoneNo || "").replace(/\D/g, "");
+    if (!/^(?:0|60)?1\d{8,9}$/.test(phoneDigits)) {
+        return "Nombor telefon tidak sah. Gunakan format seperti 012-3456789 atau +6012-3456789.";
+    }
+
+    return null;
+}
+
 // ===== Bina HTML terus dengan data user =====
 
 function renderProfile(user) {
@@ -419,6 +437,16 @@ function setupEditProfile() {
             const full_name = editProfileContainer.querySelector(".profile_fullname").value.trim();
             const email = editProfileContainer.querySelector(".profile-email").value.trim();
             const phoneNo = editProfileContainer.querySelector(".profile-phone").value.trim();
+
+            const validationError = validateProfileInput({ full_name, email, phoneNo });
+            if (validationError) {
+                if (typeof showNotification === "function") {
+                    showNotification(validationError, "error", 5000);
+                } else {
+                    alert(validationError);
+                }
+                return;
+            }
 
             const formData = new FormData();
             formData.append("full_name", full_name);

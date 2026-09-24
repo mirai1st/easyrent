@@ -1,0 +1,7 @@
+1. Siarkan Iklan (easy)
+2. Tetapan 
+3. Password Kuat time Login (easy)
+4. Page untuk owner rumah tengok list mereka (update) <- esok
+5. UI Mobile (easy)
+6. Profile User (Design kene tukar)
+7. Control Panel ✅ (Design kene tukar)
