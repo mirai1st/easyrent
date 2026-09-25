@@ -6,7 +6,7 @@ EasyRent is a student-focused accommodation platform built to make the search fo
 
 This project was developed as a Final Year Project for students looking for accommodation throughout their studies.
 
-![image]([https://github.com](https://github.com/mirai1st/easyrent/blob/c800ab992f7635b015e3837a7e3823dfcd913753/assets/screenshots/Home%20-%20EasyRent.png))
+![Image](assets/screenshots/Home - EasyRent.png)
 
 ## What EasyRent Offers
 
