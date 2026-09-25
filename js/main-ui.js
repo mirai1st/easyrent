@@ -15,7 +15,9 @@ var codeverify_close_btn = document.getElementsByClassName("codeverify-modal-clo
 login_buttons.forEach(btn => {
   btn.addEventListener("click", () => {
     register_modal.style.display = "none";
-    modal.style.display = "block";
+    register_modal.classList.remove("enabled");
+    modal.style.display = "flex";
+    modal.classList.add("enabled");
   });
 });
 
@@ -23,7 +25,9 @@ login_buttons.forEach(btn => {
 register_buttons.forEach(btn => {
   btn.addEventListener("click", () => {
     modal.style.display = "none";
-    register_modal.style.display = "block";
+    modal.classList.remove("enabled");
+    register_modal.style.display = "flex";
+    register_modal.classList.add("enabled");
   });
 });
 
@@ -48,28 +52,20 @@ document.addEventListener("click", (event) => {
 // Close buttons
 login_close_btn.onclick = function () {
   modal.style.display = "none";
+  modal.classList.remove("enabled");
 };
 
 register_close_btn.onclick = function () {
   register_modal.style.display = "none";
+  register_modal.classList.remove("enabled");
 };
 
 codeverify_close_btn.onclick = function () {
   codeverify_modal.style.display = "none";
+  codeverify_modal.classList.remove("enabled");
 };
 
 // Click outside modal content to close — single handler covers all three modals
-window.onclick = function (event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-  if (event.target == register_modal) {
-    register_modal.style.display = "none";
-  }
-  if (event.target == codeverify_modal) {
-    codeverify_modal.style.display = "none";
-  }
-};
 
 // sidebar
 const sidebar         = document.querySelector(".sidebar");
@@ -292,12 +288,14 @@ if (loginSuccess === "true") {
     
 } else if (loginSuccess === "false") {
     showNotification(`Ralat ketika mengelog masuk: ${error || 'Invalid credentials'}`, "error");
-    modal.style.display = "block"; // Open login modal on failed login
+    modal.style.display = "flex"; // Open login modal on failed login
+    modal.classList.add("enabled");
 } else if (registerSuccess === "true") {
     showNotification("Akaun anda telah didaftarkan! Anda boleh me-log masuk semula akaun anda.", "success");
 } else if (error === "1") {
     showNotification("Uh oh! That action requires you to log in.", "error");
-    modal.style.display = "block"; // Open login modal on failed login
+    modal.style.display = "flex"; // Open login modal on failed login
+    modal.classList.add("enabled");
 }
 
 // Clear only notification parameters so search and filter parameters remain visible.
@@ -324,7 +322,8 @@ if (cleanUrl.href !== window.location.href) {
 function checkLoginModal(url, callback = () => {}) {
     loadUser((user, error) => {
         if (error || !user) {
-            modal.style.display = "block";
+            modal.style.display = "flex";
+            modal.classList.add("enabled");
             showNotification("Anda perlu mengelog masuk untuk mengakses ciri ini.", "error");
         } else {
             window.location.href = url;

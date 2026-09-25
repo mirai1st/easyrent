@@ -95,6 +95,7 @@ nav a {
 }
 
 .notification-container {
+    height: calc(100vh - 140px);
     flex: 1; /* ambil baki ruang sebagai right panel */
     min-width: 0; /* elak overflow bila content dalam settings terlalu lebar */
     padding: 20px;
@@ -438,21 +439,76 @@ nav a {
 }
 
 /* Mobile */
-@media (max-width: 768px) {
-    .notification-header {
-        padding: 16px;
+@media (max-width: 767px) {
+    .desktop-view {
+        display: none !important;
     }
 
-    .notification-header-actions {
+    .mobile-view {
+        display: block;
+    }
+
+    #top {
+        padding: 68px 0 0;
+    }
+
+    .mobile-notification-view {
         width: 100%;
-        justify-content: space-between;
     }
 
-    .notification-item {
+    .mobile-notification-view .notification-container {
+        width: 100%;
+        min-height: calc(100dvh - 68px);
+        border: none;
+        border-radius: 0;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .mobile-notification-view .notification-header {
+        padding: 16px;
+        border-bottom: 1px solid #00000012;
+    }
+
+    .mobile-notification-view .notification-header-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .mobile-notification-view .notification-tabs {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mobile-notification-view .notif-tab {
+        justify-content: center;
+        width: 100%;
+        font-size: 0.78rem;
+        padding: 9px 8px;
+    }
+
+    .mobile-notification-view .notif-mark-all {
+        align-self: flex-end;
+    }
+
+    .mobile-notification-view .notification-item {
         padding: 12px 16px;
     }
 
-    .notification-group-label {
+    .mobile-notification-view .notification-group-label {
         padding: 12px 16px 6px;
+    }
+}
+
+@media (min-width: 768px) {
+    .mobile-view {
+        display: none !important;
+    }
+
+    .desktop-view {
+        display: flex;
     }
 }

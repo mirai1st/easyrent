@@ -3,7 +3,10 @@ const db = require("../system/db");
 const { toggleCommunityFavourite } = require("../users/favourite");
 
 async function fetchPost(req, res) {
-    const query = `
+    const scope = String(req.query.scope || "all").toLowerCase();
+    const username = req.user ? req.user.username : null;
+
+    let query = `
         SELECT
             p.spId,
             p.username,
@@ -15,11 +18,23 @@ async function fetchPost(req, res) {
             u.profileImg_url
         FROM spPost p
         LEFT JOIN Users u ON p.username = u.username
-        ORDER BY p.spId DESC;
     `;
 
+    const params = [];
+
+    if (scope === "mine") {
+        if (!username) {
+            return res.status(401).json({ success: false, message: "Sila log masuk untuk melihat hantaran anda." });
+        }
+
+        query += ` WHERE p.username = ? `;
+        params.push(username);
+    }
+
+    query += ` ORDER BY p.spId DESC;`;
+
     try {
-        const [posts] = await db.execute(query);
+        const [posts] = await db.execute(query, params);
 
         // Parsing imgFile jika ia disimpan dalam format string JSON di DB
         const formattedPosts = posts.map(post => {
@@ -37,7 +52,7 @@ async function fetchPost(req, res) {
             };
         });
 
-        return res.status(200).json({ success: true, posts: formattedPosts });    
+        return res.status(200).json({ success: true, posts: formattedPosts });
     } catch (err) {
         console.error("Error fetching posts: ", err);
         return res.status(500).json({ success: false, message: "Server error" });

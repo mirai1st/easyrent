@@ -509,15 +509,82 @@ nav a {
 
 @media (min-width: 768px) and (max-width: 1024px) {
   #top {
-    padding: 90px 30px 20px; /* Kurangkan padding tepi desktop yang terlalu luas (150px) */
+    padding: 100px 30px 20px;
   }
 
-  .message-container {
+  .desktop-view {
+    display: flex;
+  }
+
+  .mobile-view {
+    display: none !important;
+  }
+
+  .desktop-message-view {
+    width: 100%;
+  }
+
+  .desktop-message-view .message-container {
+    position: relative;
     height: calc(100vh - 120px);
+    overflow: hidden;
+  }
+
+  .desktop-message-view .message-list {
+    width: 100%;
+    min-width: 100%;
+    transition: opacity 0.2s ease;
+  }
+
+  .desktop-message-view .chat-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: 20;
+    background: #fff;
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+  }
+
+  .desktop-message-view .message-container.chat-open .chat-container {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .desktop-message-view .message-container:not(.chat-open) .message-list {
+    display: flex;
+  }
+
+  .desktop-message-view .message-container.chat-open .message-list {
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
+  .desktop-chat-back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #52341d;
+    cursor: pointer;
+  }
+
+  .desktop-chat-back-btn:hover {
+    background: #f1e9e2;
   }
 
   .message {
-    max-width: 80%; /* Lebih lebar untuk skrin sederhana */
+    max-width: 80%;
   }
 }
 

@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabs = document.querySelectorAll('.notif-tab');
     const emptyState = document.querySelector('.notification-empty');
     const notifList = document.querySelector('.notification-list');
-    const markAllBtn = document.querySelector('.notif-mark-all');
-    const unreadCountEl = document.querySelector('.notif-tab-count');
+    const markAllBtns = document.querySelectorAll('.notif-mark-all');
+    const unreadCountEls = document.querySelectorAll('.notif-tab-count');
 
     const modalOverlay = document.querySelector('.notif-modal-overlay');
     const modal = document.querySelector('.notif-modal');
@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalActionBtn = document.querySelector('.notif-modal-action-btn');
 
     let items = [];
+    let activeFilter = 'all';
+    let notificationCache = [];
+    let notificationUnauthorized = false;
 
     const iconStyleByType = {
         rent: { bg: '#3f8f5b1f', color: '#3f8f5b' },
@@ -105,105 +108,152 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'Minggu Lepas';
     }
 
-    function updateUnreadCount() {
-        const unreadCount = document.querySelectorAll(
-            '.notification-item.unread'
-        ).length;
+    function getCurrentNotificationTarget() {
+        const list = [...document.querySelectorAll('.notification-list')].find(el => {
+            const parent = el.closest('.mobile-view, .desktop-view');
+            return !parent || window.getComputedStyle(parent).display !== 'none';
+        }) || document.querySelector('.notification-list');
 
-        if (unreadCountEl) {
-            unreadCountEl.textContent = unreadCount;
+        const empty = [...document.querySelectorAll('.notification-empty')].find(el => {
+            const parent = el.closest('.mobile-view, .desktop-view');
+            return !parent || window.getComputedStyle(parent).display !== 'none';
+        }) || document.querySelector('.notification-empty');
+
+        return { list, empty };
+    }
+
+    async function updateUnreadCount() {
+        try {
+            const response = await fetch("/api/notifications/unread", {
+                method: "GET",
+                credentials: "include"
+            });
+
+            const data = await response.json();
+
+            const count = data && data.success && data.unreadCount !== undefined
+                ? Number(data.unreadCount) || 0
+                : Array.from(document.querySelectorAll('.notification-item.unread')).length;
+
+            const formattedCount = count > 99 ? "99+" : count;
+
+            unreadCountEls.forEach((countEl) => {
+                countEl.textContent = count === 0 ? "0" : ` ${formattedCount}`;
+            });
+        } catch (error) {
+            console.error("Error updating notification count:", error);
+
+            const fallbackCount = Array.from(document.querySelectorAll('.notification-item.unread')).length;
+            unreadCountEls.forEach((countEl) => {
+                countEl.textContent = fallbackCount === 0 ? "0" : ` ${fallbackCount > 99 ? "99+" : fallbackCount}`;
+            });
         }
     }
 
-    function renderNotifications(notifications) {
-        if (!notifList) return;
+    function renderNotifications(notifications, options = {}) {
+        notificationCache = Array.isArray(notifications) ? notifications : [];
+        notificationUnauthorized = Boolean(options.unauthorized);
 
-        notifList.innerHTML = '';
+        const listTargets = document.querySelectorAll('.notification-list');
+        const emptyTargets = document.querySelectorAll('.notification-empty');
 
-        if (!notifications || notifications.length === 0) {
-            notifList.style.display = 'none';
-            if (emptyState) emptyState.style.display = 'flex';
-            updateUnreadCount();
-            return;
-        }
+        if (!listTargets.length || !emptyTargets.length) return;
 
-        notifList.style.display = 'flex';
-        if (emptyState) emptyState.style.display = 'none';
+        listTargets.forEach((activeList, index) => {
+            const activeEmpty = emptyTargets[index] || emptyTargets[0];
 
-        let currentGroup = '';
+            activeList.innerHTML = '';
 
-        notifications.forEach(notification => {
-            const group = getDateLabel(notification.created_at);
+            const emptyTitle = activeEmpty.querySelector('p');
+            const emptyText = activeEmpty.querySelector('span');
+            const emptyIcon = activeEmpty.querySelector('i');
 
-            if (group !== currentGroup) {
-                currentGroup = group;
-
-                const groupElement = document.createElement('div');
-                groupElement.className = 'notification-group-label';
-                groupElement.textContent = group;
-                notifList.appendChild(groupElement);
+            if (notificationUnauthorized) {
+                if (emptyTitle) emptyTitle.textContent = 'Sila log masuk';
+                if (emptyText) emptyText.textContent = 'Log masuk untuk melihat notifikasi anda.';
+                if (emptyIcon) emptyIcon.className = 'fa-solid fa-right-to-bracket';
+            } else {
+                if (emptyTitle) emptyTitle.textContent = 'Tiada notifikasi lagi';
+                if (emptyText) emptyText.textContent = 'Aktiviti berkaitan sewaan, mesej dan komuniti anda akan muncul di sini.';
+                if (emptyIcon) emptyIcon.className = 'fa-regular fa-bell-slash';
             }
 
-            const isUnread = Number(notification.is_read) === 0;
-            const item = document.createElement('div');
-
-            item.className = `notification-item${isUnread ? ' unread' : ''}`;
-            item.dataset.id = notification.notificationID;
-            item.dataset.type = notification.type || 'system';
-            item.dataset.icon = getNotificationIcon(notification.type);
-            item.dataset.link = getNotificationLink(
-                notification.type,
-                notification.related_id
-            );
-            item.dataset.action = notification.related_id
-                ? 'Lihat Butiran'
-                : '';
-
-            const iconContainer = document.createElement('div');
-            iconContainer.className =
-                `notif-icon notif-icon-${notification.type}`;
-
-            const icon = document.createElement('i');
-            icon.className =
-                `fa-solid ${getNotificationIcon(notification.type)}`;
-
-            iconContainer.appendChild(icon);
-
-            const body = document.createElement('div');
-            body.className = 'notif-body';
-
-            const text = document.createElement('p');
-            text.className = 'notif-text';
-
-            const title = document.createElement('strong');
-            title.textContent = notification.title || 'Notifikasi';
-
-            const message = document.createTextNode(
-                notification.title
-                    ? ` — ${notification.message || ''}`
-                    : notification.message || ''
-            );
-
-            text.appendChild(title);
-            text.appendChild(message);
-
-            const time = document.createElement('span');
-            time.className = 'notif-time';
-            time.textContent = formatTime(notification.created_at);
-
-            body.appendChild(text);
-            body.appendChild(time);
-
-            item.appendChild(iconContainer);
-            item.appendChild(body);
-
-            if (isUnread) {
-                const dot = document.createElement('span');
-                dot.className = 'notif-dot';
-                item.appendChild(dot);
+            if (!notificationCache || notificationCache.length === 0) {
+                activeList.style.display = 'none';
+                activeEmpty.style.display = 'flex';
+                return;
             }
 
-            notifList.appendChild(item);
+            activeList.style.display = 'flex';
+            activeEmpty.style.display = 'none';
+
+            let currentGroup = '';
+
+            notificationCache.forEach(notification => {
+                const group = getDateLabel(notification.created_at);
+
+                if (group !== currentGroup) {
+                    currentGroup = group;
+
+                    const groupElement = document.createElement('div');
+                    groupElement.className = 'notification-group-label';
+                    groupElement.textContent = group;
+                    activeList.appendChild(groupElement);
+                }
+
+                const isUnread = Number(notification.is_read) === 0;
+                const item = document.createElement('div');
+
+                item.className = `notification-item${isUnread ? ' unread' : ''}`;
+                item.dataset.id = notification.notificationID;
+                item.dataset.type = notification.type || 'system';
+                item.dataset.icon = getNotificationIcon(notification.type);
+                item.dataset.link = getNotificationLink(notification.type, notification.related_id);
+                item.dataset.action = notification.related_id ? 'Lihat Butiran' : '';
+
+                const iconContainer = document.createElement('div');
+                iconContainer.className = `notif-icon notif-icon-${notification.type}`;
+
+                const icon = document.createElement('i');
+                icon.className = `fa-solid ${getNotificationIcon(notification.type)}`;
+                iconContainer.appendChild(icon);
+
+                const body = document.createElement('div');
+                body.className = 'notif-body';
+
+                const text = document.createElement('p');
+                text.className = 'notif-text';
+
+                const title = document.createElement('strong');
+                title.textContent = notification.title || 'Notifikasi';
+
+                const message = document.createTextNode(
+                    notification.title
+                        ? ` — ${notification.message || ''}`
+                        : notification.message || ''
+                );
+
+                text.appendChild(title);
+                text.appendChild(message);
+
+                const time = document.createElement('span');
+                time.className = 'notif-time';
+                time.textContent = formatTime(notification.created_at);
+
+                body.appendChild(text);
+                body.appendChild(time);
+
+                item.appendChild(iconContainer);
+                item.appendChild(body);
+
+                if (isUnread) {
+                    const dot = document.createElement('span');
+                    dot.className = 'notif-dot';
+                    item.appendChild(dot);
+                }
+
+                activeList.appendChild(item);
+            });
         });
 
         items = document.querySelectorAll('.notification-item');
@@ -225,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.status === 401) {
-                renderNotifications([]);
+                renderNotifications([], { unauthorized: true });
                 return;
             }
 
@@ -240,10 +290,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function syncTabState(filter) {
+        activeFilter = filter;
+
+        document.querySelectorAll('.notif-tab').forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.filter === filter);
+        });
+    }
+
     function applyFilter(filter) {
+        syncTabState(filter);
+
         let visibleCount = 0;
 
-        items.forEach(item => {
+        document.querySelectorAll('.notification-item').forEach(item => {
             const isUnread = item.classList.contains('unread');
             const shouldShow =
                 filter === 'all' ||
@@ -254,22 +314,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (shouldShow) visibleCount++;
         });
 
-        const groupLabels = document.querySelectorAll(
-            '.notification-group-label'
-        );
-
-        groupLabels.forEach(label => {
+        document.querySelectorAll('.notification-group-label').forEach(label => {
             let next = label.nextElementSibling;
             let hasVisible = false;
 
-            while (
-                next &&
-                !next.classList.contains('notification-group-label')
-            ) {
-                if (
-                    next.classList.contains('notification-item') &&
-                    next.style.display !== 'none'
-                ) {
+            while (next && !next.classList.contains('notification-group-label')) {
+                if (next.classList.contains('notification-item') && next.style.display !== 'none') {
                     hasVisible = true;
                     break;
                 }
@@ -280,23 +330,30 @@ document.addEventListener('DOMContentLoaded', () => {
             label.style.display = hasVisible ? 'block' : 'none';
         });
 
-        if (notifList) {
-            notifList.style.display =
-                visibleCount === 0 ? 'none' : 'flex';
-        }
+        document.querySelectorAll('.notification-list').forEach(list => {
+            list.style.display = visibleCount === 0 ? 'none' : 'flex';
+        });
 
-        if (emptyState) {
-            emptyState.style.display =
-                visibleCount === 0 ? 'flex' : 'none';
-        }
+        document.querySelectorAll('.notification-empty').forEach(empty => {
+            empty.style.display = visibleCount === 0 ? 'flex' : 'none';
+        });
     }
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
             applyFilter(tab.dataset.filter);
         });
+    });
+
+    window.addEventListener('resize', () => {
+        const currentTab = document.querySelector(`.notif-tab[data-filter="${activeFilter}"]`);
+        if (currentTab) {
+            syncTabState(activeFilter);
+        }
+
+        if (notificationCache.length > 0 || notificationUnauthorized) {
+            renderNotifications(notificationCache, { unauthorized: notificationUnauthorized });
+        }
     });
 
     async function openNotifModal(item) {
@@ -343,6 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateUnreadCount();
 
             await markNotificationAsRead(item.dataset.id);
+            loadNotificationCount();
         }
     }
 
@@ -380,14 +438,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(`HTTP error: ${response.status}`);
             }
 
-            items.forEach(item => {
-                item.classList.remove('unread');
-
-                const dot = item.querySelector('.notif-dot');
-                if (dot) dot.remove();
-            });
-
+            await getNotification();
             updateUnreadCount();
+
+            if (activeFilter !== 'all') {
+                applyFilter(activeFilter);
+            }
         } catch (error) {
             console.error(
                 'Gagal mark semua notification:',
@@ -425,12 +481,9 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
-    if (markAllBtn) {
-        markAllBtn.addEventListener(
-            'click',
-            markAllAsRead
-        );
-    }
+    markAllBtns.forEach((btn) => {
+        btn.addEventListener('click', markAllAsRead);
+    });
 
     loadUser((user, error) => {
         if (error) {

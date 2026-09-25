@@ -1,5 +1,10 @@
 // This file contains functions for users backend
+const bcrypt = require("bcrypt");
 const db = require("../system/db");
+
+function isStrongPassword(password) {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/.test(password);
+}
 
 // This functions get the user profile
 async function getProfile(req, res) {
@@ -103,6 +108,78 @@ async function updateProfile(req, res) {
 
 // ----------------------------------------------------------------------------
 // Others Functions
+
+async function changePassword(req, res) {
+    try {
+        const { oldPassword, newPassword, confirmPassword } = req.body || {};
+
+        if (!oldPassword || !newPassword || !confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Semua medan kata laluan diperlukan."
+            });
+        }
+
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Kata laluan baru dan pengesahan tidak sama."
+            });
+        }
+
+        if (!isStrongPassword(newPassword)) {
+            return res.status(400).json({
+                success: false,
+                message: "Kata laluan baru mesti sekurang-kurangnya 8 aksara, mengandungi huruf besar, huruf kecil, nombor dan simbol."
+            });
+        }
+
+        if (newPassword === oldPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Kata laluan baru mesti berbeza daripada kata laluan lama."
+            });
+        }
+
+        const [rows] = await db.execute(
+            "SELECT password FROM Users WHERE username = ? LIMIT 1",
+            [req.user.username]
+        );
+
+        if (!rows[0]) {
+            return res.status(404).json({
+                success: false,
+                message: "Pengguna tidak dijumpai."
+            });
+        }
+
+        const isCurrentPasswordValid = await bcrypt.compare(oldPassword, rows[0].password);
+        if (!isCurrentPasswordValid) {
+            return res.status(401).json({
+                success: false,
+                message: "Kata laluan lama tidak tepat."
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await db.execute(
+            "UPDATE Users SET password = ? WHERE username = ?",
+            [hashedPassword, req.user.username]
+        );
+
+        return res.json({
+            success: true,
+            message: "Kata laluan berjaya dikemaskini."
+        });
+    } catch (error) {
+        console.error("Error changing password:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Ralat server ketika mengubah kata laluan."
+        });
+    }
+}
 
 async function userLogout(req, res) {
     res.clearCookie("token", {
@@ -235,10 +312,52 @@ async function getPublicProfile(req, res) {
     }
 }
 
+async function suspendUser(req, res) {
+    try {
+        const username = req.params.username || req.params.id || req.body.username;
+        const status = req.body.status;
+
+        if (!username || status === undefined) {
+            return res.status(400).json({
+                success: false,
+                message: "Username and status are required."
+            });
+        }
+
+        const normalized = String(status).toLowerCase();
+        const isActive = normalized === "active" || normalized === "1" || normalized === "true";
+
+        const [result] = await db.execute(
+            "UPDATE Users SET is_verified = ? WHERE username = ?",
+            [isActive ? 1 : 0, username]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found."
+            });
+        }
+
+        return res.json({
+            success: true,
+            message: `User status updated to ${isActive ? "active" : "suspended"}.`
+        });
+    } catch (error) {
+        console.error("Error suspending user:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error."
+        });
+    }
+}
+
 module.exports = { 
     getProfile, 
     updateProfile, 
+    changePassword,
     userLogout, 
     userAccountDeletion,
-    getPublicProfile
+    getPublicProfile,
+    suspendUser
 };

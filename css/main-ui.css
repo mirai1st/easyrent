@@ -127,30 +127,42 @@ nav .nav-right a {
 
 .login-modal,
 .register-modal,
-.codeverify-modal {
+.codeverify-modal,
+.changepassword-modal {
     display: none;
     position: fixed;
     inset: 0;
     z-index: 502;
-    background: rgba(43, 31, 23, 0.55);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: rgba(31, 26, 22, 0.42);
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 18px;
     box-sizing: border-box;
 }
 
 .login-modal.enabled,
 .register-modal.enabled,
-.codeverify-modal.enabled {
+.codeverify-modal.enabled,
+.changepassword-modal.enabled {
     display: flex;
 }
 
 .login-modal[style*="display: block"],
 .register-modal[style*="display: block"],
-.codeverify-modal[style*="display: block"] {
+.codeverify-modal[style*="display: block"],
+.changepassword-modal[style*="display: block"] {
     display: flex !important;
+}
+
+.login-modal form,
+.register-modal form,
+.codeverify-modal form,
+.changepassword-modal form {
+    width: min(380px, 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
 }
 
 /* =========================================================
@@ -159,16 +171,17 @@ nav .nav-right a {
 
 .login-modal-container,
 .register-modal-container,
-.codeverify-modal-container {
+.codeverify-modal-container,
+.changepassword-modal-container {
     position: relative;
-    width: min(440px, 100%);
-    max-height: calc(100vh - 40px);
+    width: min(380px, 100%);
+    max-height: calc(100vh - 32px);
     overflow-y: auto;
-    background-color: #F7F2ED;
-    border: 1px solid rgba(82, 52, 29, 0.12);
-    border-radius: 18px;
-    box-shadow: 0 25px 60px rgba(43, 31, 23, 0.20), 0 8px 20px rgba(43, 31, 23, 0.10);
-    animation: authModalIn 0.3s ease forwards;
+    background-color: #fff;
+    border: 1px solid rgba(82, 52, 29, 0.10);
+    border-radius: 16px;
+    box-shadow: 0 14px 35px rgba(43, 31, 23, 0.12);
+    animation: authModalIn 0.25s ease forwards;
 }
 
 /* =========================================================
@@ -176,34 +189,18 @@ nav .nav-right a {
    ========================================================= */
 
 .modal-content-header {
-    height: 110px;
+    height: 78px;
     padding: 0;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, #6F4A2D 0%, #7A4B2B 55%, #8A5A38 100%);
-    border-radius: 18px 18px 0 0;
+    background: #52341D;
+    border-radius: 16px 16px 0 0;
+    border-bottom: 1px solid rgba(82, 52, 29, 0.08);
 }
 
-.modal-content-header::before {
-    content: "";
-    position: absolute;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    top: -80px;
-    right: -30px;
-}
-
+.modal-content-header::before,
 .modal-content-header::after {
-    content: "";
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.06);
-    bottom: -60px;
-    left: -20px;
+    display: none;
 }
 
 /* =========================================================
@@ -212,12 +209,12 @@ nav .nav-right a {
 
 .auth-brand {
     position: absolute;
-    left: 32px;
-    bottom: 22px;
+    left: 24px;
+    bottom: 18px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    color: white;
+    gap: 8px;
+    color: #fff;
     font-size: 1.15rem;
     font-weight: 800;
     z-index: 2;
@@ -233,7 +230,8 @@ nav .nav-right a {
 
 .login-modal-close-btn,
 .register-modal-close-btn,
-.codeverify-modal-close-btn {
+.codeverify-modal-close-btn,
+.changepassword-modal-close-btn {
     position: absolute;
     top: 15px;
     right: 15px;
@@ -255,7 +253,8 @@ nav .nav-right a {
 
 .login-modal-close-btn:hover,
 .register-modal-close-btn:hover,
-.codeverify-modal-close-btn:hover {
+.codeverify-modal-close-btn:hover,
+.changepassword-modal-close-btn:hover {
     background-color: white;
     transform: rotate(90deg);
 }
@@ -266,7 +265,8 @@ nav .nav-right a {
 
 .login-modal .modal-content,
 .register-modal .modal-content,
-.codeverify-modal .modal-content {
+.codeverify-modal .modal-content,
+.changepassword-modal .modal-content {
     background-color: #F7F2ED;
     padding: 32px;
     border-radius: 0 0 18px 18px;
@@ -290,7 +290,6 @@ nav .nav-right a {
     line-height: 1.5;
     margin-bottom: 25px;
 }
-
 /* =========================================================
    INPUT & CONTAINER
    ========================================================= */
@@ -359,35 +358,44 @@ nav .nav-right a {
 
 .loginForm-submit,
 .registerForm-submit,
-.codeverifyForm-submit {
+.codeverifyForm-submit,
+.changepasswordForm-submit {
     position: relative;
 }
 
 .loginForm-submit .btn-text,
 .registerForm-submit .btn-text,
-.codeverifyForm-submit .btn-text {
+.codeverifyForm-submit .btn-text,
+.changepasswordForm-submit .btn-text {
     display: inline-block;
 }
 
 .loginForm-submit .spinner,
 .registerForm-submit .spinner,
-.codeverifyForm-submit .spinner {
+.codeverifyForm-submit .spinner,
+.changepasswordForm-submit .spinner {
     display: none;
     position: absolute;
     left: 50%;
     top: 50%;
+    right: auto;
+    bottom: auto;
+    margin: 0;
     transform: translate(-50%, -50%);
+    z-index: 2;
 }
 
 .loginForm-submit.loading .btn-text,
 .registerForm-submit.loading .btn-text,
-.codeverifyForm-submit.loading .btn-text {
+.codeverifyForm-submit.loading .btn-text,
+.changepasswordForm-submit.loading .btn-text {
     visibility: hidden;
 }
 
 .loginForm-submit.loading .spinner,
 .registerForm-submit.loading .spinner,
-.codeverifyForm-submit.loading .spinner {
+.codeverifyForm-submit.loading .spinner,
+.changepasswordForm-submit.loading .spinner {
     display: inline-block;
 }
 
@@ -1023,6 +1031,10 @@ hr {
     margin-top: 10px;
 }
 
+.button-user-house {
+    display: none;
+}
+
 /* Institution dropdown */
 
 .institution-select-wrap {
@@ -1373,11 +1385,12 @@ hr {
 
 .spinner.center {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
+  left: 50%;
+  top: 50%;
+  right: auto;
+  bottom: auto;
+  margin: 0;
+  transform: translate(-50%, -50%);
 }
 
 .spinner .spinner-blade {

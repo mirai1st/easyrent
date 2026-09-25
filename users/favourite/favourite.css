@@ -280,6 +280,14 @@ nav a {
   padding: 24px 32px 32px;
 }
 
+.favourite-list--stacked {
+  grid-template-columns: 1fr;
+}
+
+.favourite-list--stacked .favourite-card {
+  max-width: 100%;
+}
+
 .favourite-message {
   grid-column: 1 / -1;
   padding: 70px 20px;
@@ -350,6 +358,7 @@ nav a {
 .favourite-card-image {
   display: block;
   aspect-ratio: 4 / 3;
+  max-height: 200px;
   background: #f7f2ed;
 }
 

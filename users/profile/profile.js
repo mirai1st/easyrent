@@ -66,7 +66,7 @@ function renderProfile(user) {
                 </div>
             </div>
 
-            <div class="profile-action">
+            <div class="profile-action" onclick="window.location.href='/users/settings/#section-privasi'">
                 <div>
                     <strong>Kata Laluan</strong>
                     <p>Pastikan kata laluan anda sentiasa selamat.</p>
@@ -233,34 +233,51 @@ function renderProfile(user) {
     </div>`;
 
     const sidePanel = `
-    <div class="side-panel">
-        <div class="side-panel-breadcrumb">
-            Pengguna
-        </div>
+        <div class="side-panel">
+            <div class="side-panel-breadcrumb">
+            <span onclick="window.location.href = '/users/profile'">
+                    Pengguna
+                </span>
+                > Profil
+            </div>
 
-        <div class="side-panel-nav">
-            <a href="/users/profile/" class="side-panel-link active">
-                <i class="fa-solid fa-user"></i> Profil
-            </a>
-            <a href="/users/favourite/" class="side-panel-link">
-                <i class="fa-solid fa-heart"></i> Kegemaran
-            </a>
-            <a href="/users/notifications/" class="side-panel-link">
-                <i class="fa-solid fa-bell"></i> Notifikasi
-            </a>
-            <a href="/users/message/" class="side-panel-link">
-                <i class="fa-solid fa-message"></i> Mesej
-            </a>
-            <a href="/users/settings/" class="side-panel-link">
-                <i class="fa-solid fa-gear"></i> Tetapan
-            </a>
+            <div class="side-panel-nav">
+                <a href="/users/profile/" class="side-panel-link active">
+                    <i class="fa-solid fa-user"></i>
+                    Profil
+                </a>
 
-            <a href="#" class="side-panel-link danger btn-logout">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Log Keluar
-            </a>
-        </div>
-    </div>`;
+                <a href="/users/house/" class="side-panel-link button-user-house">
+                    <i class="fa-solid fa-house"></i>
+                    Pengurusan Rumah
+                </a>
+
+                <a href="/users/favourite/" class="side-panel-link">
+                    <i class="fa-solid fa-heart"></i>
+                    Kegemaran
+                </a>
+
+                <a href="/users/notifications/" class="side-panel-link">
+                    <i class="fa-solid fa-bell"></i>
+                    Notifikasi
+                </a>
+
+                <a href="/users/message/" class="side-panel-link">
+                    <i class="fa-solid fa-message"></i>
+                    Mesej
+                </a>
+
+                <a href="/users/settings/" class="side-panel-link">
+                    <i class="fa-solid fa-gear"></i>
+                    Tetapan
+                </a>
+
+                <a href="#" id="btn-logout" class="side-panel-link danger btn-logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Log Keluar
+                </a>
+            </div>
+        </div>`;
 
     root.innerHTML = `
         <div class="mobile-view">

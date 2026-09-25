@@ -2,213 +2,217 @@ const $ = id => document.getElementById(id);
 const content = $("content");
 
 const icons = {
-  pause: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>`,
-  trash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>`,
-  sort: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`,
-  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 3"/></svg>`
+    pause: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>`,
+    trash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>`,
+    sort: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`,
+    check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 3"/></svg>`,
+    info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`
 };
 
 async function api(url, options = {}) {
-  try {
-    const isJsonBody = options.body && typeof options.body === "string";
-    const res = await fetch(url, {
-      headers: isJsonBody ? { "Content-Type": "application/json" } : {},
-      ...options
-    });
+    try {
+        const isJsonBody = options.body && typeof options.body === "string";
+        const res = await fetch(url, {
+            headers: isJsonBody ? { "Content-Type": "application/json" } : {},
+            ...options
+        });
 
-    if (res.status === 401) {
-      showLogin();
-      throw new Error("Unauthorized");
-    }
+        if (res.status === 401) {
+            showLogin();
+            throw new Error("Unauthorized");
+        }
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Ralat");
-    return data;
-  } catch (err) {
-    if (url.startsWith("/api/")) {
-      return null;
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Ralat");
+        return data;
+    } catch (err) {
+        if (url.startsWith("/api/")) {
+            return null;
+        }
+        throw err;
     }
-    throw err;
-  }
 }
 
 function formatCurrency(value) {
-  const num = Number(value || 0);
-  return new Intl.NumberFormat("ms-MY", {
-    style: "currency",
-    currency: "MYR",
-    maximumFractionDigits: 0
-  }).format(num);
+    const num = Number(value || 0);
+    return new Intl.NumberFormat("ms-MY", {
+        style: "currency",
+        currency: "MYR",
+        maximumFractionDigits: 0
+    }).format(num);
 }
 
 function renderStatusPill(value, labelOverride = null) {
-  const normalized = String(value || "").toLowerCase();
-  const label = labelOverride || (
-    normalized.includes("approved") ? "Approved" :
-    normalized.includes("active") || normalized.includes("verified") ? "Verified" :
-    normalized.includes("pending") || normalized.includes("new") ? "Pending" :
-    "Suspended"
-  );
+    const normalized = String(value || "").toLowerCase();
+    const label = labelOverride || (
+        normalized.includes("approved") ? "Approved" :
+            normalized.includes("active") || normalized.includes("verified") ? "Verified" :
+                normalized.includes("pending") || normalized.includes("new") ? "Pending" :
+                    "Suspended"
+    );
 
-  if (["active", "approved", "verified", "resolved"].some(item => normalized.includes(item))) {
-    return `<span class="pill green">${label}</span>`;
-  }
+    if (["active", "approved", "verified", "resolved"].some(item => normalized.includes(item))) {
+        return `<span class="pill green">${label}</span>`;
+    }
 
-  if (["pending", "new"].some(item => normalized.includes(item))) {
-    return `<span class="pill yellow">${label}</span>`;
-  }
+    if (["pending", "new"].some(item => normalized.includes(item))) {
+        return `<span class="pill yellow">${label}</span>`;
+    }
 
-  return `<span class="pill red">${label}</span>`;
+    return `<span class="pill red">${label}</span>`;
 }
 
 function bindActionButtons() {
-  document.querySelectorAll("[data-action='toggle-user-status']").forEach(button => {
-    button.addEventListener("click", async () => {
-      const { id, status } = button.dataset;
-      const nextStatus = status === "active" ? "suspended" : "active";
+    document.querySelectorAll("[data-action='delete-user']").forEach(button => {
+        button.addEventListener("click", async () => {
+            const { id } = button.dataset;
+            if (!confirm("Padam pengguna ini?")) return;
 
-      await api(`/api/users/${encodeURIComponent(id)}/status`, {
-        method: "PUT",
-        body: JSON.stringify({ status: nextStatus })
-      });
-
-      await loadPage("users");
+            await api(`/api/users/${encodeURIComponent(id)}`, { method: "DELETE" });
+            await loadPage("users");
+        });
     });
-  });
 
-  document.querySelectorAll("[data-action='delete-user']").forEach(button => {
-    button.addEventListener("click", async () => {
-      const { id } = button.dataset;
-      if (!confirm("Padam pengguna ini?")) return;
 
-      await api(`/api/users/${encodeURIComponent(id)}`, { method: "DELETE" });
-      await loadPage("users");
+    // To suspend user accounts
+    document.querySelectorAll("[data-action='toggle-user-status'], [data-action='suspend-user']").forEach(button => {
+        button.addEventListener("click", async () => {
+            const { id, status } = button.dataset;
+            const normalized = String(status || "").toLowerCase();
+            const nextStatus = normalized === "active" || normalized === "1" ? "suspended" : "active";
+
+            await api(`/api/users/${encodeURIComponent(id)}/status`, {
+                method: "PUT",
+                body: JSON.stringify({ status: nextStatus })
+            });
+
+            await loadPage("users");
+        });
     });
-  });
 
-  document.querySelectorAll("[data-action='toggle-property-status']").forEach(button => {
-    button.addEventListener("click", async () => {
-      const { id, status } = button.dataset;
-      const nextStatus = status === "approved" ? "pending" : "approved";
+    document.querySelectorAll("[data-action='toggle-property-status']").forEach(button => {
+        button.addEventListener("click", async () => {
+            const { id, status } = button.dataset;
+            const nextStatus = status === "approved" ? "pending" : "approved";
 
-      await api(`/api/properties/${encodeURIComponent(id)}/status`, {
-        method: "PUT",
-        body: JSON.stringify({ status: nextStatus })
-      });
+            await api(`/api/properties/${encodeURIComponent(id)}/status`, {
+                method: "PUT",
+                body: JSON.stringify({ status: nextStatus })
+            });
 
-      await loadPage("properties");
+            await loadPage("properties");
+        });
     });
-  });
 
-  document.querySelectorAll("[data-action='delete-property']").forEach(button => {
-    button.addEventListener("click", async () => {
-      const { id } = button.dataset;
-      if (!confirm("Padam rumah ini?")) return;
+    document.querySelectorAll("[data-action='delete-property']").forEach(button => {
+        button.addEventListener("click", async () => {
+            const { id } = button.dataset;
+            if (!confirm("Padam rumah ini?")) return;
 
-      await api(`/api/properties/${encodeURIComponent(id)}`, { method: "DELETE" });
-      await loadPage("properties");
+            await api(`/api/properties/${encodeURIComponent(id)}`, { method: "DELETE" });
+            await loadPage("properties");
+        });
     });
-  });
 
-  document.querySelectorAll("[data-action='approve-property']").forEach(button => {
-    button.addEventListener("click", async () => {
-      const { id } = button.dataset;
-      await api(`/api/properties/${encodeURIComponent(id)}/status`, {
-        method: "PUT",
-        body: JSON.stringify({ status: "approved" })
-      });
+    document.querySelectorAll("[data-action='approve-property']").forEach(button => {
+        button.addEventListener("click", async () => {
+            const { id } = button.dataset;
+            await api(`/api/properties/${encodeURIComponent(id)}/status`, {
+                method: "PUT",
+                body: JSON.stringify({ status: "approved" })
+            });
 
-      await loadPage("approvals");
+            await loadPage("approvals");
+        });
     });
-  });
 }
 
 function showLogin() {
-  $("loginPage").classList.remove("hidden");
-  $("app").classList.add("hidden");
+    $("loginPage").classList.remove("hidden");
+    $("app").classList.add("hidden");
 }
 
 function showApp(admin) {
-  $("loginPage").classList.add("hidden");
-  $("app").classList.remove("hidden");
-  $("adminName").textContent = admin?.name || "admin@easyrent.com";
+    $("loginPage").classList.add("hidden");
+    $("app").classList.remove("hidden");
+    $("adminName").textContent = admin?.name || "admin@easyrent.com";
 }
 
 function setActiveNav(page) {
-  document.querySelectorAll(".nav").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.page === page);
-  });
+    document.querySelectorAll(".nav").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.page === page);
+    });
 }
 
 $("loginForm")?.addEventListener("submit", async e => {
-  e.preventDefault();
-  try {
-    const data = await api("/api/admin/login", {
-      method: "POST",
-      body: JSON.stringify({
-        email: $("email").value,
-        password: $("password").value
-      })
-    });
+    e.preventDefault();
+    try {
+        const data = await api("/api/admin/login", {
+            method: "POST",
+            body: JSON.stringify({
+                email: $("email").value,
+                password: $("password").value
+            })
+        });
 
-    if (data?.admin) {
-      showApp(data.admin);
-      loadPage("dashboard");
-    } else {
-      $("loginError").textContent = "Login gagal.";
+        if (data?.admin) {
+            showApp(data.admin);
+            loadPage("dashboard");
+        } else {
+            $("loginError").textContent = "Login gagal.";
+        }
+    } catch (err) {
+        $("loginError").textContent = err.message;
     }
-  } catch (err) {
-    $("loginError").textContent = err.message;
-  }
 });
 
 $("logoutBtn")?.addEventListener("click", async () => {
-  try {
-    await api("/api/admin/logout", { method: "POST" });
-  } catch (err) {
-    // ignore logout failures for UI preview
-  }
+    try {
+        await api("/api/admin/logout", { method: "POST" });
+    } catch (err) {
+        // ignore logout failures for UI preview
+    }
 
-  showLogin();
+    showLogin();
 });
 
 document.querySelectorAll(".nav").forEach(btn => {
-  btn.addEventListener("click", () => {
-    setActiveNav(btn.dataset.page);
-    loadPage(btn.dataset.page);
-  });
+    btn.addEventListener("click", () => {
+        setActiveNav(btn.dataset.page);
+        loadPage(btn.dataset.page);
+    });
 });
 
 async function loadPage(page) {
-  const pageMap = {
-    dashboard,
-    users,
-    properties,
-    approvals,
-    notifications,
-    admins,
-    about
-  };
+    const pageMap = {
+        dashboard,
+        users,
+        properties,
+        approvals,
+        notifications,
+        admins,
+        about
+    };
 
-  const handler = pageMap[page] || dashboard;
-  try {
-    await handler();
-  } catch (e) {
-    content.innerHTML = `<div class="panel"><p>${e.message || "Something went wrong."}</p></div>`;
-  }
+    const handler = pageMap[page] || dashboard;
+    try {
+        await handler();
+    } catch (e) {
+        content.innerHTML = `<div class="panel"><p>${e.message || "Something went wrong."}</p></div>`;
+    }
 }
 
 async function dashboard() {
-  const data = await api("/api/dashboard") || {};
-  const dashboardStats = [
-    { label: "Users", value: data.users ?? 0 },
-    { label: "Landlord", value: data.landlords ?? 0 },
-    { label: "Total Properties", value: data.properties ?? 0 },
-    { label: "Pending Approval", value: data.pending ?? 0 },
-    { label: "Approved", value: data.approved ?? 0 }
-  ];
+    const data = await api("/api/dashboard") || {};
+    const dashboardStats = [
+        { label: "Users", value: data.users ?? 0 },
+        { label: "Landlord", value: data.landlords ?? 0 },
+        { label: "Total Properties", value: data.properties ?? 0 },
+        { label: "Pending Approval", value: data.pending ?? 0 },
+        { label: "Approved", value: data.approved ?? 0 }
+    ];
 
-  content.innerHTML = `
+    content.innerHTML = `
     <h2 class="page-title">Dashboard</h2>
     <div class="dashboard-grid">
       ${dashboardStats.map(item => `
@@ -224,9 +228,9 @@ async function dashboard() {
 }
 
 async function users() {
-  const users = await api("/api/users") || [];
+    const users = await api("/api/users") || [];
 
-  content.innerHTML = `
+    content.innerHTML = `
     <h2 class="page-title">All Users</h2>
     <div class="table-panel">
       <table>
@@ -245,8 +249,8 @@ async function users() {
         </thead>
         <tbody>
           ${users.map((row, index) => {
-            const status = row.status === "active" ? "active" : "suspended";
-            return `
+        const status = row.status === "active" ? "active" : "suspended";
+        return `
               <tr>
                 <td>${index + 1}</td>
                 <td>@${row.id || row.username || "-"}</td>
@@ -264,50 +268,53 @@ async function users() {
                 </td>
               </tr>
             `;
-          }).join("")}
+    }).join("")}
         </tbody>
       </table>
     </div>
   `;
 
-  bindActionButtons();
+    bindActionButtons();
 }
 
 async function properties() {
-  const properties = await api("/api/properties") || [];
+    const properties = await api("/api/properties") || [];
 
-  content.innerHTML = `
+    content.innerHTML = `
     <h2 class="page-title">Properties</h2>
     <div class="table-panel">
       <table>
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Landlord</th>
-            <th>Price</th>
-            <th>Location</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
+            <tr>
+                <th>Index</th>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Landlord</th>
+                <th>Price</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
         </thead>
         <tbody>
-          ${properties.map(property => `
-            <tr>
-              <td>${property.id}</td>
-              <td>${property.title || "-"}</td>
-              <td>${property.landlord || "-"}</td>
-              <td>${formatCurrency(property.price)}</td>
-              <td>${property.location || "-"}</td>
-              <td>${property.type || "-"}</td>
-              <td>${renderStatusPill(property.status, property.status === "approved" ? "Approved" : "Pending")}</td>
-              <td>
-                <div class="action-buttons">
-                  <button class="action-btn pause" title="${property.status === "approved" ? "Set pending" : "Approve"}" data-action="toggle-property-status" data-id="${property.id}" data-status="${property.status}">${property.status === "approved" ? icons.pause : icons.check}</button>
-                  <button class="action-btn delete" title="Delete" data-action="delete-property" data-id="${property.id}">${icons.trash}</button>
-                </div>
-              </td>
+          ${properties.map((property,index) => `
+            <tr">
+                <td>${index}</td>
+                <td>${property.id}</td>
+                <td>${property.title || "-"}</td>
+                <td>${property.landlord || "-"}</td>
+                <td>${formatCurrency(property.price)}</td>
+                <td>${property.location || "-"}</td>
+                <td>${property.type || "-"}</td>
+                <td>${renderStatusPill(property.status, property.status === "approved" ? "Approved" : "Pending")}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="action-btn view" title="View this property" data-action="view-property" onclick="window.open('/house/?id=${property.id}', '_blank')" data-id="${property.id}">${icons.info}</button>
+                        <button class="action-btn pause" title="${property.status === "approved" ? "Set pending" : "Approve"}" data-action="toggle-property-status" data-id="${property.id}" data-status="${property.status}">${property.status === "approved" ? icons.pause : icons.check}</button>
+                        <button class="action-btn delete" title="Delete" data-action="delete-property" data-id="${property.id}">${icons.trash}</button>
+                    </div>
+                </td>
             </tr>
           `).join("")}
         </tbody>
@@ -315,14 +322,14 @@ async function properties() {
     </div>
   `;
 
-  bindActionButtons();
+    bindActionButtons();
 }
 
 async function approvals() {
-  const properties = await api("/api/properties") || [];
-  const pending = properties.filter(item => String(item.status).toLowerCase() !== "approved");
+    const properties = await api("/api/properties") || [];
+    const pending = properties.filter(item => String(item.status).toLowerCase() !== "approved");
 
-  content.innerHTML = `
+    content.innerHTML = `
     <h2 class="page-title">Approval</h2>
     <div class="table-panel">
       <table>
@@ -354,13 +361,13 @@ async function approvals() {
     </div>
   `;
 
-  bindActionButtons();
+    bindActionButtons();
 }
 
 async function notifications() {
-  const reports = await api("/api/reports") || [];
+    const reports = await api("/api/reports") || [];
 
-  content.innerHTML = `
+    content.innerHTML = `
     <h2 class="page-title">Notifications</h2>
     <div class="table-panel">
       <table>
@@ -380,7 +387,7 @@ async function notifications() {
               <td>${item.reporter || "-"}</td>
               <td>${item.property_title || "-"}</td>
               <td>${item.description || "-"}</td>
-              <td>${renderStatusPill(item.status, item.status === "resolved" ? "Resolved" : "New")}</td>
+              <td>${renderStatusPill(item.status, item.status === "resolved" ? "Read" : "Unread")}</td>
             </tr>
           `).join("") : `<tr><td colspan="5">Tiada notifikasi.</td></tr>`}
         </tbody>
@@ -390,9 +397,9 @@ async function notifications() {
 }
 
 async function admins() {
-  const admins = await api("/api/admins") || [];
+    const admins = await api("/api/admins") || [];
 
-  content.innerHTML = `
+    content.innerHTML = `
     <h2 class="page-title">Admin Accounts</h2>
     <div class="table-panel">
       <table>
@@ -422,7 +429,7 @@ async function admins() {
 }
 
 async function about() {
-  content.innerHTML = `
+    content.innerHTML = `
     <h2 class="page-title">About</h2>
     <div class="panel">
       <h3>EasyRent Admin Control</h3>
@@ -432,6 +439,6 @@ async function about() {
 }
 
 (async () => {
-  showLogin();
-  setActiveNav("dashboard");
+    showLogin();
+    setActiveNav("dashboard");
 })();

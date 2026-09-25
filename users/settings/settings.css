@@ -261,6 +261,28 @@ nav a {
     display: flex;
 }
 
+.input-container {
+    position: relative; /* Wajib ada */
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 10px 40px 10px 10px; /* Jarak 40px di kanan supaya teks tak bertindih dengan ikon */
+    box-sizing: border-box;
+}
+
+.input-container i {
+    position: absolute;
+    right: 15px; /* Jarak ikon dari sebelah kanan */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+}
+
+
 
 
 @media (max-width: 768px) {

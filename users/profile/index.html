@@ -7,15 +7,20 @@
     <title>EasyRent - Profil</title>
     <link rel="stylesheet" href="/css/main-ui.css">
     <link rel="stylesheet" href="profile.css">
+    <script src="../main.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <style>html.loading body { visibility: hidden; }</style>
     <script src="https://kit.fontawesome.com/7a8114958c.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div id="login-modal" class="login-modal">
-        <form id="loginForm">
-            <div class="login-modal-container">
+    <div class="components">
+        <div class="notification-toast-container" id="notification-toast-container" aria-live="polite"></div>
+        <div class="notification-chooser-container" id="notification-chooser-container" aria-live="polite"></div>
+
+        <div id="login-modal" class="login-modal">
+            <form id="loginForm">
+                <div class="login-modal-container">
                 <!-- Close -->
                 <a class="login-modal-close-btn">
                     <i class="fa-solid fa-xmark"></i>
@@ -377,6 +382,7 @@
             <a class="yes-alert-box">Yes</a>
             <a class="no-alert-box">No</a>
         </div>
+    </div>
     </div>
 
     <section id="top">

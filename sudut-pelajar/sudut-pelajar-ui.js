@@ -1,5 +1,6 @@
 let currentUsername = null;
 let likedPostIds = new Set();
+let activeCommunityScope = "all";
 
 // 1. Dapatkan user semasa dulu
 async function loadCurrentUser() {
@@ -38,12 +39,54 @@ async function loadLikedPosts() {
     }
 }
 
+function scrollToPostFromHash() {
+    const targetId = window.location.hash.replace('#', '').trim();
+    if (!targetId) return;
+
+    const target = document.querySelector(`article[data-id="${CSS.escape(targetId)}"]`);
+    if (!target) return;
+
+    setTimeout(() => {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.style.outline = '2px solid rgba(215, 185, 108, 0.9)';
+        target.style.outlineOffset = '4px';
+        setTimeout(() => {
+            target.style.outline = '';
+            target.style.outlineOffset = '';
+        }, 2000);
+    }, 200);
+}
+
+function bindCommunityFilters() {
+    const filters = document.querySelectorAll(".community-pill");
+    if (!filters.length) return;
+
+    filters.forEach((button) => {
+        button.addEventListener("click", async () => {
+            const nextScope = button.textContent.includes("Anda") ? "mine" : "all";
+
+            if (nextScope === "mine" && !currentUsername) {
+                showNotification("Sila log masuk untuk melihat hantaran anda.", "error", 3000);
+                return;
+            }
+
+            activeCommunityScope = nextScope;
+            filters.forEach((item) => item.classList.toggle("active", item === button));
+            await fetchAndRenderPosts(activeCommunityScope);
+        });
+    });
+}
+
 // Dom Content Loaded Sequence
 document.addEventListener("DOMContentLoaded", async () => {
+    bindCommunityFilters();
+
     // MESTI tunggu loadCurrentUser siap 100% dulu
     await loadCurrentUser();
+
     // Kemudian baru fetch posts & likes
-    await fetchAndRenderPosts();
+    await fetchAndRenderPosts(activeCommunityScope);
+    scrollToPostFromHash();
 });
 
 // Elak XSS
@@ -67,19 +110,28 @@ function avatarHtml(name, imgUrl) {
 }
 
 // 3. Ambil Posts & Likes secara berurutan supaya data lengkap sebelum lukis UI
-async function fetchAndRenderPosts() {
+async function fetchAndRenderPosts(scope = activeCommunityScope) {
     try {
         // Ambil liked posts dulu
         await loadLikedPosts();
 
-        // Kemudian ambil feed post
-        const res = await fetch("/api/v1/sp/fetch");
-        if (!res.ok) throw new Error("Gagal mengambil hantaran dari server");
+        const url = scope === "mine"
+            ? "/api/v1/sp/fetch?scope=mine"
+            : "/api/v1/sp/fetch?scope=all";
+
+        const res = await fetch(url);
+        if (!res.ok) {
+            if (res.status === 401) {
+                renderFeed([]);
+                return;
+            }
+            throw new Error("Gagal mengambil hantaran dari server");
+        }
 
         const data = await res.json();
 
         if (data.success) {
-            renderFeed(data.posts);
+            renderFeed(data.posts || []);
         } else {
             console.error("Gagal mengambil hantaran:", data.message);
         }
@@ -147,7 +199,7 @@ function renderFeed(posts) {
             const isLiked = likedPostIds.has(String(post.spId));
 
             html += `
-                <article class="sp-post-card" data-id="${post.spId}" data-aos="fade-up" data-aos-duration="500">
+                <article class="sp-post-card" data-id="${post.spId}" data-aos="fade-up" data-aos-duration="500" id="${post.spId}">
                     <div class="sp-post-header">
                         <div class="sp-user-info">
                             ${avatarHtml(displayName, post.profileImg_url)}

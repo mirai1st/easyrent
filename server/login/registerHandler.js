@@ -10,6 +10,10 @@ function generateVerificationCode() {
 }
 
 // This function handle user registrations
+function isStrongPassword(password) {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/.test(password);
+}
+
 async function registerHandler(req, res) {
     try {
         const { username, email, password, repeat_password } = req.body;
@@ -17,6 +21,13 @@ async function registerHandler(req, res) {
 
         if (!username || !normalizedEmail || !password || !repeat_password) {
             return res.status(400).json({ success: false, message: "Please fill all fields!" });
+        }
+
+        if (!isStrongPassword(password)) {
+            return res.status(400).json({
+                success: false,
+                message: "Kata laluan mesti sekurang-kurangnya 8 aksara, mengandungi huruf besar, huruf kecil, nombor dan simbol."
+            });
         }
 
         if (password !== repeat_password) {
@@ -39,8 +50,16 @@ async function registerHandler(req, res) {
         const verificationCode = generateVerificationCode();
 
         await pool.query(
-            `INSERT INTO Users (username, email, password, is_verified, verification_code, verification_expires)
-             VALUES (?, ?, ?, 0, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE))`,
+            `INSERT INTO Users (
+                username,
+                email,
+                password,
+                is_verified,
+                verification_code,
+                verification_expires,
+                address,
+                description
+            ) VALUES (?, ?, ?, 0, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE), '', '')`,
             [username, normalizedEmail, hashedPassword, verificationCode]
         );
 

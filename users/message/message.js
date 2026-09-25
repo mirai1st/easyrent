@@ -132,8 +132,15 @@ async function openConversation(conversationId, username, avatar = null) {
     checkOnlineStatus(username);
     await markConversationRead(conversationId);
 
-    // Mobile view state
-    document.querySelector(".mobile-message-view .message-container")?.classList.add("chat-open");
+    // Tablet/mobile hybrid state: open chat only after selecting a user
+    document.querySelectorAll(".message-container").forEach((container) => {
+        const isDesktopTablet = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
+        const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+        if (isDesktopTablet || isMobile) {
+            container.classList.add("chat-open");
+        }
+    });
 
     // Toggle active state in list
     document.querySelectorAll(".conversation").forEach((item) => {
@@ -480,8 +487,12 @@ socket.on("user_status_changed", (data) => {
     updateOnlineStatus(data.online);
 });
 
-document.querySelector(".chat-back-btn")?.addEventListener("click", () => {
-    document.querySelector(".mobile-message-view .message-container")?.classList.remove("chat-open");
+document.querySelectorAll(".chat-back-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll(".message-container").forEach((container) => {
+            container.classList.remove("chat-open");
+        });
+    });
 });
 
 document.querySelector("#desktopChatForm")?.addEventListener("submit", (e) => {

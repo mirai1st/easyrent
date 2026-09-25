@@ -18,12 +18,15 @@ function initSocket(httpServer) {
     // =====================================================
 
     io.use((socket, next) => {
-
         try {
-
             const cookies = cookie.parse(
                 socket.handshake.headers.cookie || ""
             );
+
+            if (!cookies.token) {
+                socket.username = null;
+                return next();
+            }
 
             const decoded = jwt.verify(
                 cookies.token,
@@ -31,17 +34,10 @@ function initSocket(httpServer) {
             );
 
             socket.username = decoded.username;
-
-            next();
-
+            return next();
         } catch (err) {
-
-            console.error(
-                "Socket authentication failed:",
-                err.message
-            );
-
-            next(new Error("Unauthorized"));
+            socket.username = null;
+            return next();
         }
     });
 
@@ -53,17 +49,19 @@ function initSocket(httpServer) {
 
         const username = socket.username;
 
-        console.log(
-            `${username} connected (socket ${socket.id})`
-        );
+        if (username) {
+            console.log(
+                `${username} connected (socket ${socket.id})`
+            );
 
-        // =================================================
-        // USER ROOM
-        // =================================================
-
-        // Every user gets their own room.
-        // Used for checking online status.
-        socket.join(`user_${username}`);
+            // Every user gets their own room.
+            // Used for checking online status.
+            socket.join(`user_${username}`);
+        } else {
+            console.log(
+                `Guest connected (socket ${socket.id})`
+            );
+        }
 
         // =================================================
         // JOIN CONVERSATION

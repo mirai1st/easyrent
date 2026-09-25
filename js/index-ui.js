@@ -144,6 +144,8 @@ function createCard(data) {
                     <br>
                     <p class="location-text"><i class="fa-solid fa-location-dot"></i>&nbsp ${data.location}</p>
                 </p>
+
+                <a class="button-fav" role="button" tabindex="0" data-house-id="${data.house_id}" aria-pressed="false" aria-label="Simpan rumah ini"><i class="fa-regular fa-heart"></i></a>
             </div>
 
             <div class="card-footer">
@@ -151,9 +153,6 @@ function createCard(data) {
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
-
-            <a class="button-fav" role="button" tabindex="0" data-house-id="${data.house_id}"
-               aria-pressed="false" aria-label="Simpan rumah ini"><i class="fa-regular fa-heart"></i></a>
         </div>
     `;
 }

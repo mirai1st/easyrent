@@ -163,6 +163,7 @@ async function toggleFavourite(type, postId) {
     }
 }
 
+
 // ===== Init navbar (tunggu data siap dulu, baru page dibuka) =====
 
 function showPage() {
@@ -193,7 +194,6 @@ async function initNavbar() {
 
         loginBtnSide.forEach(btn => btn.style.display = "none");
         notificationObject.forEach(btn => btn.style.display = "block");
-
     } catch (err) {
         console.error("initNavbar error:", err);
     } finally {

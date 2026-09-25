@@ -6,6 +6,7 @@ const resendCodeBtn = document.getElementById('resend-code-btn');
 
 const registerModal = document.getElementById('register-modal');
 const codeverifyModal = document.getElementById('codeverify-modal');
+const loginModal = document.getElementById('login-modal');
 const insertedEmailSpan = document.getElementById('inserted-email');
 
 // Keeps track of which email is currently pending verification
@@ -16,7 +17,9 @@ function openCodeverifyModal(email) {
     insertedEmailSpan.textContent = email;
 
     registerModal.style.display = 'none';
-    codeverifyModal.style.display = 'block';
+    registerModal.classList.remove('enabled');
+    codeverifyModal.style.display = 'flex';
+    codeverifyModal.classList.add('enabled');
 }
 
 // ---- Login ----
@@ -49,8 +52,24 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
         // Account exists but hasn't verified their email yet
         if (data.needsVerification && data.email) {
-            document.getElementById("login-modal").style.display = 'none';
+            loginModal.style.display = 'none';
+            loginModal.classList.remove('enabled');
             openCodeverifyModal(data.email);
+            return;
+        }
+
+        // Account is suspended
+        if (data.isSuspended) {
+            const errorMessage = data.message;
+            if (typeof showNotification === 'function') {
+                showNotification(errorMessage, 'error');
+            } else {
+                showNotification(errorMessage, "error", 3000);
+            }
+
+            // Kekalkan pengguna pada halaman semasa dan biarkan modal login terbuka.
+            loginModal.style.display = 'block';
+            loginModal.classList.add('enabled');
             return;
         }
 
@@ -62,10 +81,9 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         }
 
         // Kekalkan pengguna pada halaman semasa dan biarkan modal login terbuka.
-        document.getElementById('login-modal').style.display = 'block';
-
-
-
+        loginModal.style.display = 'block';
+        loginModal.classList.add('enabled');
+        
     } catch (err) {
         showNotification("Ralat sambungan! Sila cuba sebentar lagi.", "error", 3000);
     } finally {
@@ -134,10 +152,13 @@ document.getElementById("codeverifyForm").addEventListener("submit", async (e) =
         const data = await response.json();
 
         if (data.success) {
-            const cleanURL = window.location.origin + window.location.pathname
+            codeverifyModal.style.display = 'none';
+            codeverifyModal.classList.remove('enabled');
+            pendingVerificationEmail = null;
+            const cleanURL = window.location.origin + window.location.pathname;
             window.location = `${cleanURL}?register_success=true`;
         } else {
-            showNotification("Ralat sambungan! Sila cuba sebentar lagi.", "error", 3000);
+            showNotification(data.message || "Kod pengesahan tidak sah. Sila cuba lagi.", "error", 3000);
         }
     } catch (err) {
         showNotification("Ralat sambungan! Sila cuba sebentar lagi.", "error", 3000);
@@ -165,7 +186,7 @@ resendCodeBtn.addEventListener("click", async () => {
         });
 
         const data = await response.json();
-        alert(data.message);
+        showNotification(data.message || "Kod pengesahan baharu telah dihantar.", "success", 3000);
     } catch (err) {
         showNotification("Ralat sambungan! Sila cuba sebentar lagi.", "error", 3000);
     } finally {

@@ -90,6 +90,44 @@ async function postHandler(req, res) {
     }
 }
 
+async function fetchUserHouses(req, res) {
+    if (!req.user || !req.user.username) {
+        return res.status(401).json({ success: false, message: 'Sila log masuk untuk melihat senarai rumah anda.' });
+    }
+
+    try {
+        const [rows] = await db.execute(
+            `SELECT rentID, title, totalOf_bedroom, totalOf_shower, description, img_url,
+                    price, location, target_institution, gender, dateCreated
+             FROM Rent
+             WHERE username = ?
+             ORDER BY dateCreated DESC`,
+            [req.user.username]
+        );
+
+        return res.json({
+            success: true,
+            count: rows.length,
+            houses: rows.map((row) => ({
+                house_id: row.rentID,
+                title: row.title,
+                description: row.description,
+                totalRoom: row.totalOf_bedroom,
+                totalShower: row.totalOf_shower,
+                price: row.price,
+                location: row.location,
+                targetInstitution: row.target_institution,
+                gender: row.gender,
+                dateCreated: row.dateCreated,
+                images: normalizeImagePaths(row.img_url)
+            }))
+        });
+    } catch (error) {
+        console.error('Error fetching user houses:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}
+
 async function getRecommendations(req, res) {
     try {
         const [rows] = await db.query(
@@ -268,6 +306,7 @@ function normalizeImagePaths(imageValue) {
 
 module.exports = {
     postHandler,
+    fetchUserHouses,
     getRecommendations,
     fetchHouses,
     fetchHouseById
