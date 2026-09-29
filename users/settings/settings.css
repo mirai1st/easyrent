@@ -90,6 +90,7 @@ nav a {
 }
 
 .settings-container {
+    min-height: calc(100vh - 120px);
     flex: 1; /* ambil baki ruang sebagai right panel */
     min-width: 0; /* elak overflow bila content dalam settings terlalu lebar */
     padding: 0 32px;
@@ -283,7 +284,43 @@ nav a {
 }
 
 
+@media (max-width: 1024px) {
+    #top {
+        padding: 100px 20px;
+        transition: padding 0.3s ease;
+    }
 
+    .mobile-view {
+        font-size: 0.9rem;
+    }
+
+    .mobile-view h2 {
+        font-size: 1.3rem;
+    }
+
+    .mobile-view h4.header {
+        font-size: 0.95rem;
+    }
+
+    .settings-appearance {
+        flex-direction: column;
+    }
+
+    .desktop-view:not(nav) {
+        display: none;
+    }
+
+    .mobile-view {
+        display: block;
+    }
+
+    .settings-container {
+        margin-top: 0;
+        flex: 1; /* ambil baki ruang sebagai right panel */
+        min-width: 0; /* elak overflow bila content dalam settings terlalu lebar */
+        padding: 0;
+    }
+}
 
 @media (max-width: 768px) {
     .mobile-view {

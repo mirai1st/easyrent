@@ -1,0 +1,1 @@
+cloudflared tunnel --url http://localhost:4000 2>&1 | grep --line-buffered -oE "https://[a-zA-Z0-9-]+\.trycloudflare\.com" | head -n 1 | xargs -I {} qrencode -t ANSIUTF8 {}

@@ -278,6 +278,7 @@ function showNotification(msg, type = 'success', timer = 10000, messageUrl = '/u
 const urlParams = new URLSearchParams(window.location.search);
 const loginSuccess = urlParams.get("login_success");
 const registerSuccess = urlParams.get("register_success");
+const success = urlParams.get("success");
 const error = urlParams.get("error");
 
 // Priority logic prevents overwriting notifications
@@ -285,7 +286,7 @@ if (loginSuccess === "true") {
     loadUser((user) => {
       showNotification(`Selamat kembali @${user.username}!`, "success");
     });
-    
+
 } else if (loginSuccess === "false") {
     showNotification(`Ralat ketika mengelog masuk: ${error || 'Invalid credentials'}`, "error");
     modal.style.display = "flex"; // Open login modal on failed login
@@ -296,6 +297,10 @@ if (loginSuccess === "true") {
     showNotification("Uh oh! That action requires you to log in.", "error");
     modal.style.display = "flex"; // Open login modal on failed login
     modal.classList.add("enabled");
+} else if (success === 'change-role') {
+    showNotification("Berjaya menukar akaun anda kepada pengguna biasa!")
+} else if (error === 'change-role') {
+    showNotification("Berjaya menukar akaun anda kepada pengguna biasa!")
 }
 
 // Clear only notification parameters so search and filter parameters remain visible.

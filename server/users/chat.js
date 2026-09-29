@@ -5,10 +5,7 @@ const { uploadMessage } = require("../system/uploadConfig"); // adjust path if u
 
 const router = express.Router();
 
-// ========================================================
-// GET USER CONVERSATIONS (unread_count + image-aware preview)
-// ========================================================
-
+// This function fetch user conversation (unread_count + image-aware preview)
 router.get("/conversations", authenticateToken, async (req, res) => {
     try {
         const username = req.user.username;
@@ -88,11 +85,7 @@ router.get("/conversations", authenticateToken, async (req, res) => {
     }
 });
 
-
-// ========================================================
-// CREATE / GET CONVERSATION
-// ========================================================
-
+// Create / get conversations
 router.post("/conversations", authenticateToken, async (req, res) => {
     try {
         const currentUser = req.user.username;
@@ -141,22 +134,15 @@ router.post("/conversations", authenticateToken, async (req, res) => {
 });
 
 
-// ========================================================
-// GET MESSAGES (now includes image attachments per message)
-// ========================================================
+// Get messages (now includes image attachments per message)
+router.get("/conversations/:id/messages", authenticateToken, async (req, res) => {
+    try {
+        const username = req.user.username;
+        const conversationId = req.params.id;
 
-router.get(
-    "/conversations/:id/messages",
-    authenticateToken,
-    async (req, res) => {
-
-        try {
-            const username = req.user.username;
-            const conversationId = req.params.id;
-
-            // Check user belongs to conversation
-            const [conversation] = await db.execute(
-                `
+        // Check user belongs to conversation
+        const [conversation] = await db.execute(
+            `
                 SELECT conversation_id
                 FROM conversation
 
@@ -167,22 +153,22 @@ router.get(
                     OR user2 = ?
                 )
                 `,
-                [
-                    conversationId,
-                    username,
-                    username
-                ]
-            );
+            [
+                conversationId,
+                username,
+                username
+            ]
+        );
 
-            if (conversation.length === 0) {
-                return res.status(403).json({
-                    error: "You are not part of this conversation"
-                });
-            }
+        if (conversation.length === 0) {
+            return res.status(403).json({
+                error: "You are not part of this conversation"
+            });
+        }
 
-            // Get messages bersama profile picture sender + attached images (comma-joined)
-            const [messages] = await db.execute(
-                `
+        // Get messages bersama profile picture sender + attached images (comma-joined)
+        const [messages] = await db.execute(
+            `
                 SELECT 
                     m.message_id,
                     m.sender,
@@ -206,100 +192,89 @@ router.get(
 
                 ORDER BY m.sent_at ASC
                 `,
-                [
-                    conversationId
-                ]
-            );
+            [
+                conversationId
+            ]
+        );
 
-            const formatted = messages.map((row) => ({
-                ...row,
-                images: row.images ? row.images.split(",") : []
-            }));
+        const formatted = messages.map((row) => ({
+            ...row,
+            images: row.images ? row.images.split(",") : []
+        }));
 
-            res.json(formatted);
+        res.json(formatted);
 
-        } catch (err) {
+    } catch (err) {
 
-            console.error("Get messages error:", err);
+        console.error("Get messages error:", err);
 
-            res.status(500).json({
-                error: "Failed to get messages"
-            });
-        }
+        res.status(500).json({
+            error: "Failed to get messages"
+        });
     }
+}
 );
 
 
-// ========================================================
-// MARK CONVERSATION AS READ
-// ========================================================
+// Mark conversation as read
+router.put("/conversations/:id/read", authenticateToken, async (req, res) => {
+    try {
+        const username = req.user.username;
+        const conversationId = req.params.id;
 
-router.put(
-    "/conversations/:id/read",
-    authenticateToken,
-    async (req, res) => {
-
-        try {
-            const username = req.user.username;
-            const conversationId = req.params.id;
-
-            // Check user belongs to conversation
-            const [conversation] = await db.execute(
-                `
+        // Check user belongs to conversation
+        const [conversation] = await db.execute(
+            `
                 SELECT conversation_id
                 FROM conversation
                 WHERE conversation_id = ?
                 AND (user1 = ? OR user2 = ?)
                 `,
-                [conversationId, username, username]
-            );
+            [conversationId, username, username]
+        );
 
-            if (conversation.length === 0) {
-                return res.status(403).json({
-                    error: "You are not part of this conversation"
-                });
-            }
+        if (conversation.length === 0) {
+            return res.status(403).json({
+                error: "You are not part of this conversation"
+            });
+        }
 
-            const [result] = await db.execute(
-                `
+        const [result] = await db.execute(
+            `
                 UPDATE message
                 SET is_read = 1
                 WHERE conversation_id = ?
                   AND sender != ?
                   AND is_read = 0
                 `,
-                [conversationId, username]
-            );
+            [conversationId, username]
+        );
 
-            // Let the other person know their messages were seen (optional, safe to ignore on frontend)
-            const io = req.app.get("io");
-            if (io && result.affectedRows > 0) {
-                io.to(`conversation_${conversationId}`).emit("messages_read", {
-                    conversation_id: conversationId,
-                    reader: username
-                });
-            }
-
-            res.json({
-                success: true,
-                marked_read: result.affectedRows
-            });
-
-        } catch (err) {
-            console.error("Mark as read error:", err);
-
-            res.status(500).json({
-                error: "Failed to mark conversation as read"
+        // Let the other person know their messages were seen (optional, safe to ignore on frontend)
+        const io = req.app.get("io");
+        if (io && result.affectedRows > 0) {
+            io.to(`conversation_${conversationId}`).emit("messages_read", {
+                conversation_id: conversationId,
+                reader: username
             });
         }
+
+        res.json({
+            success: true,
+            marked_read: result.affectedRows
+        });
+
+    } catch (err) {
+        console.error("Mark as read error:", err);
+
+        res.status(500).json({
+            error: "Failed to mark conversation as read"
+        });
     }
+}
 );
 
-
-// ========================================================
-// GLOBAL UNREAD COUNT (for navbar/bell icon)
-// ========================================================
-
+// Fetch global unread count (for navbar/bell icon)
 router.get("/unread-count", authenticateToken, async (req, res) => {
     try {
         const username = req.user.username;
@@ -327,45 +302,36 @@ router.get("/unread-count", authenticateToken, async (req, res) => {
     }
 });
 
+// Send message (text and/or up to 5 images)
+router.post("/messages", authenticateToken, uploadMessage.array("images", 5), async (req, res) => {
+    try {
 
-// ========================================================
-// SEND MESSAGE (text and/or up to 5 images)
-// ========================================================
+        const sender = req.user.username;
 
-router.post(
-    "/messages",
-    authenticateToken,
-    uploadMessage.array("images", 5),
-    async (req, res) => {
+        const {
+            conversation_id,
+            message
+        } = req.body;
 
-        try {
+        const trimmedMessage = message?.trim() || null;
+        const files = req.files || [];
 
-            const sender = req.user.username;
+        if (!conversation_id) {
+            return res.status(400).json({
+                error: "Conversation ID is required"
+            });
+        }
 
-            const {
-                conversation_id,
-                message
-            } = req.body;
-
-            const trimmedMessage = message?.trim() || null;
-            const files = req.files || [];
-
-            if (!conversation_id) {
-                return res.status(400).json({
-                    error: "Conversation ID is required"
-                });
-            }
-
-            if (!trimmedMessage && files.length === 0) {
-                return res.status(400).json({
-                    error: "Message text or at least one image is required"
-                });
-            }
+        if (!trimmedMessage && files.length === 0) {
+            return res.status(400).json({
+                error: "Message text or at least one image is required"
+            });
+        }
 
 
-            // Check user belongs to conversation
-            const [conversation] = await db.execute(
-                `
+        // Check user belongs to conversation
+        const [conversation] = await db.execute(
+            `
                 SELECT conversation_id, user1, user2
 
                 FROM conversation
@@ -377,31 +343,31 @@ router.post(
                     OR user2 = ?
                 )
                 `,
-                [
-                    conversation_id,
-                    sender,
-                    sender
-                ]
-            );
+            [
+                conversation_id,
+                sender,
+                sender
+            ]
+        );
 
 
-            if (conversation.length === 0) {
+        if (conversation.length === 0) {
 
-                return res.status(403).json({
-                    error: "You are not part of this conversation"
-                });
+            return res.status(403).json({
+                error: "You are not part of this conversation"
+            });
 
-            }
+        }
 
-            const recipient =
-                conversation[0].user1 === sender
-                    ? conversation[0].user2
-                    : conversation[0].user1;
+        const recipient =
+            conversation[0].user1 === sender
+                ? conversation[0].user2
+                : conversation[0].user1;
 
 
-            // Save message (text may be null if image-only)
-            const [result] = await db.execute(
-                `
+        // Save message (text may be null if image-only)
+        const [result] = await db.execute(
+            `
                 INSERT INTO message
                     (
                         conversation_id,
@@ -412,70 +378,67 @@ router.post(
                 VALUES
                     (?, ?, ?)
                 `,
-                [
-                    conversation_id,
-                    sender,
-                    trimmedMessage
-                ]
+            [
+                conversation_id,
+                sender,
+                trimmedMessage
+            ]
+        );
+
+        const messageId = result.insertId;
+        const imageNames = files.map((file) => file.filename);
+
+        if (imageNames.length > 0) {
+            const values = imageNames.map((name) => [messageId, name]);
+
+            await db.query(
+                `INSERT INTO message_attachment (message_id, file_name) VALUES ?`,
+                [values]
             );
-
-            const messageId = result.insertId;
-            const imageNames = files.map((file) => file.filename);
-
-            if (imageNames.length > 0) {
-                const values = imageNames.map((name) => [messageId, name]);
-
-                await db.query(
-                    `INSERT INTO message_attachment (message_id, file_name) VALUES ?`,
-                    [values]
-                );
-            }
-
-
-            // Push the new message live to everyone in this conversation's room
-            const io = req.app.get("io");
-
-            if (io) {
-                io.to(`conversation_${conversation_id}`).emit("new_message", {
-                    message_id: messageId,
-                    conversation_id,
-                    sender,
-                    message: trimmedMessage,
-                    images: imageNames,
-                    is_read: 0,
-                    sent_at: new Date()
-                });
-
-                // Push a toast-style notification straight to the recipient,
-                // even if they're not on the messages page at all
-                io.to(`user_${recipient}`).emit("message_notification", {
-                    conversation_id,
-                    sender,
-                    message: trimmedMessage || "📷 Gambar",
-                    sent_at: new Date()
-                });
-            }
-
-
-            res.json({
-                success: true,
-                message_id: messageId,
-                images: imageNames
-            });
-
-
-        } catch (err) {
-
-            console.error("Send message error:", err);
-
-            res.status(500).json({
-                error: err.message || "Failed to send message"
-            });
-
         }
 
-    }
-);
 
+        // Push the new message live to everyone in this conversation's room
+        const io = req.app.get("io");
+
+        if (io) {
+            io.to(`conversation_${conversation_id}`).emit("new_message", {
+                message_id: messageId,
+                conversation_id,
+                sender,
+                message: trimmedMessage,
+                images: imageNames,
+                is_read: 0,
+                sent_at: new Date()
+            });
+
+            // Push a toast-style notification straight to the recipient,
+            // even if they're not on the messages page at all
+            io.to(`user_${recipient}`).emit("message_notification", {
+                conversation_id,
+                sender,
+                message: trimmedMessage || "📷 Gambar",
+                sent_at: new Date()
+            });
+        }
+
+
+        res.json({
+            success: true,
+            message_id: messageId,
+            images: imageNames
+        });
+
+
+    } catch (err) {
+
+        console.error("Send message error:", err);
+
+        res.status(500).json({
+            error: err.message || "Failed to send message"
+        });
+
+    }
+});
 
 module.exports = router;

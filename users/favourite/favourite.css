@@ -1,72 +1,84 @@
 * {
-  scroll-margin-top: 100px;
-  box-sizing: border-box;
+    scroll-margin-top: 100px;
+    box-sizing: border-box;
 }
 
 nav {
-  padding: 20px 30px;
-  background-color: #f7f2ed;
-  display: flex;
-  justify-content: space-between;
-  font-weight: 500;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 499;
-  color: #52341d;
-  border-bottom: 1px solid #52341d3f;
+    padding: 20px 30px;
+    background-color: #f7f2ed;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 499;
+    color: #52341d;
+    border-bottom: 1px solid #52341d3f;
 }
 
 body {
     background-color: #f7f2ed;
     background-image:
-        repeating-linear-gradient(135deg, rgba(82, 52, 29, 0.025) 0 1px, transparent 1px 26px),
-        radial-gradient(circle at 8% 12%, rgba(215, 185, 108, 0.16), transparent 28%),
-        radial-gradient(circle at 92% 78%, rgba(74, 50, 31, 0.08), transparent 30%);
+        repeating-linear-gradient(
+            135deg,
+            rgba(82, 52, 29, 0.025) 0 1px,
+            transparent 1px 26px
+        ),
+        radial-gradient(
+            circle at 8% 12%,
+            rgba(215, 185, 108, 0.16),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 92% 78%,
+            rgba(74, 50, 31, 0.08),
+            transparent 30%
+        );
     background-attachment: fixed;
 }
 
 nav ul {
-  list-style: none;
-  display: flex;
-  gap: 20px;
+    list-style: none;
+    display: flex;
+    gap: 20px;
 }
 
 nav a {
-  color: #52341d;
-  text-decoration: none;
+    color: #52341d;
+    text-decoration: none;
 }
 
 .nav-logo {
-  font-weight: 800;
-  font-size: 1.1rem;
+    font-weight: 800;
+    font-size: 1.1rem;
 }
 
 .nav-mainbutton {
-  padding: 10px 15px;
-  color: #52341d;
-  background: #ad6a3623;
-  border: 1px solid rgba(215, 185, 108, 0.3);
-  border-radius: 8px;
-  backdrop-filter: blur(10px);
+    padding: 10px 15px;
+    color: #52341d;
+    background: #ad6a3623;
+    border: 1px solid rgba(215, 185, 108, 0.3);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
 }
 
 .nav-mainbutton.disable {
-  pointer-events: none;
+    pointer-events: none;
 }
 
 /* Sama dengan profile.css */
 #top {
-  padding: 100px 150px 40px;
+    padding: 100px 150px 40px;
 }
 
 .mobile-view {
-  display: none;
+    display: none;
 }
 
 .desktop-view {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 /* =========================================================
@@ -74,501 +86,558 @@ nav a {
    ========================================================= */
 
 .favourite-container {
-  flex: 1;
-  min-width: 0;
-  min-height: calc(100vh - 140px);
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid #00000018;
-  border-radius: 16px;
-  animation: favouriteSlideUp 0.3s ease-out both;
-  will-change: opacity, transform;
+    flex: 1;
+    min-width: 0;
+    min-height: calc(100vh - 140px);
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #00000018;
+    border-radius: 16px;
+    animation: favouriteSlideUp 0.3s ease-out both;
+    will-change: opacity, transform;
 }
 
 .favourite-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 30px 32px 26px;
-  background: linear-gradient(135deg, #fffdfb 0%, #f7f2ed 100%);
-  border-bottom: 1px solid #00000012;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 30px 32px 26px;
+    background: linear-gradient(135deg, #fffdfb 0%, #f7f2ed 100%);
+    border-bottom: 1px solid #00000012;
 }
 
 .favourite-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 9px;
-  color: #a4832f;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 9px;
+    color: #a4832f;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .favourite-header h1 {
-  margin: 0;
-  color: #52341d;
-  font-size: 1.5rem;
-  line-height: 1.25;
+    margin: 0;
+    color: #52341d;
+    font-size: 1.5rem;
+    line-height: 1.25;
 }
 
 .favourite-header p {
-  margin: 7px 0 0;
-  color: #806e60;
-  font-size: 0.86rem;
+    margin: 7px 0 0;
+    color: #806e60;
+    font-size: 0.86rem;
 }
 
 .favourite-count {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  min-width: 72px;
-  color: #806e60;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    min-width: 72px;
+    color: #806e60;
 }
 
 .favourite-count strong {
-  color: #52341d;
-  font-size: 1.55rem;
-  line-height: 1;
+    color: #52341d;
+    font-size: 1.55rem;
+    line-height: 1;
 }
 
 .favourite-count span {
-  margin-top: 5px;
-  font-size: 0.72rem;
+    margin-top: 5px;
+    font-size: 0.72rem;
 }
 
 .favourite-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px 32px;
-  border-bottom: 1px solid #00000012;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 32px;
+    border-bottom: 1px solid #00000012;
 }
 
 .favourite-tabs {
-  display: flex;
-  gap: 5px;
-  max-width: 100%;
-  overflow-x: auto;
-  padding: 4px;
-  background: #f7f2ed;
-  border-radius: 8px;
-  scrollbar-width: none;
+    display: flex;
+    gap: 5px;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 4px;
+    background: #f7f2ed;
+    border-radius: 8px;
+    scrollbar-width: none;
 }
 
 .favourite-tabs::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .favourite-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 12px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: #6f4a2d;
-  font: inherit;
-  font-size: 0.8rem;
-  flex-shrink: 0;
-  white-space: nowrap;
-  cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #6f4a2d;
+    font: inherit;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    white-space: nowrap;
+    cursor: pointer;
 }
 
 .favourite-tab.active {
-  background: #52341d;
-  color: #f7f2ed;
+    background: #52341d;
+    color: #f7f2ed;
 }
 
 .favourite-tab span {
-  padding: 1px 6px;
-  border-radius: 999px;
-  background: #d7b96c;
-  color: #52341d;
-  font-size: 0.68rem;
-  font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: #d7b96c;
+    color: #52341d;
+    font-size: 0.68rem;
+    font-weight: 700;
 }
 
 .favourite-tab i {
-  font-size: 0.75rem;
+    font-size: 0.75rem;
 }
 
 .favourite-sort {
-  color: #806e60;
-  font-size: 0.78rem;
+    color: #806e60;
+    font-size: 0.78rem;
 }
 
 .favourite-sort i {
-  margin-right: 5px;
-  color: #a4832f;
+    margin-right: 5px;
+    color: #a4832f;
 }
 
 .favourite-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 390px;
-  padding: 48px 24px;
-  text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 390px;
+    padding: 48px 24px;
+    text-align: center;
 }
 
 .favourite-empty-icon {
-  display: grid;
-  width: 72px;
-  height: 72px;
-  place-items: center;
-  margin-bottom: 18px;
-  border: 1px solid #d7b96c66;
-  border-radius: 50%;
-  background: #d7b96c22;
-  color: #a4832f;
-  font-size: 1.8rem;
+    display: grid;
+    width: 72px;
+    height: 72px;
+    place-items: center;
+    margin-bottom: 18px;
+    border: 1px solid #d7b96c66;
+    border-radius: 50%;
+    background: #d7b96c22;
+    color: #a4832f;
+    font-size: 1.8rem;
 }
 
 .favourite-empty h2 {
-  margin: 0;
-  color: #52341d;
-  font-size: 1.15rem;
+    margin: 0;
+    color: #52341d;
+    font-size: 1.15rem;
 }
 
 .favourite-empty p {
-  max-width: 360px;
-  margin: 8px 0 22px;
-  color: #806e60;
-  font-size: 0.84rem;
-  line-height: 1.55;
+    max-width: 360px;
+    margin: 8px 0 22px;
+    color: #806e60;
+    font-size: 0.84rem;
+    line-height: 1.55;
 }
 
 .favourite-explore-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 11px 16px;
-  border-radius: 8px;
-  background: #52341d;
-  color: #fff;
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 16px;
+    border-radius: 8px;
+    background: #52341d;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .favourite-explore-btn:hover {
-  background: #6f4a2d;
-  transform: translateY(-1px);
+    background: #6f4a2d;
+    transform: translateY(-1px);
 }
 
 @keyframes favouriteSlideUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
-
 
 /* =========================================================
    FAVOURITE LIST (kad rumah & post Sudut Pelajar)
    ========================================================= */
 
 .favourite-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 18px;
-  padding: 24px 32px 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+    padding: 24px 32px 32px;
 }
 
 .favourite-list--stacked {
-  grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
 }
 
 .favourite-list--stacked .favourite-card {
-  max-width: 100%;
+    max-width: 100%;
 }
 
 .favourite-message {
-  grid-column: 1 / -1;
-  padding: 70px 20px;
-  color: #806e60;
-  font-size: 0.86rem;
-  text-align: center;
+    grid-column: 1 / -1;
+    padding: 70px 20px;
+    color: #806e60;
+    font-size: 0.86rem;
+    text-align: center;
 }
 
 .favourite-message button {
-  display: block;
-  margin: 14px auto 0;
-  padding: 9px 16px;
-  border: 0;
-  border-radius: 8px;
-  background: #52341d;
-  color: #fff;
-  font: inherit;
-  font-size: 0.8rem;
-  cursor: pointer;
+    display: block;
+    margin: 14px auto 0;
+    padding: 9px 16px;
+    border: 0;
+    border-radius: 8px;
+    background: #52341d;
+    color: #fff;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
 }
 
 .favourite-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid #00000018;
-  border-radius: 12px;
-  animation: favouriteSlideUp 0.3s ease-out both;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #00000018;
+    border-radius: 12px;
+    animation: favouriteSlideUp 0.3s ease-out both;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .favourite-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(82, 52, 29, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(82, 52, 29, 0.1);
 }
 
 .favourite-remove {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 2;
-  display: grid;
-  width: 34px;
-  height: 34px;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  color: #c2543a;
-  cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    color: #c2543a;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
 }
 
 .favourite-remove:hover {
-  transform: scale(1.1);
+    transform: scale(1.1);
 }
 
 .favourite-remove:disabled {
-  opacity: 0.5;
-  cursor: default;
+    opacity: 0.5;
+    cursor: default;
 }
 
 /* Kad rumah */
 
 .favourite-card-image {
-  display: block;
-  aspect-ratio: 4 / 3;
-  max-height: 200px;
-  background: #f7f2ed;
+    display: block;
+    aspect-ratio: 4 / 3;
+    max-height: 200px;
+    background: #f7f2ed;
 }
 
 .favourite-card-image img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .favourite-card-noimage {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  place-items: center;
-  color: #b8a99b;
-  font-size: 2rem;
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+    color: #b8a99b;
+    font-size: 2rem;
 }
 
 .favourite-card-body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 8px;
-  padding: 14px 16px 16px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 16px 16px;
 }
 
 .favourite-card-body h3 {
-  display: -webkit-box;
-  margin: 0;
-  overflow: hidden;
-  font-size: 0.98rem;
-  line-height: 1.35;
-  -webkit-box-orient: vertical;
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    font-size: 0.98rem;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
 }
 
 .favourite-card-body h3 a {
-  color: #52341d;
-  text-decoration: none;
+    color: #52341d;
+    text-decoration: none;
 }
 
 .favourite-card-location {
-  margin: 0;
-  color: #806e60;
-  font-size: 0.78rem;
-  line-height: 1.4;
+    margin: 0;
+    color: #806e60;
+    font-size: 0.78rem;
+    line-height: 1.4;
 }
 
 .favourite-card-location i {
-  margin-right: 4px;
-  color: #a4832f;
+    margin-right: 4px;
+    color: #a4832f;
 }
 
 .favourite-card-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  color: #6f4a2d;
-  font-size: 0.76rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: #6f4a2d;
+    font-size: 0.76rem;
 }
 
 .favourite-card-meta i {
-  margin-right: 4px;
-  color: #a4832f;
+    margin-right: 4px;
+    color: #a4832f;
 }
 
 .favourite-card-price {
-  margin-top: auto;
-  padding-top: 4px;
-  color: #52341d;
-  font-size: 1rem;
-  font-weight: 700;
+    margin-top: auto;
+    padding-top: 4px;
+    color: #52341d;
+    font-size: 1rem;
+    font-weight: 700;
 }
 
 .favourite-card-price small {
-  color: #806e60;
-  font-size: 0.72rem;
-  font-weight: 400;
+    color: #806e60;
+    font-size: 0.72rem;
+    font-weight: 400;
 }
 
 /* Kad post Sudut Pelajar */
 
 .favourite-post {
-  gap: 12px;
-  padding: 18px;
+    gap: 12px;
+    padding: 18px;
 }
 
 .favourite-post-user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-right: 40px;
 }
 
 .favourite-post-avatar {
-  position: relative;
-  display: grid;
-  width: 38px;
-  height: 38px;
-  flex-shrink: 0;
-  place-items: center;
-  overflow: hidden;
-  border-radius: 50%;
-  background: #d7b99c;
-  color: #52341d;
-  font-weight: 700;
+    position: relative;
+    display: grid;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #d7b99c;
+    color: #52341d;
+    font-weight: 700;
 }
 
 .favourite-post-avatar img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .favourite-post-user strong {
-  display: block;
-  color: #52341d;
-  font-size: 0.86rem;
+    display: block;
+    color: #52341d;
+    font-size: 0.86rem;
 }
 
 .favourite-post-user span {
-  color: #806e60;
-  font-size: 0.74rem;
+    color: #806e60;
+    font-size: 0.74rem;
 }
 
 .favourite-post-content {
-  display: -webkit-box;
-  margin: 0;
-  overflow: hidden;
-  color: #52341d;
-  font-size: 0.85rem;
-  line-height: 1.55;
-  white-space: pre-line;
-  -webkit-box-orient: vertical;
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    color: #52341d;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    white-space: pre-line;
+    -webkit-box-orient: vertical;
 }
 
 .favourite-post-image {
-  width: 100%;
-  max-height: 200px;
-  border-radius: 8px;
-  object-fit: cover;
+    width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
 }
 
 .favourite-post-footer {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid #00000012;
-  color: #806e60;
-  font-size: 0.76rem;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid #00000012;
+    color: #806e60;
+    font-size: 0.76rem;
 }
 
 .favourite-post-footer a {
-  margin-left: auto;
-  color: #6f4a2d;
-  font-weight: 600;
-  text-decoration: none;
+    margin-left: auto;
+    color: #6f4a2d;
+    font-weight: 600;
+    text-decoration: none;
 }
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
+@media (max-width: 1024px) {
+    div.desktop-view {
+        display: none !important;
+    }
+
+    .mobile-view {
+        display: block;
+    }
+
+    /* Menambah padding sekeliling untuk bekas kandungan utama */
+    #top {
+        padding: 85px 20px 30px; /* Atas (elak terlindung dek navbar), Kiri-Kanan 20px, Bawah 30px */
+    }
+
+    .mobile-favourite-view .favourite-container {
+        min-height: calc(100vh - 75px);
+        border: 1px solid #00000018; /* Kekalkan border lembut */
+        border-radius: 12px;        /* Beri kelengkungan bucu supaya kemas */
+    }
+
+    .mobile-favourite-view .favourite-header {
+        padding: 24px 20px 22px;
+    }
+
+    .mobile-favourite-view .favourite-toolbar {
+        padding: 14px 20px;
+    }
+
+    .mobile-favourite-view .favourite-empty {
+        min-height: calc(100vh - 245px);
+        padding: 40px 20px;
+    }
+
+    .mobile-favourite-view .favourite-sort {
+        display: none;
+    }
+
+    .mobile-favourite-view .favourite-header p {
+        max-width: 280px;
+        line-height: 1.45;
+    }
+
+    /* Padding di dalam senarai kad */
+    .favourite-list {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 16px;
+    }
+}
 
 @media (max-width: 767px) {
-  .desktop-view {
-    display: none !important;
-  }
+    .desktop-view {
+        display: none !important;
+    }
 
-  .mobile-view {
-    display: block;
-  }
+    .mobile-view {
+        display: block;
+    }
 
-  #top {
-    padding: 75px 0 0;
-  }
+    #top {
+        padding: 85px 15px 30px; /* Atas (elak terlindung dek navbar), Kiri-Kanan 20px, Bawah 30px */
+    }
 
-  .mobile-favourite-view .favourite-container {
-    min-height: calc(100vh - 75px);
-    border: 0;
-    border-radius: 0;
-  }
+    .mobile-favourite-view .favourite-container {
+        min-height: calc(100vh - 75px);
+        border: 1px solid #00000018; /* Kekalkan border lembut */
+        border-radius: 12px;        /* Beri kelengkungan bucu supaya kemas */
+    }
 
-  .mobile-favourite-view .favourite-header {
-    padding: 24px 20px 22px;
-  }
+    .mobile-favourite-view .favourite-header {
+        padding: 24px 20px 22px;
+    }
 
-  .mobile-favourite-view .favourite-toolbar {
-    padding: 14px 20px;
-  }
+    .mobile-favourite-view .favourite-toolbar {
+        padding: 14px 20px;
+    }
 
-  .mobile-favourite-view .favourite-empty {
-    min-height: calc(100vh - 245px);
-    padding: 40px 20px;
-  }
+    .mobile-favourite-view .favourite-empty {
+        min-height: calc(100vh - 245px);
+        padding: 40px 20px;
+    }
 
-  .mobile-favourite-view .favourite-sort {
-    display: none;
-  }
+    .mobile-favourite-view .favourite-sort {
+        display: none;
+    }
 
-  .mobile-favourite-view .favourite-header p {
-    max-width: 220px;
-    line-height: 1.45;
-  }
+    .mobile-favourite-view .favourite-header p {
+        max-width: 220px;
+        line-height: 1.45;
+    }
 
-  .favourite-list {
-    grid-template-columns: 1fr;
-    padding: 16px 20px 24px;
-  }
+    .favourite-list {
+        grid-template-columns: 1fr;
+        padding: 16px 20px 24px;
+    }
 }

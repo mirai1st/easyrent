@@ -474,29 +474,7 @@
                         </div>
                     </div>
 
-                    <h4 class="header">Notifikasi</h4>
-                    <div class="settings-toggle" data="notif-email">
-                        <table>
-                            <td><b>Notifikasi E-mel</b><br>Terima kemas kini iklan & mesej melalui e-mel</td>
-                            <td class="btn-settings-toggle" data="toggle"><i class="fa-solid fa-toggle-off"></i></td>
-                        </table>
-                    </div>
-
-                    <div class="settings-toggle" data="notif-push">
-                        <table>
-                            <td><b>Notifikasi Push</b><br>Terima notifikasi terus pada peranti anda</td>
-                            <td class="btn-settings-toggle" data="toggle"><i class="fa-solid fa-toggle-off"></i></td>
-                        </table>
-                    </div>
-
                     <h4 class="header">Privasi & Keselamatan</h4>
-                    <div class="settings-toggle" data="hide-profile">
-                        <table>
-                            <td><b>Sembunyikan profil saya</b><br>Nama pengguna anda akan dipaparkan sebagai anonymous
-                            </td>
-                            <td class="btn-settings-toggle" data="toggle"><i class="fa-solid fa-toggle-off"></i></td>
-                        </table>
-                    </div>
 
                     <div class="settings" data="change-password" data-id="change-password">
                         <table>
@@ -511,6 +489,20 @@
                     </div>
 
                     <h4 class="header">Akaun</h4>
+
+                    <div class="settings-group" id="section-akaun">
+                        <div class="settings change-role-settings" data="change-role" style="display: none;">
+                            <table>
+                                <td><b>Tukar ke Akaun Biasa</b><br>Tukar akaun anda kepada pengguna biasa.</td>
+                                <td class="btn-settings-toggle"><i class="fa-solid fa-chevron-down"></i></td>
+                            </table>
+
+                            <div class="setting-content">
+                                <button type="button" class="nav-mainbutton change-role-btn"
+                                    style="color: #b3382c; border-color: #b3382c47;">Tukar</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="settings" data="delete-account">
                         <table>
@@ -541,7 +533,6 @@
             </div>
         </div>
 
-        <!-- ============ DESKTOP VIEW ============ -->
         <div class="desktop-view">
             <div class="side-panel">
                 <div class="side-panel-breadcrumb">
@@ -551,9 +542,6 @@
                 <div class="side-panel-nav">
                     <a href="#section-bahasa" class="side-panel-link active">
                         <i class="fa-solid fa-gear"></i> Tetapan Am
-                    </a>
-                    <a href="#section-notifikasi" class="side-panel-link">
-                        <i class="fa-solid fa-bell"></i> Notifikasi
                     </a>
                     <a href="#section-privasi" class="side-panel-link">
                         <i class="fa-solid fa-lock"></i> Privasi & Keselamatan
@@ -587,37 +575,9 @@
                             </div>
                         </div>
                     </div>
-
-                    <h4 class="header">Notifikasi</h4>
-                    <div class="settings-group" id="section-notifikasi">
-                        <div class="settings-toggle" data="notif-email">
-                            <table>
-                                <td><b>Notifikasi E-mel</b><br>Terima kemas kini iklan & mesej melalui e-mel</td>
-                                <td class="btn-settings-toggle" data="toggle"><i class="fa-solid fa-toggle-off"></i>
-                                </td>
-                            </table>
-                        </div>
-
-                        <div class="settings-toggle" data="notif-push">
-                            <table>
-                                <td><b>Notifikasi Push</b><br>Terima notifikasi terus pada peranti anda</td>
-                                <td class="btn-settings-toggle" data="toggle"><i class="fa-solid fa-toggle-off"></i>
-                                </td>
-                            </table>
-                        </div>
-                    </div>
-
+                    
                     <h4 class="header">Privasi & Keselamatan</h4>
                     <div class="settings-group" id="section-privasi">
-                        <div class="settings-toggle" data="hide-profile">
-                            <table>
-                                <td><b>Sembunyikan profil saya</b><br>Nama pengguna anda akan dipaparkan sebagai
-                                    anonymous</td>
-                                <td class="btn-settings-toggle" data="toggle"><i class="fa-solid fa-toggle-off"></i>
-                                </td>
-                            </table>
-                        </div>
-
                         <div class="settings" data="change-password">
                             <table>
                                 <td><b>Kata Laluan</b><br>Tukar kata laluan akaun anda</td>
@@ -633,6 +593,20 @@
                     </div>
 
                     <h4 class="header">Akaun</h4>
+                    <div class="settings-group change-role-settings" id="section-akaun" style="display: none;">
+                        <div class="settings" data="change-role">
+                            <table>
+                                <td><b>Tukar ke Akaun Biasa</b><br>Tukar akaun anda kepada pengguna biasa.</td>
+                                <td class="btn-settings-toggle"><i class="fa-solid fa-chevron-down"></i></td>
+                            </table>
+
+                            <div class="setting-content">
+                                <button type="button" class="nav-mainbutton change-role-btn"
+                                    style="color: #b3382c; border-color: #b3382c47;">Tukar</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="settings-group" id="section-akaun">
                         <div class="settings" data="delete-account">
                             <table>
@@ -667,9 +641,41 @@
         </div>
     </section>
 
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <a class="footer-brand" href="/">EasyRent<span>.</span></a>
+                <p>Tempat yang lebih mudah untuk pelajar mencari rumah yang sesuai.</p>
+            </div>
+
+            <div class="footer-right">
+                <div class="footer-column">
+                    <h3>Teroka</h3>
+                    <a href="/#recommendations">Cadangan rumah</a>
+                    <a href="/sudut-pelajar/">Sudut pelajar</a>
+                    <a href="/users/favourite/">Kegemaran</a>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Hubungi kami</h3>
+                    <a href="mailto:info@easyrent.com">
+                        <i class="fa-solid fa-envelope"></i> info@easyrent.com
+                    </a>
+                    <a href="tel:+60185799311">
+                        <i class="fa-solid fa-phone"></i> +60 18 5799-311
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; 2026 EasyRent</span>
+            <span>Dibina untuk kehidupan pelajar yang lebih mudah.</span>
+        </div>
+    </footer>
+
     <script src="settings.js"></script>
     <script src="/js/main-ui.js"></script>
     <script src="/js/loginRequest.js"></script>
 </body>
-
 </html>

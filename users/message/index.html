@@ -19,63 +19,63 @@
         <div id="login-modal" class="login-modal">
             <form id="loginForm">
                 <div class="login-modal-container">
-                    <!-- Close -->
-                    <a class="login-modal-close-btn">
-                        <i class="fa-solid fa-xmark"></i>
-                    </a>
+                <!-- Close -->
+                <a class="login-modal-close-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
 
-                    <!-- Header -->
-                    <div class="modal-content-header">
-                        <div class="auth-brand">
-                            <i class="fa-solid fa-house"></i>
-                            <span>EasyRent</span>
-                        </div>
-                    </div>
-
-                    <!-- Content -->
-                    <div class="modal-content">
-                        <h3>Selamat Kembali ke EasyRent!</h3>
-                        <p>Log masuk untuk meneruskan perjalanan anda.</p>
-
-                        <!-- Username -->
-                        <div class="input-container">
-                            <input type="text" id="username-login" placeholder="Username atau Email"
-                                autocomplete="username">
-                        </div>
-
-                        <!-- Password -->
-                        <div class="input-container">
-                            <input type="password" id="password-login" placeholder="Password"
-                                autocomplete="current-password">
-                        </div>
-
-                        <!-- Login -->
-                        <button type="submit" class="loginForm-submit">
-                            <span class="btn-text">Log Masuk</span>
-                            <div class="spinner center loginForm-spinner">
-                                <div class="spinner-blade"></div>
-                                <div class="spinner-blade"></div>
-                                <div class="spinner-blade"></div>
-                                <div class="spinner-blade"></div>
-                                <div class="spinner-blade"></div>
-                                <div class="spinner-blade"></div>
-                                <div class="spinner-blade"></div>
-                                <div class="spinner-blade"></div>
-                                <div class="spinner-blade"></div>
-                                <div class="spinner-blade"></div>
-                                <div class="spinner-blade"></div>
-                                <div class="spinner-blade"></div>
-                            </div>
-                        </button>
-
-                        <!-- Register -->
-                        <div class="auth-switch">
-                            <span>Belum mempunyai akaun?</span>
-                            <a id="register-modal-btn" class="register-modal-btn">Daftar sekarang</a>
-                        </div>
+                <!-- Header -->
+                <div class="modal-content-header">
+                    <div class="auth-brand">
+                        <i class="fa-solid fa-house"></i>
+                        <span>EasyRent</span>
                     </div>
                 </div>
-            </form>
+
+                <!-- Content -->
+                <div class="modal-content">
+                    <h3>Selamat Kembali ke EasyRent!</h3>
+                    <p>Log masuk untuk meneruskan perjalanan anda.</p>
+
+                    <!-- Username -->
+                    <div class="input-container">
+                        <input type="text" id="username-login" placeholder="Username atau Email"
+                            autocomplete="username">
+                    </div>
+
+                    <!-- Password -->
+                    <div class="input-container">
+                        <input type="password" id="password-login" placeholder="Password"
+                            autocomplete="current-password">
+                    </div>
+
+                    <!-- Login -->
+                    <button type="submit" class="loginForm-submit">
+                        <span class="btn-text">Log Masuk</span>
+                        <div class="spinner center loginForm-spinner">
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                            <div class="spinner-blade"></div>
+                        </div>
+                    </button>
+
+                    <!-- Register -->
+                    <div class="auth-switch">
+                        <span>Belum mempunyai akaun?</span>
+                        <a id="register-modal-btn" class="register-modal-btn">Daftar sekarang</a>
+                    </div>
+                </div>
+            </div>
+        </form>
         </div>
 
         <div id="register-modal" class="register-modal">
@@ -281,8 +281,7 @@
                     Log Masuk Akaun
                     <i class="fa-solid fa-user"></i>
                 </a>
-                <a class="lihat-profile sidebar-profile-btn" onclick="checkLoginModal('/users/profile/')"
-                    style="display: none">
+                <a class="lihat-profile sidebar-profile-btn" onclick="checkLoginModal('/users/profile/')" style="display: none">
                     Lihat Profile
                     <i class="fa-solid fa-user"></i>
                 </a>
@@ -309,8 +308,7 @@
             <div class="nav-right">
                 <ul>
                     <li>
-                        <a href="/users/notifications/"
-                            class="notification_object notification-button nav-right-button">
+                        <a href="/users/notifications/" class="notification_object notification-button nav-right-button">
                             <i class="notification-count fa-regular fa-bell"></i>
                         </a>
                     </li>
@@ -352,8 +350,7 @@
                 <div class="nav-right">
                     <ul>
                         <li>
-                            <a href="/users/notifications/"
-                                class="notification_object notification-button nav-right-button">
+                            <a href="/users/notifications/" class="notification_object notification-button nav-right-button">
                                 <i class="notification-count fa-regular fa-bell"></i>
                             </a>
                         </li>
@@ -370,6 +367,19 @@
                     </ul>
                 </div>
             </nav>
+        </div>
+
+        <div class="alertbox-overlay"></div>
+
+        <div class="alert-box">
+            <h3>Alert</h3>
+            <p class="alertbox-message">
+                Are you sure you want to do this?
+            </p>
+            <div class="alert-box-footer">
+                <a class="yes-alert-box">Yes</a>
+                <a class="no-alert-box">No</a>
+            </div>
         </div>
     </div>
 
@@ -523,6 +533,40 @@
         </div>
     </section>
 
+    <footer class="desktop-view">
+        <div class="footer-container">
+            <div class="footer-left">
+                <a class="footer-brand" href="/">EasyRent<span>.</span></a>
+                <p>Tempat yang lebih mudah untuk pelajar mencari rumah yang sesuai.</p>
+            </div>
+
+            <div class="footer-right">
+                <div class="footer-column">
+                    <h3>Teroka</h3>
+                    <a href="/#recommendations">Cadangan rumah</a>
+                    <a href="/sudut-pelajar/">Sudut pelajar</a>
+                    <a href="/users/favourite/">Kegemaran</a>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Hubungi kami</h3>
+                    <a href="mailto:info@easyrent.com">
+                        <i class="fa-solid fa-envelope"></i> info@easyrent.com
+                    </a>
+                    <a href="tel:+60185799311">
+                        <i class="fa-solid fa-phone"></i> +60 18 5799-311
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; 2026 EasyRent</span>
+            <span>Dibina untuk kehidupan pelajar yang lebih mudah.</span>
+        </div>
+    </footer>
+
+    <script src="../logout.js"></script>
     <script src="../main.js"></script>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="/js/checkLogin.js"></script>

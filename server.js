@@ -32,44 +32,73 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(cors({
     origin: (origin, callback) => {
-        const allowedOrigins = [
-            "http://localhost:4000",
-            "http://127.0.0.1:4000",
-            "http://[::1]:4000",
-            "null"
-        ];
 
-        const isLocalHost = (value) => {
-            if (!value) return true;
-            try {
-                const url = new URL(value);
-                const hostname = url.hostname;
-                return (
-                    hostname === "localhost" ||
-                    hostname === "127.0.0.1" ||
-                    hostname === "::1" ||
-                    /^192\.168\.|^10\.|^172\.(1[6-9]|2\d|3[0-1])\.|^localhost$/.test(hostname) ||
-                    hostname === "0.0.0.0" ||
-                    hostname.startsWith("file://")
-                );
-            } catch {
-                return false;
-            }
-        };
-
-        if (!origin || allowedOrigins.includes(origin) || isLocalHost(origin) || origin.startsWith("file://")) {
-            callback(null, true);
-            return;
+        // Request tanpa Origin:
+        // curl, Postman, server-side request, dll.
+        if (!origin) {
+            return callback(null, true);
         }
 
-        callback(new Error("Not allowed by CORS"));
+        try {
+            const url = new URL(origin);
+            const hostname = url.hostname;
+
+            const isLocalhost =
+                hostname === "localhost" ||
+                hostname === "127.0.0.1" ||
+                hostname === "::1" ||
+                hostname === "0.0.0.0" ||
+                /^192\.168\./.test(hostname) ||
+                /^10\./.test(hostname) ||
+                /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname);
+
+            const isCloudflareTunnel =
+                hostname.endsWith(".trycloudflare.com");
+
+            const allowedOrigins = [
+                "http://localhost:4000",
+                "http://127.0.0.1:4000",
+                "http://[::1]:4000"
+            ];
+
+            if (
+                allowedOrigins.includes(origin) ||
+                isLocalhost ||
+                isCloudflareTunnel ||
+                origin === "null"
+            ) {
+                return callback(null, true);
+            }
+
+            console.log("❌ CORS blocked:", origin);
+            return callback(new Error("Not allowed by CORS"));
+
+        } catch (err) {
+            console.log("❌ Invalid Origin:", origin);
+            return callback(new Error("Invalid Origin"));
+        }
     },
+
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+
+    methods: [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "OPTIONS"
+    ],
+
+    allowedHeaders: [
+        "Content-Type",
+        "Authorization"
+    ]
 }));
+
 
 app.use(express.static(path.join(__dirname)));
 
@@ -88,7 +117,9 @@ app.post("/api/update-profile", authenticateToken, upload.uploadProfile.single("
 app.patch("/api/change-password", authenticateToken, userHandler.changePassword); // This handle when user want to update their account password
 app.delete("/api/delete-account", authenticateToken, userHandler.userAccountDeletion); // This handle when user want to delete the account
 app.post("/api/users/update-profile", authenticateToken, upload.uploadProfile.single("profileImage"), userHandler.updateProfile); // This handle when user want to update their account profile
-app.get("/api/users/user", userHandler.getPublicProfile); // public profile view
+app.get("/api/profile", userHandler.getPublicProfile); // public profile view
+app.post("/api/change-role", authenticateToken, userHandler.changeRole); // This handle when user want to change their role to normal user
+app.post("/api/users/become-host", authenticateToken, userHandler.becomeHost);
 
 // User Notifications ----------------------------------------------------------
 
@@ -109,6 +140,12 @@ app.post("/api/favourite/toggle", authenticateToken, favHandler.toggleFavourite)
 app.get("/api/house/fetch", houseHandler.fetchHouses);
 app.get("/api/house/my-listings", authenticateToken, houseHandler.fetchUserHouses);
 app.get("/api/house/detail", houseHandler.fetchHouseById);
+// Dapatkan maklumat rumah spesifik pemilik
+app.get("/api/house/my-listings/:id", authenticateToken, houseHandler.fetchHouseByIdForOwner);
+// Update iklan rumah pemilik
+app.put("/api/house/update/:id", authenticateToken, upload.uploadHouse.array("images", 5), houseHandler.updateHouse);
+app.delete("/api/house/delete/:id", authenticateToken, houseHandler.deleteHouse);
+app.patch("/api/house/status/:id", authenticateToken, houseHandler.updateHouseStatus);
 
 // Chat Handler ----------------------------------------------------------------
 

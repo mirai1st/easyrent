@@ -258,7 +258,15 @@ async function getPublicProfile(req, res) {
             [username]
         );
 
-        // 3. Formatkan Gambar Rumah
+        // 3. Ambil Siaran Sudut Pelajar dari Jadual sppost
+        const [spPosts] = await db.execute(
+            `SELECT spID, username, content, imgFile, commentCount, likeCount 
+             FROM spPost WHERE username = ? 
+             ORDER BY spID DESC`,
+            [username]
+        );
+
+        // 4. Formatkan Gambar Rumah
         const listings = houses.map(house => {
             let images = [];
             try {
@@ -289,7 +297,36 @@ async function getPublicProfile(req, res) {
             };
         });
 
-        // 4. Hantar JSON Response
+        // 5. Formatkan Siaran Sudut Pelajar (sppost)
+        const posts = spPosts.map(post => {
+            let parsedImg = null;
+
+            if (post.imgFile) {
+                try {
+                    const parsed = typeof post.imgFile === 'string' ? JSON.parse(post.imgFile) : post.imgFile;
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        parsedImg = parsed[0];
+                    } else if (typeof parsed === 'string') {
+                        parsedImg = parsed;
+                    }
+                } catch (e) {
+                    parsedImg = post.imgFile;
+                }
+            }
+
+            const filename = parsedImg ? String(parsedImg).split(/[\\/]/).pop() : null;
+
+            return {
+                spID: post.spID,
+                username: post.username,
+                content: post.content,
+                img_url: filename ? `/userdata/uploads/sp/${filename}` : null,
+                commentCount: post.commentCount || 0,
+                likeCount: post.likeCount || 0
+            };
+        });
+
+        // 6. Hantar JSON Response
         return res.json({
             success: true,
             user: {
@@ -299,11 +336,12 @@ async function getPublicProfile(req, res) {
                 phoneNo: user.phoneNo || 'Tidak dinyatakan',
                 address: user.address || 'Belum dikemaskini',
                 description: user.description || 'Belum ada biografi.',
-                profileImg_url: user.profileImg_url ? `/userdata/uploads/profileImg/${user.profileImg_url}` : null,
+                profileImg_url: user.profileImg_url ? `/userdata/uploads/profileImg/${user.profileImg_url.split(/[\\/]/).pop()}` : null,
                 role: user.role,
                 dateCreated: user.dateCreated
             },
-            listings
+            listings,
+            posts
         });
 
     } catch (error) {
@@ -352,6 +390,147 @@ async function suspendUser(req, res) {
     }
 }
 
+async function changeRole(req, res) {
+    // Guna connection daripada pool untuk mulakan transaction
+    const connection = await db.getConnection();
+
+    try {
+        const username = req.user.username;
+
+        const [rows] = await connection.execute(
+            "SELECT role FROM Users WHERE username = ? LIMIT 1",
+            [username]
+        );
+
+        if (!rows[0]) {
+            connection.release();
+            return res.status(404).json({
+                success: false,
+                message: "Pengguna tidak dijumpai."
+            });
+        }
+
+        if (rows[0].role === "Admin") {
+            connection.release();
+            return res.status(403).json({
+                success: false,
+                message: "Admin tidak boleh menukar peranan."
+            });
+        }
+
+        if (rows[0].role === "Pengguna") {
+            connection.release();
+            return res.status(400).json({
+                success: false,
+                message: "Anda sudah pun pengguna biasa."
+            });
+        }
+
+        // Mulakan transaction
+        await connection.beginTransaction();
+
+        // 1. Tukar peranan pengguna dalam jadual Users
+        await connection.execute(
+            "UPDATE Users SET role = ? WHERE username = ?",
+            ["Pengguna", username] // Guna 'student' jika role pengguna biasa disimpan sebagai 'student'
+        );
+
+        // 2. Setkan status semua rumah milik pengguna ini kepada isActive = 'false'
+        await connection.execute(
+            "UPDATE Rent SET isActive = 'false' WHERE username = ?",
+            [username]
+        );
+
+        // Commit transaction jika kedua-dua query berjaya
+        await connection.commit();
+
+        return res.json({
+            success: true,
+            message: "Peranan berjaya ditukar kepada pengguna biasa dan semua siaran telah dinyahaktifkan."
+        });
+
+    } catch (error) {
+        // Rollback sekiranya berlaku sebarang ralat
+        await connection.rollback();
+        console.error("Error changing role:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Ralat server ketika menukar peranan."
+        });
+    } finally {
+        // Lepaskan connection kembali ke pool
+        connection.release();
+    }
+}
+
+async function becomeHost(req, res) {
+    const username = req.user.username;
+    const { role } = req.body;
+
+    const roleMap = {
+        owner: 'Tuan Rumah',
+        agent: 'Ejen Hartanah'
+    };
+
+    const newRole = roleMap[role];
+    if (!newRole) {
+        return res.status(400).json({ success: false, message: 'Peranan tidak sah.' });
+    }
+
+    // Dapatkan connection khas untuk transaction
+    const connection = await db.getConnection();
+
+    try {
+        const [rows] = await connection.execute(
+            'SELECT role FROM Users WHERE username = ? LIMIT 1',
+            [username]
+        );
+
+        if (rows.length === 0) {
+            connection.release();
+            return res.status(404).json({ success: false, message: 'Pengguna tidak dijumpai.' });
+        }
+
+        // Jangan turunkan pangkat Admin atau tukar semula tuan rumah sedia ada
+        if (['Admin', 'Tuan Rumah', 'Ejen Hartanah'].includes(rows[0].role)) {
+            connection.release();
+            return res.status(400).json({ success: false, message: 'Anda sudah berdaftar sebagai tuan rumah.' });
+        }
+
+        // Mulakan transaction
+        await connection.beginTransaction();
+
+        // 1. Kemas kini role pengguna kepada Tuan Rumah / Ejen Hartanah
+        await connection.execute(
+            'UPDATE Users SET role = ? WHERE username = ?',
+            [newRole, username]
+        );
+
+        // 2. Aktifkan semula (reactivate) semua rumah milik pengguna ini yang pernah di-archive
+        await connection.execute(
+            "UPDATE Rent SET isActive = 'true' WHERE username = ?",
+            [username]
+        );
+
+        // Commit transaction
+        await connection.commit();
+
+        return res.json({ 
+            success: true, 
+            message: 'Pendaftaran tuan rumah berjaya dan siaran lama anda telah diaktifkan semula.' 
+        });
+
+    } catch (error) {
+        // Rollback sekiranya ada ralat
+        await connection.rollback();
+        console.error('becomeHost error:', error);
+        return res.status(500).json({ success: false, message: 'Ralat server. Sila cuba lagi.' });
+    } finally {
+        // Lepaskan connection kembali ke pool
+        connection.release();
+    }
+}
+
 module.exports = { 
     getProfile, 
     updateProfile, 
@@ -359,5 +538,7 @@ module.exports = {
     userLogout, 
     userAccountDeletion,
     getPublicProfile,
-    suspendUser
+    suspendUser,
+    changeRole,
+    becomeHost
 };

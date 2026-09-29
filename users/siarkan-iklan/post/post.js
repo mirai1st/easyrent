@@ -418,6 +418,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    async function initProfile() {
+        const [{ user, error }] = await Promise.all([loadUser(), domReady()]);
+    
+        // belum login atau gagal load user: biar page ni kekal (elak TypeError bila user null)
+        if (error || !user) return;
+    
+        const skipRoles = ["Tuan Rumah", "Ejen Hartanah", "Admin"];
+    
+        if (!skipRoles.includes(user.role)) {
+            // replace() supaya butang back tak terperangkap dalam redirect loop
+            window.location.replace("/users/siarkan-iklan/?error=10");
+        }
+    }
+    
+    initProfile();
+
     // Render awal bila page load
     renderImages();
 });

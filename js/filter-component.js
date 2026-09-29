@@ -65,15 +65,15 @@
                 </div>
             </div>
 
-            <!-- BILIK AIR -->
+            <!-- BILIK TIDUR -->
             <div class="filter-button">
                 <table>
-                    <td width="25px"><i class="fa-solid fa-shower"></i></td>
-                    <td>Bilik Air</td>
-                    <td style="text-align: right;"><span class="data" data-summary="bilikAir"></span>&nbsp&nbsp <i class="fa-solid fa-chevron-down"></i></td>
+                    <td width="25px"><i class="fa-solid fa-bed fa-sm"></i></td>
+                    <td>Bilangan Bilik Tidur</td>
+                    <td style="text-align: right;"><span class="data" data-summary="bilikTidur"></span>&nbsp&nbsp <i class="fa-solid fa-chevron-down"></i></td>
                 </table>
                 <div class="filter-content">
-                    <div class="stepper" data-filter-key="bilikAir">
+                    <div class="stepper" data-filter-key="bilikTidur">
                         <button type="button" class="stepper-btn minus">−</button>
                         <span class="stepper-value">1</span>
                         <button type="button" class="stepper-btn plus">+</button>
@@ -81,15 +81,15 @@
                 </div>
             </div>
 
-            <!-- BILIK TIDUR -->
+            <!-- BILIK AIR -->
             <div class="filter-button">
                 <table>
-                    <td width="25px"><i class="fa-solid fa-bed fa-sm"></i></td>
-                    <td>Bilik Tidur</td>
-                    <td style="text-align: right;"><span class="data" data-summary="bilikTidur"></span>&nbsp&nbsp <i class="fa-solid fa-chevron-down"></i></td>
+                    <td width="25px"><i class="fa-solid fa-shower"></i></td>
+                    <td>Bilangan Bilik Air</td>
+                    <td style="text-align: right;"><span class="data" data-summary="bilikAir"></span>&nbsp&nbsp <i class="fa-solid fa-chevron-down"></i></td>
                 </table>
                 <div class="filter-content">
-                    <div class="stepper" data-filter-key="bilikTidur">
+                    <div class="stepper" data-filter-key="bilikAir">
                         <button type="button" class="stepper-btn minus">−</button>
                         <span class="stepper-value">1</span>
                         <button type="button" class="stepper-btn plus">+</button>
@@ -117,7 +117,7 @@
             <div class="filter-button">
                 <table>
                     <td width="25px"><i class="fa-regular fa-user"></i></td>
-                    <td>Jantina <br><span class="subtitle"><span class="data" data-summary="jantina"></span></span></td>
+                    <td>Pilihan Jantina <br><span class="subtitle"><span class="data" data-summary="jantina"></span></span></td>
                     <td style="text-align: right;"><i class="fa-solid fa-chevron-down"></i></td>
                 </table>
                 <div class="filter-content">
@@ -186,19 +186,6 @@
     let injected = false;
     let elOverlay, elContainer;
 
-    /**
-     * Injects filter component markup into the DOM (executes only once)
-     * Steps:
-     * 1. Checks if already injected to prevent duplicates
-     * 2. Removes any old static filter markup to avoid duplicate IDs
-     * 3. Injects scoped CSS for the institution dropdown
-     * 4. Creates filter markup from FILTER_HTML template
-     * 5. Appends overlay and container to document body
-     * 6. Caches element references (elOverlay, elContainer)
-     * 7. Binds all event listeners to inputs and controls
-     * 8. Applies saved state values to input fields
-     * 9. Updates summary preview text in each filter button header
-     */
     function inject() {
         if (injected) return;
 
@@ -359,33 +346,51 @@
      * Removes 'enabled' class from both overlay and container to trigger CSS animations
      * Does nothing if component hasn't been injected yet
      */
+    /**
+     * Closes the filter bottom-sheet component with slide-down animation
+     * Removes 'enabled' class from both overlay and container to trigger CSS animations
+     * Also collapses all accordion sections so they start closed next time
+     * Does nothing if component hasn't been injected yet
+     */
     function close() {
         if (!injected) return;
         elOverlay.classList.remove('enabled');
         elContainer.classList.remove('enabled');
         closeInstitutionDropdown();
+
+        // tutup semua seksyen accordion
+        elContainer.querySelectorAll('.filter-button').forEach((btn) => {
+            btn.classList.remove('active');
+        });
     }
 
     /**
      * Wires up all interactive event listeners for the filter component
-     * Handles:
-     * - Close button and overlay click events
-     * - Accordion toggle for each filter section
-     * - Institution search input (open/filter/select dropdown)
-     * - Stepper increment/decrement buttons for bathroom and bedroom counts
-     * - Price range input validation and updates
-     * - Gender radio button selection changes
+     */
+    /**
+     * Wires up all interactive event listeners for the filter component
      */
     function bindEvents() {
         // Close via overlay click or close button
         elOverlay.addEventListener('click', close);
         elContainer.querySelector('.js-close-filter').addEventListener('click', close);
 
-        // Accordion: toggle each filter-button's content section independently
-        elContainer.querySelectorAll('.filter-button').forEach((btn) => {
+        // Accordion: hanya satu seksyen boleh terbuka pada satu masa
+        const sections = elContainer.querySelectorAll('.filter-button');
+
+        sections.forEach((btn) => {
             const table = btn.querySelector('table');
             table.addEventListener('click', () => {
-                btn.classList.toggle('active');
+                const wasActive = btn.classList.contains('active');
+
+                // tutup semua seksyen dulu
+                sections.forEach((other) => other.classList.remove('active'));
+
+                // buka seksyen yang ditekan (kalau dia tengah terbuka, biar tertutup)
+                if (!wasActive) btn.classList.add('active');
+
+                // tutup dropdown institusi sekali kalau tengah terbuka
+                closeInstitutionDropdown();
             });
         });
 

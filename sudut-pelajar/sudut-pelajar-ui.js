@@ -17,21 +17,17 @@ async function loadCurrentUser() {
     }
 }
 
-// 2. Ambil senarai ID post yang di-like (disimpan sebagai STRING)
+// 2. Ambil senarai ID post yang di-like
 async function loadLikedPosts() {
     likedPostIds = new Set();
-    if (!currentUsername) return; // Belum log masuk
+    if (!currentUsername) return;
 
     try {
-        // Guna endpoint /api/v1/sp/likes
         const res = await fetch("/api/v1/sp/likes");
-        
-        // Elak SyntaxError jika server pulangkan 404/500 HTML
-        if (!res.ok) return; 
+        if (!res.ok) return;
 
         const data = await res.json();
         if (data.success && Array.isArray(data.spIds)) {
-            // Tukar semua ID ke String supaya perbandingan .has() sentiasa TEPAT
             likedPostIds = new Set(data.spIds.map(id => String(id)));
         }
     } catch (err) {
@@ -58,33 +54,39 @@ function scrollToPostFromHash() {
 }
 
 function bindCommunityFilters() {
-    const filters = document.querySelectorAll(".community-pill");
-    if (!filters.length) return;
+    const btnSemua = document.querySelector('.community-pill:nth-child(1)');
+    const btnAnda = document.querySelector('.community-pill:nth-child(2)');
 
-    filters.forEach((button) => {
-        button.addEventListener("click", async () => {
-            const nextScope = button.textContent.includes("Anda") ? "mine" : "all";
+    if (btnSemua) {
+        btnSemua.addEventListener('click', () => {
+            btnSemua.classList.add('active');
+            if (btnAnda) btnAnda.classList.remove('active');
+            
+            // Direct fetch semua post dari backend
+            fetchAndRenderPosts('all');
+        });
+    }
 
-            if (nextScope === "mine" && !currentUsername) {
+    if (btnAnda) {
+        btnAnda.addEventListener('click', () => {
+            if (!currentUsername) {
                 showNotification("Sila log masuk untuk melihat hantaran anda.", "error", 3000);
                 return;
             }
 
-            activeCommunityScope = nextScope;
-            filters.forEach((item) => item.classList.toggle("active", item === button));
-            await fetchAndRenderPosts(activeCommunityScope);
+            btnAnda.classList.add('active');
+            if (btnSemua) btnSemua.classList.remove('active');
+
+            // Direct fetch post pengguna dari backend
+            fetchAndRenderPosts('mine');
         });
-    });
+    }
 }
 
 // Dom Content Loaded Sequence
 document.addEventListener("DOMContentLoaded", async () => {
     bindCommunityFilters();
-
-    // MESTI tunggu loadCurrentUser siap 100% dulu
     await loadCurrentUser();
-
-    // Kemudian baru fetch posts & likes
     await fetchAndRenderPosts(activeCommunityScope);
     scrollToPostFromHash();
 });
@@ -109,10 +111,9 @@ function avatarHtml(name, imgUrl) {
     return `<div class="sp-avatar">${initial}${img}</div>`;
 }
 
-// 3. Ambil Posts & Likes secara berurutan supaya data lengkap sebelum lukis UI
+// 3. Ambil Posts & Likes secara berurutan
 async function fetchAndRenderPosts(scope = activeCommunityScope) {
     try {
-        // Ambil liked posts dulu
         await loadLikedPosts();
 
         const url = scope === "mine"
@@ -168,10 +169,14 @@ function renderFeed(posts) {
     `;
 
     if (!posts || posts.length === 0) {
+        const emptyText = activeCommunityScope === "mine"
+            ? "Anda belum membuat sebarang hantaran. Cipta hantaran pertama anda di atas!"
+            : "Tiada hantaran lagi. Mulakan perbincangan pertama anda!";
+
         html += `
             <div class="sp-empty">
                 <i class="fa-regular fa-comments fa-2x"></i>
-                <p>Tiada hantaran lagi. Mulakan perbincangan pertama anda!</p>
+                <p>${emptyText}</p>
             </div>
         `;
     } else {
@@ -195,7 +200,6 @@ function renderFeed(posts) {
                     </button>`
                 : "";
 
-            // PERBAIKAN PENTING: Paksa post.spId jadi String semasa check .has()
             const isLiked = likedPostIds.has(String(post.spId));
 
             html += `
@@ -203,7 +207,7 @@ function renderFeed(posts) {
                     <div class="sp-post-header">
                         <div class="sp-user-info">
                             ${avatarHtml(displayName, post.profileImg_url)}
-                            <div class="sp-user-details">
+                            <div class="sp-user-details" title="Lihat Profile" onclick="window.location.href = '/users/profile/lookup/?username=${escapeHtml(post.username)}'">
                                 <h4>${escapeHtml(displayName)}</h4>
                                 <span>@${escapeHtml(post.username)}</span>
                             </div>
@@ -226,7 +230,7 @@ function renderFeed(posts) {
                         </button>
                     </div>
 
-                    <div id="comments-section-${post.spId}" class="sp-comments-section">
+                    <div id="comments-section-${post.spId}" class="sp-comments-section" style="display:none;">
                         <div id="comments-list-${post.spId}">
                             <em style="font-size: 12px; color: #7a6359;">Memuatkan komen...</em>
                         </div>
@@ -242,6 +246,7 @@ function renderFeed(posts) {
 
     feedContainer.innerHTML = html;
 
+    // Pasangkan semula event listener submit post
     const btnSubmit = document.getElementById("btn-submit-post");
     if (btnSubmit) {
         btnSubmit.addEventListener("click", handleCreatePost);
@@ -264,8 +269,10 @@ function previewImage(event) {
 function removeSelectedImage() {
     const fileInput = document.getElementById("post-img-input");
     if (fileInput) fileInput.value = "";
-    document.getElementById("image-preview-container").style.display = "none";
-    document.getElementById("image-preview").src = "";
+    const previewContainer = document.getElementById("image-preview-container");
+    if (previewContainer) previewContainer.style.display = "none";
+    const previewImg = document.getElementById("image-preview");
+    if (previewImg) previewImg.src = "";
 }
 
 // 5. Tambah Post Baru
@@ -275,7 +282,11 @@ async function handleCreatePost() {
     const content = input.value.trim();
 
     if (!content && (!imgInput.files || imgInput.files.length === 0)) {
-        showNotification("Sila taip atau memuat naik sekurang-kurangnya satu gambar.", "error", 3000);
+        if (typeof showNotification === "function") {
+            showNotification("Sila taip atau memuat naik sekurang-kurangnya satu gambar.", "error", 3000);
+        } else {
+            alert("Sila taip atau memuat naik sekurang-kurangnya satu gambar.");
+        }
         return;
     }
 
@@ -297,9 +308,13 @@ async function handleCreatePost() {
             input.value = "";
             removeSelectedImage();
             fetchAndRenderPosts();
-            showNotification("Post anda telah pun berjaya disiarkan!", "success", 3000);
+            if (typeof showNotification === "function") {
+                showNotification("Post anda telah pun berjaya disiarkan!", "success", 3000);
+            }
         } else {
-            showNotification("Sila log masuk akaun sebelum membuat siaran", "error", 3000);
+            if (typeof showNotification === "function") {
+                showNotification("Sila log masuk akaun sebelum membuat siaran", "error", 3000);
+            }
         }
     } catch (err) {
         console.error("Error creating post:", err);
@@ -315,9 +330,13 @@ async function handleDeletePost(spID) {
         const data = await res.json();
         if (data.success) {
             fetchAndRenderPosts();
-            showNotification("Post anda telah dipadamkan.", "success", 3000);
+            if (typeof showNotification === "function") {
+                showNotification("Post anda telah dipadamkan.", "success", 3000);
+            }
         } else {
-            showNotification("Maaf, anda tidak boleh memadam siaran orang lain.", "error", 3000);
+            if (typeof showNotification === "function") {
+                showNotification("Maaf, anda tidak boleh memadam siaran orang lain.", "error", 3000);
+            }
         }
     } catch (err) {
         console.error("Error deleting post:", err);
@@ -327,7 +346,9 @@ async function handleDeletePost(spID) {
 // 7. Like / Unlike Post
 async function handleLikePost(spID, btn) {
     if (!currentUsername) {
-        showNotification("Sila log masuk untuk menyukai hantaran ini.", "error", 3000);
+        if (typeof showNotification === "function") {
+            showNotification("Sila log masuk untuk menyukai hantaran ini.", "error", 3000);
+        }
         return;
     }
 
@@ -348,22 +369,26 @@ async function handleLikePost(spID, btn) {
             const icon = btn.querySelector("i");
             if (icon) icon.className = `fa-${data.liked ? "solid" : "regular"} fa-heart`;
 
-            // Kemaskini Set tempatan supaya sync serta-merta
             if (data.liked) {
                 likedPostIds.add(String(spID));
             } else {
                 likedPostIds.delete(String(spID));
             }
 
-            showNotification(data.liked ? "Disukai dan disimpan ke Kegemaran." : "Dibuang dari Kegemaran.", "success", 2000);
+            if (typeof showNotification === "function") {
+                showNotification(data.liked ? "Disukai dan disimpan ke Kegemaran." : "Dibuang dari Kegemaran.", "success", 2000);
+            }
         } else if (res.status === 401) {
-            showNotification("Sila log masuk untuk menyukai hantaran ini.", "error", 3000);
+            if (typeof showNotification === "function") {
+                showNotification("Sila log masuk untuk menyukai hantaran ini.", "error", 3000);
+            }
         } else {
-            showNotification("Gagal menyukai hantaran. Cuba lagi.", "error", 3000);
+            if (typeof showNotification === "function") {
+                showNotification("Gagal menyukai hantaran. Cuba lagi.", "error", 3000);
+            }
         }
     } catch (err) {
         console.error("Error liking post:", err);
-        showNotification("Gagal menyukai hantaran. Cuba lagi.", "error", 3000);
     } finally {
         btn.disabled = false;
     }
@@ -377,6 +402,8 @@ function adjustCommentCount(spID, delta) {
 // 8. Komen Logic
 function toggleComments(spID) {
     const section = document.getElementById(`comments-section-${spID}`);
+    if (!section) return;
+
     if (section.style.display === "none" || section.style.display === "") {
         section.style.display = "block";
         fetchAndRenderComments(spID);
@@ -387,6 +414,8 @@ function toggleComments(spID) {
 
 async function fetchAndRenderComments(spID) {
     const commentsList = document.getElementById(`comments-list-${spID}`);
+    if (!commentsList) return;
+
     try {
         const res = await fetch(`/api/v1/sp/posts/${spID}/comments`);
         const data = await res.json();
@@ -425,7 +454,9 @@ async function fetchAndRenderComments(spID) {
             commentsList.innerHTML = html;
         }
     } catch (err) {
-        showNotification("Ralat ketika memuatkan komen", "error", 3000);
+        if (typeof showNotification === "function") {
+            showNotification("Ralat ketika memuatkan komen", "error", 3000);
+        }
         commentsList.innerHTML = `<p style="color:red; font-size: 12px;">Gagal memuatkan komen.</p>`;
     }
 }
@@ -435,7 +466,9 @@ async function handleSendComment(spID) {
     const content = input.value.trim();
 
     if (!content) {
-        showNotification("Sila taip komen terlebih dahulu", "error", 3000);
+        if (typeof showNotification === "function") {
+            showNotification("Sila taip komen terlebih dahulu", "error", 3000);
+        }
         return;
     }
 
@@ -451,9 +484,13 @@ async function handleSendComment(spID) {
             input.value = "";
             adjustCommentCount(spID, 1);
             fetchAndRenderComments(spID);
-            showNotification("Komen anda telah berjaya dihantar!", "success", 3000);
+            if (typeof showNotification === "function") {
+                showNotification("Komen anda telah berjaya dihantar!", "success", 3000);
+            }
         } else {
-            showNotification("Sila log masuk sebelum membuat komen.", "error", 3000);
+            if (typeof showNotification === "function") {
+                showNotification("Sila log masuk sebelum membuat komen.", "error", 3000);
+            }
         }
     } catch (err) {
         console.error("Error sending comment:", err);
@@ -469,9 +506,13 @@ async function handleDeleteComment(commentId, spID) {
         if (data.success) {
             adjustCommentCount(spID, -1);
             fetchAndRenderComments(spID);
-            showNotification("Komen anda telah berjaya dipadamkan.", "success", 3000);
+            if (typeof showNotification === "function") {
+                showNotification("Komen anda telah berjaya dipadamkan.", "success", 3000);
+            }
         } else {
-            showNotification("Gagal memadam komen.", "error", 3000);
+            if (typeof showNotification === "function") {
+                showNotification("Gagal memadam komen.", "error", 3000);
+            }
         }
     } catch (err) {
         console.error("Error deleting comment:", err);

@@ -87,7 +87,6 @@ nav a {
 #top {
     padding: 100px 150px;
     transition: padding 0.3s ease;
-    
 }
 
 .profile-container {
@@ -104,19 +103,6 @@ nav a {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
-
-.footer-container {
-    margin-top: 12px;
-    border: 1px solid #00000023;
-    border-radius: 12px;
-    background-color: white;
-    overflow: hidden;
-    padding: 20px;
-    flex: 0 0 260px;
-    align-self: flex-start;
-}
-
 
 /* From Uiverse.io by Na3ar-17 */ 
 .radio-input {
@@ -508,10 +494,11 @@ nav a {
 }
 
 /* =========================
-   MOBILE
+   MOBILE + TABLET (<= 1024px)
+   Tablet guna design mobile yang sama
 ========================= */
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     #top {
         padding: 90px 15px 30px;
     }
@@ -559,7 +546,8 @@ nav a {
         padding: 10px 0;
     }
 
-    .desktop-view {
+    /* :not(nav) supaya navbar desktop (nav.desktop-view) tak ikut tersorok di tablet */
+    .desktop-view:not(nav) {
         display: none;
     }
 
@@ -577,5 +565,11 @@ nav a {
     }
 }
 
-/* Alert box */
+/* Navbar desktop hanya disembunyikan pada lebar mobile sebenar (nav mobile ambil alih) */
+@media (max-width: 768px) {
+    nav.desktop-view {
+        display: none;
+    }
+}
 
+/* Alert box */

@@ -204,80 +204,89 @@ async function setupSaveButton(house) {
 }
 
 function renderHouse(house) {
-	const images = house.images?.length ? house.images : ['https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85'];
-	const gallery = images.map((image, index) => `
-		<div class="gallery-slide ${index === 0 ? 'is-active' : ''}" aria-hidden="${index === 0 ? 'false' : 'true'}">
-			<img src="${escapeHtml(image)}" alt="${escapeHtml(house.title)} - gambar ${index + 1}" loading="${index ? 'lazy' : 'eager'}">
-		</div>
-	`).join('');
-	const galleryDots = images.map((_, index) => `
-		<button class="gallery-dot ${index === 0 ? 'is-active' : ''}" type="button" aria-label="Lihat gambar ${index + 1}" aria-current="${index === 0 ? 'true' : 'false'}"></button>
-	`).join('');
+    const images = house.images?.length ? house.images : ['https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85'];
+    
+    // Dibetulkan: Dibalut dengan quotes `'${escapeHtml(image)}'` di dalam onclick
+    const gallery = images.map((image, index) => `
+        <div class="gallery-slide ${index === 0 ? 'is-active' : ''}" aria-hidden="${index === 0 ? 'false' : 'true'}">
+            <img onclick="window.open(encodeURI('${escapeHtml(image)}'), '_blank');" src="${escapeHtml(image)}" alt="${escapeHtml(house.title)} - gambar ${index + 1}" loading="${index ? 'lazy' : 'eager'}">
+        </div>
+    `).join('');
 
-	let gender = "Semua Jantina";
+    const galleryDots = images.map((_, index) => `
+        <button class="gallery-dot ${index === 0 ? 'is-active' : ''}" type="button" aria-label="Lihat gambar ${index + 1}" aria-current="${index === 0 ? 'true' : 'false'}"></button>
+    `).join('');
 
-	if (house.gender && house.gender !== "Semua") {
-		gender = `${house.gender} Sahaja`;
-	}
+    let gender = "Semua Jantina";
 
-	detailRoot.innerHTML = `
-		<div class="detail-gallery" aria-label="Galeri gambar rumah">
-			<div class="gallery-viewport">${gallery}</div>
-			<button class="gallery-control gallery-prev" type="button" aria-label="Gambar sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
-			<button class="gallery-control gallery-next" type="button" aria-label="Gambar seterusnya"><i class="fa-solid fa-chevron-right"></i></button>
-			<div class="gallery-dots">${galleryDots}</div>
-			<span class="gallery-count">1 / ${images.length}</span>
-		</div>
-		<div class="detail-heading">
-			<div>
-				<p class="detail-eyebrow"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(house.location || 'Lokasi tidak dinyatakan')}</p>
-				<h1>${escapeHtml(house.title)}</h1>
-				<p class="detail-meta">Disiarkan oleh <strong><a href="/users/user/?username=${encodeURIComponent(house.originalposter || 'Tuan rumah')}" class="poster-link">@${escapeHtml(house.originalposter || 'Tuan rumah')}</a></strong> · ${formatDate(house.dateCreated)}</p>
-			</div>
-			<button class="save-house" type="button" aria-label="Simpan rumah ini" aria-pressed="false"><i class="fa-regular fa-heart"></i></button>
-		</div>
-		<div class="detail-layout">
-			<div class="detail-main">
-				<section class="detail-section facts-section">
-					<div class="fact"><i class="fa-solid fa-bed"></i><span><strong>${house.totalRoom || 0}</strong> bilik tidur</span></div>
-					<div class="fact"><i class="fa-solid fa-shower"></i><span><strong>${house.totalShower || 0}</strong> bilik air</span></div>
-					<div class="fact"><i class="fa-solid fa-graduation-cap"></i><span><strong>${escapeHtml(house.targetInstitution || 'Pelajar')}</strong> Institusi Sasaran</span></div>
-					<div class="fact"><i class="fa-solid fa-users"></i><span><strong>${gender}</strong></span></div>
-				</section>
-				<section class="detail-section">
-					<h2>Perihal rumah</h2>
-					<p class="description">${escapeHtml(house.description || 'Tuan rumah belum menambah penerangan untuk iklan ini.')}</p>
-				</section>
-				<section class="detail-section location-section">
-					<h2>Lokasi</h2>
-					<p><i class="fa-solid fa-location-dot"></i> ${escapeHtml(house.location || 'Lokasi tidak dinyatakan')}</p>
-					<br>
-					<h4>Berikut adalah peta jarak dari rumah ke ${escapeHtml(house.targetInstitution || 'Pelajar')}</h4>
-					<div id="house-map" class="map-placeholder"><i class="fa-solid fa-map-location-dot"></i><span>Memuatkan peta jarak...</span></div>
+    if (house.gender && house.gender !== "Semua") {
+        gender = `${house.gender} Sahaja`;
+    }
 
-					<div class="street-view-section">
-						<div class="street-view-heading">
-							<h3><i class="fa-solid fa-street-view"></i> Street View</h3>
-							<span>Lihat kawasan sekitar rumah</span>
-						</div>
-						${createStreetViewMarkup(house)}
-					</div>
+    const isBooked = house.isBooked === true || house.isBooked === 'true';
 
-					<br>
+    let status_sewa = `<div class="price">RM ${formatPrice(house.price)} <small>/bulan</small></div>`;
+    if (isBooked) {
+        status_sewa = `<div class="price">Telah Disewakan</div>`;
+    }
+
+    detailRoot.innerHTML = `
+        <div class="detail-gallery" aria-label="Galeri gambar rumah">
+            <div class="gallery-viewport">${gallery}</div>
+            <button class="gallery-control gallery-prev" type="button" aria-label="Gambar sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="gallery-control gallery-next" type="button" aria-label="Gambar seterusnya"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="gallery-dots">${galleryDots}</div>
+            <span class="gallery-count">1 / ${images.length}</span>
+        </div>
+        <div class="detail-heading">
+            <div>
+                <p class="detail-eyebrow"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(house.location || 'Lokasi tidak dinyatakan')}</p>
+                <h1>${escapeHtml(house.title)}</h1>
+                <p class="detail-meta">Disiarkan oleh <strong><a href="/users/profile/lookup/?username=${encodeURIComponent(house.originalposter || 'Tuan rumah')}" class="poster-link">@${escapeHtml(house.originalposter || 'Tuan rumah')}</a></strong> · ${formatDate(house.dateCreated)}</p>
+            </div>
+            <button class="save-house" type="button" aria-label="Simpan rumah ini" aria-pressed="false"><i class="fa-regular fa-heart"></i></button>
+        </div>
+        <div class="detail-layout">
+            <div class="detail-main">
+                <section class="detail-section facts-section">
+                    <div class="fact"><i class="fa-solid fa-bed"></i><span><strong>${house.totalRoom || 0}</strong> bilik tidur</span></div>
+                    <div class="fact"><i class="fa-solid fa-shower"></i><span><strong>${house.totalShower || 0}</strong> bilik air</span></div>
+                    <div class="fact"><i class="fa-solid fa-graduation-cap"></i><span><strong>${escapeHtml(house.targetInstitution || 'Pelajar')}</strong> Institusi Sasaran</span></div>
+                    <div class="fact"><i class="fa-solid fa-users"></i><span><strong>${gender}</strong></span></div>
+                </section>
+                <section class="detail-section">
+                    <h2>Perihal rumah</h2>
+                    <p class="description">${escapeHtml(house.description || 'Tuan rumah belum menambah penerangan untuk iklan ini.')}</p>
+                </section>
+                <section class="detail-section location-section">
+                    <h2>Lokasi</h2>
+                    <p><i class="fa-solid fa-location-dot"></i> ${escapeHtml(house.location || 'Lokasi tidak dinyatakan')}</p>
+                    <br>
+                    <h4>Berikut adalah peta jarak dari rumah ke ${escapeHtml(house.targetInstitution || 'Pelajar')}</h4>
+                    <div id="house-map" class="map-placeholder"><i class="fa-solid fa-map-location-dot"></i><span>Memuatkan peta jarak...</span></div>
+
+                    <div class="street-view-section">
+                        <div class="street-view-heading">
+                            <h3><i class="fa-solid fa-street-view"></i> Street View</h3>
+                            <span>Lihat kawasan sekitar rumah</span>
+                        </div>
+                        ${createStreetViewMarkup(house)}
+                    </div>
+
+                    <br>
                     <p>Maklumat peta ini adalah berdasarkan API leaflet (OpenStreetMap), Google Street View berdasarkan API Google Maps</p>
                 </section>
-			</div>
-			<aside class="contact-card">
-				<div class="price-label">Sewa bulanan</div>
-				<div class="price">RM ${formatPrice(house.price)} <small>/bulan</small></div>
-				<div class="contact-divider"></div>
-				<p>Minat dengan rumah ini? Hubungi tuan rumah untuk semak ketersediaan dan buat lawatan.</p>
-				<button class="contact-button" type="button"><i class="fa-regular fa-message"></i> Hubungi tuan rumah</button>
-				<p class="contact-note"><i class="fa-solid fa-shield-heart"></i> Jangan buat bayaran sebelum melihat rumah.</p>
-			</aside>
-		</div>
-        
-	`;
+            </div>
+            <aside class="contact-card">
+                <div class="price-label">Sewa bulanan</div>
+                ${status_sewa}
+                <div class="contact-divider"></div>
+                <p>Minat dengan rumah ini? Hubungi tuan rumah untuk semak ketersediaan dan buat lawatan.</p>
+                <button class="contact-button" type="button" ${isBooked ? 'disabled' : ''}><i class="fa-regular fa-message"></i> Hubungi tuan rumah</button>
+                <p class="contact-note"><i class="fa-solid fa-shield-heart"></i> Jangan buat bayaran sebelum melihat rumah.</p>
+            </aside>
+        </div>
+    `;
 
 	const galleryRoot = detailRoot.querySelector('.detail-gallery');
 	const slides = [...galleryRoot.querySelectorAll('.gallery-slide')];
@@ -329,7 +338,7 @@ async function contact(posterUsername) {
     }
 
 	if (user.username == posterUsername) {
-		showNotification("You cannot chat with yourself!", "error", 3000);
+		showNotification("Anda tidak boleh mesej diri sendiri!", "error", 3000);
 		return;
 	}
 

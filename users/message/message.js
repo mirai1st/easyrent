@@ -342,6 +342,7 @@ async function markConversationRead(conversationId) {
         });
 
         updateGlobalUnreadBadge();
+        loadMessageCount();
     } catch (err) {
         console.error("Mark as read error:", err);
     }
@@ -395,6 +396,16 @@ function updateChatHeader(username, avatar = null) {
 
     const desktopUsername = document.getElementById("desktopChatUserName");
     const mobileUsername = document.getElementById("mobileChatUserName");
+
+    if (desktopUsername || mobileUsername){
+        desktopUsername.addEventListener("click", () => {
+            window.location.href = `/users/profile/lookup/?username=${username}`;
+        });
+
+        mobileUsername.addEventListener("click", () => {
+            window.location.href = `/users/profile/lookup/?username=${username}`;
+        });
+    }
 
     const profileImg = document.querySelectorAll(".chat-avatar");
 
@@ -459,6 +470,7 @@ function joinConversation(conversationId) {
 
 socket.on("new_message", (message) => {
     updateConversationPreview(message);
+    loadMessageCount();
 
     const isCurrentConversation = String(message.conversation_id) === String(currentConversationId);
     const isOwnMessage = message.sender === currentUser;

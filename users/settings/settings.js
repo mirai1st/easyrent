@@ -217,6 +217,40 @@ logOutBtns.forEach(btn => {
     });
 });
 
+const changeRoleBtns = document.querySelectorAll(".change-role-btn");
+
+changeRoleBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        alertbox("Adakah anda pasti untuk menukar peranan anda kepada pengguna biasa?", () => {
+            alertbox("Ini akan menukar semua siaran anda kepada status tidak aktif, adakah anda betul-betul pasti?", () => {
+                changeRole();
+            });
+        });
+    });
+});
+
+async function changeRole() {
+    try {
+        const response = await fetch("/api/change-role", {
+            method: "POST",
+            credentials: "include"
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Tukar peranan gagal:", data.message);
+            return;
+        }
+
+        window.location.href = "/users/settings/?success=change-role"
+
+    } catch (error) {
+        console.error("Gagal menukar peranan:", error);
+        window.location.href = "/users/settings/?error=change-role"
+    }
+}
+
 async function logoutUser() {
     try {
         const response = await fetch("/api/logout", {
@@ -334,3 +368,21 @@ if (changePasswordForm) {
     });
 }
 
+async function initProfile() {
+    const [{ user, error }] = await Promise.all([loadUser(), domReady()]);
+
+    if (error || !user) {
+        window.location.href = "/?error=1"; // tukar ikut route awak
+        return;
+    }
+
+    const button_change_role = document.querySelectorAll(".change-role-settings");
+
+    if (user.role !== "Pengguna" && user.role !== "Admin") {
+        button_change_role.forEach(btn => {
+            btn.style.display = "";
+        });
+    }
+}
+
+initProfile();

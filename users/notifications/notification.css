@@ -5,15 +5,32 @@
 body {
     background-color: #f7f2ed;
     background-image:
-        repeating-linear-gradient(135deg, rgba(82, 52, 29, 0.025) 0 1px, transparent 1px 26px),
-        radial-gradient(circle at 8% 12%, rgba(215, 185, 108, 0.16), transparent 28%),
-        radial-gradient(circle at 92% 78%, rgba(74, 50, 31, 0.08), transparent 30%);
+        repeating-linear-gradient(
+            135deg,
+            rgba(82, 52, 29, 0.025) 0 1px,
+            transparent 1px 26px
+        ),
+        radial-gradient(
+            circle at 8% 12%,
+            rgba(215, 185, 108, 0.16),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 92% 78%,
+            rgba(74, 50, 31, 0.08),
+            transparent 30%
+        );
     background-attachment: fixed;
 }
 
+
+/* =========================
+   NAVIGATION
+   ========================= */
+
 nav {
     padding: 20px 30px;
-    background-color: transparent;
+    background-color: #F7F2ED;
     display: flex;
     justify-content: space-between;
     font-weight: 500;
@@ -21,14 +38,14 @@ nav {
     top: 0;
     width: 100%;
     z-index: 499;
-    transition: background-color 0.3s ease, padding 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        padding 0.3s ease;
     box-sizing: border-box;
-    background-color: #F7F2ED;
-    padding: 20px 30px;
     color: #52341D;
     border-bottom: 1px solid #52341d3f;
 }
-    
+
 nav.scrolled {
     background-color: #F7F2ED;
     padding: 20px 30px;
@@ -42,6 +59,11 @@ nav ul {
     gap: 20px;
 }
 
+
+/* =========================
+   NAV BUTTON
+   ========================= */
+
 .nav-mainbutton {
     padding: 10px 15px;
     color: #52341D;
@@ -50,7 +72,7 @@ nav ul {
     animation: fadeIn 0.3s ease-in-out forwards;
     background: #ad6a3623;
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 8px;
     border: 1px solid rgba(215, 185, 108, 0.3);
 }
@@ -73,44 +95,53 @@ nav .nav-right a {
     cursor: pointer;
 }
 
-/* Override CSS */
-
 nav a {
     color: #52341D;
     text-decoration: none;
 }
 
-/* Profile */
 
+/* =========================
+   PROFILE / VIEW
+   ========================= */
 
 .desktop-view {
     gap: 10px;
     display: flex;
 }
 
+.mobile-view {
+    display: none;
+}
+
+
+/* =========================
+   TOP
+   ========================= */
 
 #top {
     padding: 100px 150px;
     transition: padding 0.3s ease;
 }
 
+
+/* =========================
+   NOTIFICATION CONTAINER
+   ========================= */
+
 .notification-container {
     height: calc(100vh - 140px);
-    flex: 1; /* ambil baki ruang sebagai right panel */
-    min-width: 0; /* elak overflow bila content dalam settings terlalu lebar */
+    flex: 1;
+    min-width: 0;
     padding: 20px;
     border: 1px solid #00000023;
     border-radius: 12px;
 }
 
-.mobile-view {
-    display: none;
-}
 
-/* Notification Container */
-
-/* Notification page - reuses side-panel styles from message.css */
-
+/* =========================
+   NOTIFICATION PAGE
+   ========================= */
 
 .notification-container {
     flex: 1;
@@ -124,10 +155,27 @@ nav a {
     will-change: opacity, transform;
 }
 
+
+/* =========================
+   ANIMATION
+   ========================= */
+
 @keyframes favouriteSlideUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
+
+/* =========================
+   NOTIFICATION HEADER
+   ========================= */
 
 .notification-header {
     display: flex;
@@ -151,6 +199,11 @@ nav a {
     gap: 16px;
 }
 
+
+/* =========================
+   NOTIFICATION TABS
+   ========================= */
+
 .notification-tabs {
     display: flex;
     gap: 6px;
@@ -168,7 +221,9 @@ nav a {
     padding: 6px 12px;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -193,6 +248,11 @@ nav a {
     color: #52341D;
 }
 
+
+/* =========================
+   MARK ALL
+   ========================= */
+
 .notif-mark-all {
     border: none;
     background: transparent;
@@ -209,6 +269,11 @@ nav a {
     color: #52341D;
 }
 
+
+/* =========================
+   NOTIFICATION LIST
+   ========================= */
+
 .notification-list {
     display: flex;
     flex-direction: column;
@@ -222,6 +287,11 @@ nav a {
     text-transform: uppercase;
     color: #6F4A2D99;
 }
+
+
+/* =========================
+   NOTIFICATION ITEM
+   ========================= */
 
 .notification-item {
     display: flex;
@@ -244,6 +314,11 @@ nav a {
 .notification-item.unread:hover {
     background-color: #ad6a361c;
 }
+
+
+/* =========================
+   NOTIFICATION ICON
+   ========================= */
 
 .notif-icon {
     flex: 0 0 40px;
@@ -281,6 +356,11 @@ nav a {
     color: #3a5f91;
 }
 
+
+/* =========================
+   NOTIFICATION BODY
+   ========================= */
+
 .notif-body {
     flex: 1;
     min-width: 0;
@@ -313,6 +393,11 @@ nav a {
     margin-top: 6px;
 }
 
+
+/* =========================
+   EMPTY STATE
+   ========================= */
+
 .notification-empty {
     display: flex;
     flex-direction: column;
@@ -341,7 +426,10 @@ nav a {
     max-width: 280px;
 }
 
-/* Notification detail modal */
+
+/* =========================
+   NOTIFICATION MODAL
+   ========================= */
 
 .notif-modal-overlay {
     display: none;
@@ -376,8 +464,15 @@ nav a {
 }
 
 @keyframes notifModalIn {
-    from { opacity: 0; transform: translate(-50%, -46%); }
-    to { opacity: 1; transform: translate(-50%, -50%); }
+    from {
+        opacity: 0;
+        transform: translate(-50%, -46%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
 }
 
 .notif-modal-close-btn {
@@ -438,31 +533,61 @@ nav a {
     background-color: #6F4A2D;
 }
 
-/* Mobile */
-@media (max-width: 767px) {
-    .desktop-view {
+
+/* =========================================================
+   PHONE + TABLET
+   0px - 1023px
+   ========================================================= */
+
+@media (max-width: 1023px) {
+
+    /* Hide desktop */
+    .desktop-view:not(nav) {
         display: none !important;
     }
 
+    /* Show mobile */
     .mobile-view {
         display: block;
     }
 
+    /*
+       Reset #top.
+       Padding is applied directly to
+       .mobile-notification-view instead.
+    */
     #top {
-        padding: 68px 0 0;
+        padding: 0 !important;
+        margin: 0;
+        width: 100%;
+        box-sizing: border-box;
     }
 
+    /*
+       PHONE + TABLET CONTENT
+       85px top
+       15px left/right
+       30px bottom
+    */
     .mobile-notification-view {
+        display: block;
         width: 100%;
+        padding: 85px 15px 30px !important;
+        margin: 0;
+        box-sizing: border-box;
     }
 
     .mobile-notification-view .notification-container {
         width: 100%;
-        min-height: calc(100dvh - 68px);
-        border: none;
-        border-radius: 0;
-        overflow: hidden;
+        min-height: calc(100dvh - 115px);
+        height: auto;
+        margin: 0;
+        box-sizing: border-box;
+
+        border: 1px solid #00000023;
+        border-radius: 12px;
         background: #fff;
+        overflow: hidden;
     }
 
     .mobile-notification-view .notification-header {
@@ -503,12 +628,55 @@ nav a {
     }
 }
 
-@media (min-width: 768px) {
+
+/* =========================================================
+   TABLET
+   768px - 1023px
+   ========================================================= */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+
+    /*
+       IMPORTANT:
+       Jangan letak padding pada #top di sini.
+       Padding 85px 15px 30px datang daripada
+       .mobile-notification-view di atas.
+    */
+
+    .mobile-notification-view .notification-header {
+        padding: 20px 24px;
+    }
+
+    .mobile-notification-view .notification-item {
+        padding: 16px 24px;
+    }
+
+    .mobile-notification-view .notification-group-label {
+        padding: 14px 24px 6px;
+    }
+
+    .mobile-notification-view .notification-empty {
+        padding: 100px 24px;
+    }
+}
+
+
+/* =========================================================
+   DESKTOP
+   1024px+
+   ========================================================= */
+
+@media (min-width: 1024px) {
+
     .mobile-view {
         display: none !important;
     }
 
     .desktop-view {
         display: flex;
+    }
+
+    #top {
+        padding: 100px 150px;
     }
 }

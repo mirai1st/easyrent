@@ -348,6 +348,7 @@ nav a {
 
 .sp-user-details {
     min-width: 0;
+    cursor: pointer;
 }
 
 .sp-user-details h4 {

@@ -306,7 +306,7 @@ function setText(selector, value) {
 
 let sessionInterval;
 
-function startSessionTimer(sessionStart, expiresInSeconds = 3600) {
+function startSessionTimer(sessionStart, expiresInSeconds = 86400) { // 86400 saat = 24 jam
     if (sessionInterval) clearInterval(sessionInterval);
 
     sessionInterval = setInterval(() => {
@@ -328,7 +328,6 @@ function startSessionTimer(sessionStart, expiresInSeconds = 3600) {
         setText(".session-time", formatted);
     }, 1000);
 }
-
 // ===== Log keluar =====
 
 function setupLogoutButtons() {
@@ -359,39 +358,6 @@ async function logoutUser() {
     } catch (error) {
         console.error("Gagal log keluar:", error);
     }
-}
-
-// ===== Alert box (element dicari setiap kali supaya boleh dibuka berkali-kali) =====
-
-function closeAlertBox() {
-    document.querySelector(".alert-box").classList.remove("enabled");
-    document.querySelector(".alertbox-overlay").classList.remove("enabled");
-}
-
-function alertbox(message, callback = null) {
-    const alertBox = document.querySelector(".alert-box");
-    const overlay = document.querySelector(".alertbox-overlay");
-    const yes = document.querySelector(".yes-alert-box");
-    const no = document.querySelector(".no-alert-box");
-
-    alertBox.classList.add("enabled");
-    overlay.classList.add("enabled");
-    document.querySelector(".alertbox-message").textContent = message;
-
-    // clone nodes to strip old listeners, avoid stacking
-    const newYes = yes.cloneNode(true);
-    yes.replaceWith(newYes);
-
-    const newNo = no.cloneNode(true);
-    no.replaceWith(newNo);
-
-    newYes.addEventListener("click", () => {
-        closeAlertBox();
-        if (callback) callback();
-    });
-
-    newNo.addEventListener("click", closeAlertBox);
-    overlay.onclick = closeAlertBox;
 }
 
 // ===== Edit profile =====

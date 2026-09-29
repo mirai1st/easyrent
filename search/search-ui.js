@@ -43,15 +43,71 @@ function summoncard(rentid, title, img, price, totalShower, totalRoom, gender, l
             </div>
             <div class="card-footer">
                 <a href="/house/?id=${escapeHtml(rentid)}"><i class="fa-solid fa-circle-info"></i>&nbsp; More Info</a>
-                <a href="#"><i class="fa-regular fa-message"></i>&nbsp; Contact</a>
+                <a onclick="contact('${escapeHtml(originalposter)}')"><i class="fa-regular fa-message"></i>&nbsp; Contact</a>
             </div>
         </div>
     `;
 }
 
+// Fungsi untuk mengekalkan nilai filter dari URL Parameter ke dalam Input HTML
+function populateFilterFields(query) {
+    const searchQuery = query.get('search');
+    const lokasi = query.get('lokasi');
+    const bilikAir = query.get('bilikAir');
+    const bilikTidur = query.get('bilikTidur');
+    const hargaMin = query.get('hargaMin');
+    const hargaMax = query.get('hargaMax');
+    const jantina = query.get('jantina');
+
+    // 1. Isikan Kata Kunci Carian (Search Input & Hidden Search Input)
+    if (searchQuery !== null) {
+        document.querySelectorAll('.search-container input[name=search]').forEach(input => {
+            input.value = searchQuery;
+        });
+        document.querySelectorAll('.hidden-search-input').forEach(hiddenInput => {
+            hiddenInput.value = searchQuery;
+        });
+    }
+
+    // 2. Isikan Institusi / Lokasi
+    if (lokasi !== null) {
+        const lokasiInput = document.getElementById('desktop-lokasi');
+        if (lokasiInput) lokasiInput.value = lokasi;
+    }
+
+    // 3. Isikan Bilik Air Minimum
+    if (bilikAir !== null) {
+        const bilikAirInput = document.getElementById('desktop-bilik-air');
+        if (bilikAirInput) bilikAirInput.value = bilikAir;
+    }
+
+    // 4. Isikan Bilik Tidur Minimum
+    if (bilikTidur !== null) {
+        const bilikTidurInput = document.getElementById('desktop-bilik-tidur');
+        if (bilikTidurInput) bilikTidurInput.value = bilikTidur;
+    }
+
+    // 5. Isikan Harga Min & Max
+    if (hargaMin !== null) {
+        const hargaMinInput = document.getElementById('desktop-harga-min');
+        if (hargaMinInput) hargaMinInput.value = hargaMin;
+    }
+    if (hargaMax !== null) {
+        const hargaMaxInput = document.getElementById('desktop-harga-max');
+        if (hargaMaxInput) hargaMaxInput.value = hargaMax;
+    }
+
+    // 6. Pilih Radio Button Jantina
+    if (jantina !== null) {
+        const jantinaRadio = document.querySelector(`form.desktop-filter-form input[name="jantina"][value="${jantina}"]`);
+        if (jantinaRadio) {
+            jantinaRadio.checked = true;
+        }
+    }
+}
+
 async function fetchHouseData() {
     const cardContainers = document.querySelectorAll('.card-container');
-    const searchContainers = document.querySelectorAll('.search-container');
     const resultCount = document.getElementById('result-count');
 
     if (!cardContainers.length) {
@@ -59,21 +115,10 @@ async function fetchHouseData() {
     }
 
     const query = new URLSearchParams(window.location.search);
-    const selectedInstitution = query.get('lokasi');
-    const searchQuery = query.get('search');
 
-    if (searchQuery) {
-        searchContainers.forEach(container => {
-            const input = container.querySelector('input[name=search]');
-            if (input) {
-                input.value = searchQuery;
-            }
-        });
-    }
+    // Isikan semua input form berdasarkan URL Parameter terkini
+    populateFilterFields(query);
 
-    if (selectedInstitution) {
-        query.set('lokasi', selectedInstitution);
-    }
     const endpoint = `/api/house/fetch?${query.toString()}`;
 
     cardContainers.forEach((container) => {
@@ -89,6 +134,7 @@ async function fetchHouseData() {
         }
 
         if (!houses.length) {
+            resultCount.textContent = '0';
             cardContainers.forEach((container) => {
                 container.innerHTML = '<p class="search-status">Tiada rumah yang sepadan dengan carian.</p>';
             });
@@ -120,4 +166,47 @@ async function fetchHouseData() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', fetchHouseData);
+async function contact(posterUsername) {
+    if (!posterUsername) return;
+
+    if (typeof loadUser !== "function") {
+        console.error("loadUser() is not defined.");
+        return;
+    }
+
+    const { user, error } = await loadUser();
+    
+    if (error || !user) {
+        if (typeof checkLoginModal === "function") checkLoginModal();
+        return;
+    }
+
+    if (user.username === posterUsername) {
+        if (typeof showNotification === "function") {
+            showNotification("Anda tidak boleh mesej diri sendiri!", "error", 3000);
+        } else {
+            alert("Anda tidak boleh mesej diri sendiri!");
+        }
+        return;
+    }
+
+    if (typeof startChat === "function") {
+        startChat(posterUsername);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetchHouseData();
+
+    // Penyelarasan real-time jika pengguna menaip di search bar utama
+    const mainSearchInputs = document.querySelectorAll('.search-container input[name=search]');
+    const hiddenInputs = document.querySelectorAll('.hidden-search-input');
+
+    mainSearchInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            hiddenInputs.forEach(hiddenInput => {
+                hiddenInput.value = e.target.value;
+            });
+        });
+    });
+});
