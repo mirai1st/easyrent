@@ -1,6 +1,6 @@
 # EasyRent
 
-> Sadly, this project didn't place in the FIYPROC 2026 competition—it didn't even make the top 10. My expectations were higher, so not winning was a bit disappointing, but I'm making the project open-source so anyone can use or build upon it. Good luck to everyone!
+> Sadly, this project didn't place in the FIYPROC 2026 competition—it didn't even make the top 10. My expectations were higher, so not winning was a bit disappointing. I'm making the project open-source so anyone can use or build upon it. Good luck to everyone!
 
 ### Find a place that feels like home.
 
